@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="soc2Seal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f4f5f7"/>
+      <stop offset="55%" stop-color="#c9ccd1"/>
+      <stop offset="100%" stop-color="#9aa0a8"/>
+    </linearGradient>
+  </defs>
+  <path d="M 100.0,8.0 L 108.73,22.49 L 120.47,10.31 L 125.76,26.38 L 139.92,17.11 L 141.5,33.96 L 157.36,28.07 L 155.15,44.85 L 171.93,42.64 L 166.04,58.5 L 182.89,60.08 L 173.62,74.24 L 189.69,79.53 L 177.51,91.27 L 192.0,100.0 L 177.51,108.73 L 189.69,120.47 L 173.62,125.76 L 182.89,139.92 L 166.04,141.5 L 171.93,157.36 L 155.15,155.15 L 157.36,171.93 L 141.5,166.04 L 139.92,182.89 L 125.76,173.62 L 120.47,189.69 L 108.73,177.51 L 100.0,192.0 L 91.27,177.51 L 79.53,189.69 L 74.24,173.62 L 60.08,182.89 L 58.5,166.04 L 42.64,171.93 L 44.85,155.15 L 28.07,157.36 L 33.96,141.5 L 17.11,139.92 L 26.38,125.76 L 10.31,120.47 L 22.49,108.73 L 8.0,100.0 L 22.49,91.27 L 10.31,79.53 L 26.38,74.24 L 17.11,60.08 L 33.96,58.5 L 28.07,42.64 L 44.85,44.85 L 42.64,28.07 L 58.5,33.96 L 60.08,17.11 L 74.24,26.38 L 79.53,10.31 L 91.27,22.49 Z" fill="url(#soc2Seal)" stroke="#3a3f47" stroke-width="2.5"/>
+  <circle cx="100" cy="100" r="70" fill="#17191c" stroke="#3a3f47" stroke-width="1.5"/>
+  <text x="100" y="80" text-anchor="middle" font-family="Arial, Helvetica, sans-serif"
+        font-size="19" font-weight="700" fill="#f4f5f7" letter-spacing="1">AICPA</text>
+  <line x1="58" y1="92" x2="142" y2="92" stroke="#f4f5f7" stroke-width="1.5"/>
+  <text x="100" y="124" text-anchor="middle" font-family="Arial, Helvetica, sans-serif"
+        font-size="29" font-weight="800" fill="#f4f5f7">SOC 2</text>
+  <text x="100" y="146" text-anchor="middle" font-family="Arial, Helvetica, sans-serif"
+        font-size="12" font-weight="600" fill="#cfd2d6" letter-spacing="2">TYPE I</text>
+</svg>

@@ -1,0 +1,867 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+
+/* ==========================================
+   SERVICES SECTION
+========================================== */
+
+.services-section {
+  position: relative;
+  overflow: hidden;
+  padding: 140px 0;
+  background: var(--bg-primary);
+}
+
+.services-container {
+  width: min(1280px, 92%);
+  margin: 0 auto;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.services-eyebrow {
+  display: inline-flex;
+  margin-bottom: 20px;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 0.16em;
+  line-height: 1.05;
+
+  text-transform: uppercase;
+
+  color: var(--accent-primary);
+}
+
+
+/* ==========================================
+   SERVICES HEADING
+========================================== */
+
+.services-heading {
+  max-width: 980px;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size:
+    clamp(3rem, 6vw, 5.4rem);
+
+  font-weight: 700;
+
+  letter-spacing: -0.055em;
+
+  line-height: 1.05;
+
+  margin-bottom: 24px;
+
+  background:
+    linear-gradient(
+      100deg,
+      var(--text-primary) 0%,
+      var(--text-primary) 62%,
+      var(--accent-deep) 82%,
+      var(--accent-primary) 100%
+    );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  background-clip: text;
+}
+
+
+/* ==========================================
+   SUBTITLE
+========================================== */
+
+.services-sub {
+  max-width: 720px;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 18px;
+
+  font-weight: 400;
+
+  letter-spacing: -0.015em;
+
+  line-height: 1.7;
+
+  color: var(--text-secondary);
+
+  margin-bottom: 70px;
+}
+
+
+/* ==========================================
+   FADE-IN ANIMATION
+========================================== */
+
+.fade-in-el {
+  opacity: 1;
+  transform: none;
+}
+
+.fade-in-el.visible {
+  opacity: 1;
+  transform: none;
+}
+
+
+/* ==========================================
+   GRID
+========================================== */
+
+.featured-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 28px;
+
+  margin-bottom: 28px;
+
+  align-items: stretch;
+}
+
+.service-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 28px;
+
+  align-items: stretch;
+}
+
+
+/* ==========================================
+   CARD SYSTEM
+========================================== */
+
+.service-card {
+  position: relative;
+
+  min-height: 310px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  padding: 34px;
+
+  overflow: hidden;
+
+  border-radius: 34px;
+
+  isolation: isolate;
+
+  opacity: 1;
+
+  transform: translateY(0);
+
+  transition:
+    transform 0.18s ease,
+    border-color 0.45s ease,
+    box-shadow 0.45s ease,
+    background 0.45s ease;
+
+  background: var(--bg-surface);
+
+  border:
+    1px solid var(--border);
+
+  box-shadow:
+    0 14px 45px rgba(var(--shadow-rgb), 0.045),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.service-card:hover {
+  transform: translateY(-6px);
+
+  border-color:
+    var(--accent-tint-strong);
+
+  box-shadow:
+    0 22px 54px rgba(var(--shadow-rgb), 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  background:
+    var(--bg-surface-soft);
+}
+
+
+/* ==========================================
+   LIGHTING LAYER
+========================================== */
+
+.service-card::before {
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: -1;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(var(--accent-rgb), 0.10),
+      transparent 35%
+    );
+
+  opacity: 0.45;
+
+  pointer-events: none;
+}
+
+
+/* ==========================================
+   PREMIUM BORDER SHIMMER
+========================================== */
+
+.service-card::after {
+  content: '';
+
+  position: absolute;
+
+  inset: -1px;
+
+  border-radius: inherit;
+
+  padding: 1px;
+
+  background:
+    linear-gradient(
+      135deg,
+      transparent,
+      rgba(var(--accent-rgb), 0.20),
+      rgba(var(--accent-rgb), 0.10),
+      transparent
+    );
+
+  background-size: 220% 220%;
+
+  opacity: 0.18;
+
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+
+  -webkit-mask-composite: xor;
+
+  mask-composite: exclude;
+
+  pointer-events: none;
+}
+
+
+/* ==========================================
+   FEATURED CARD
+========================================== */
+
+.service-card.featured {
+  min-height: 360px;
+
+  background:
+    var(--accent-soft);
+
+  border:
+    1px solid var(--accent-tint-strong);
+
+  box-shadow:
+    0 18px 60px rgba(var(--accent-rgb), 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+
+/* ==========================================
+   ICON
+========================================== */
+
+.service-icon {
+  position: relative;
+
+  width: 78px;
+  height: 78px;
+
+  border-radius: 28px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-bottom: 28px;
+
+  overflow: hidden;
+
+  background:
+    var(--accent-soft);
+
+  border:
+    1px solid var(--border);
+
+  color:
+    var(--accent-primary);
+
+  transition:
+    transform 0.45s ease,
+    box-shadow 0.45s ease,
+    background 0.45s ease;
+}
+
+.service-icon svg {
+  transform-origin: center;
+}
+
+.service-card:hover .service-icon {
+  transform:
+    translateY(-5px)
+    scale(1.03);
+
+  background:
+    var(--accent-soft-2);
+
+  box-shadow:
+    0 12px 32px rgba(var(--accent-rgb), 0.12);
+}
+
+.service-card:hover .service-icon svg {
+  transform:
+    scale(1.08);
+}
+
+
+/* ==========================================
+   TEXT
+========================================== */
+
+.service-card h3 {
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 30px;
+
+  font-weight: 700;
+
+  letter-spacing: -0.055em;
+
+  line-height: 1.05;
+
+  color:
+    var(--text-primary);
+
+  margin-bottom: 18px;
+
+  transition:
+    transform 0.35s ease,
+    color 0.35s ease;
+}
+
+.service-card:hover h3 {
+  transform:
+    translateX(2px);
+
+  color:
+    var(--accent-hover);
+}
+
+.service-card p {
+  width: 100%;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 15px;
+
+  font-weight: 400;
+
+  letter-spacing: -0.015em;
+
+  line-height: 1.7;
+
+  color:
+    var(--text-secondary);
+
+  margin-bottom: 30px;
+
+  transition:
+    color 0.35s ease;
+}
+
+.service-card:hover p {
+  color:
+    var(--text-secondary);
+}
+
+
+/* ==========================================
+   TAGS
+========================================== */
+
+.service-tags {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  margin-top: auto;
+}
+
+.service-tags span {
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 10px 14px;
+
+  border-radius: 999px;
+
+  background:
+    var(--bg-secondary);
+
+  border:
+    1px solid var(--border);
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  letter-spacing: -0.015em;
+
+  line-height: 1.4;
+
+  color:
+    var(--text-secondary);
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+.service-tags span::before {
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  opacity: 0;
+
+  transform:
+    translateX(-100%);
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(var(--accent-rgb), 0.08),
+      transparent
+    );
+
+  transition:
+    0.5s ease;
+}
+
+.service-card:hover .service-tags span {
+  transform:
+    translateY(-1px);
+
+  background:
+    var(--accent-soft);
+
+  border-color:
+    var(--accent-tint-strong);
+
+  color:
+    var(--accent-primary);
+}
+
+.service-card:hover .service-tags span::before {
+  opacity: 1;
+
+  transform:
+    translateX(100%);
+}
+
+
+/* ==========================================
+   BUTTON
+========================================== */
+
+.learn-btn {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  width: fit-content;
+
+  margin-top: 26px;
+
+  border: none;
+
+  background:
+    transparent;
+
+  color:
+    var(--accent-primary);
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  letter-spacing: -0.015em;
+
+  line-height: 1.4;
+
+  cursor: pointer;
+}
+
+.learn-btn span {
+  transition:
+    transform 0.35s ease;
+}
+
+.service-card:hover .learn-btn span {
+  transform:
+    translateX(5px);
+}
+
+
+/* ==========================================
+   ACCENT COLORS
+   Unified SystemaOps green system
+========================================== */
+
+.cyan .service-icon,
+.blue .service-icon,
+.green .service-icon,
+.orange .service-icon,
+.gold .service-icon,
+.pink .service-icon,
+.purple .service-icon,
+.teal .service-icon {
+  color:
+    var(--accent-primary);
+}
+
+
+/* ==========================================
+   KEYFRAMES
+========================================== */
+
+@keyframes ambientGlow {
+
+  0%,
+  100% {
+    opacity: 0.08;
+  }
+
+  50% {
+    opacity: 0.18;
+  }
+
+}
+
+@keyframes borderShift {
+
+  from {
+    background-position: 0% 50%;
+  }
+
+  to {
+    background-position: 220% 50%;
+  }
+
+}
+
+@keyframes iconFloat {
+
+  0%,
+  100% {
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+  50% {
+    transform:
+      translateY(-2px)
+      scale(1.03);
+  }
+
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1024px) {
+
+  .featured-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .service-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .services-section {
+    padding:
+      90px 0;
+  }
+
+  .services-container {
+    width:
+      92%;
+  }
+
+  .services-heading {
+
+    font-family:
+      'Space Grotesk',
+      'Plus Jakarta Sans',
+      sans-serif;
+
+    font-size:
+      clamp(2.4rem, 10vw, 3.8rem);
+
+    font-weight:
+      700;
+
+    letter-spacing:
+      -0.055em;
+
+    line-height:
+      1.05;
+
+    word-break:
+      break-word;
+
+  }
+
+  .services-sub {
+
+    width:
+      100%;
+
+    font-family:
+      'Space Grotesk',
+      'Plus Jakarta Sans',
+      sans-serif;
+
+    font-size:
+      15px;
+
+    font-weight:
+      400;
+
+    letter-spacing:
+      -0.015em;
+
+    line-height:
+      1.7;
+
+    margin-bottom:
+      40px;
+
+  }
+
+  .featured-grid,
+  .service-grid {
+
+    grid-template-columns:
+      1fr;
+
+    gap:
+      20px;
+
+  }
+
+  .service-card {
+
+    width:
+      100%;
+
+    min-height:
+      auto;
+
+    padding:
+      24px;
+
+    border-radius:
+      24px;
+
+  }
+
+  .service-card.featured {
+    min-height:
+      auto;
+  }
+
+  .service-icon {
+
+    width:
+      64px;
+
+    height:
+      64px;
+
+    border-radius:
+      22px;
+
+    margin-bottom:
+      20px;
+
+  }
+
+  .service-card h3 {
+
+    font-family:
+      'Space Grotesk',
+      'Plus Jakarta Sans',
+      sans-serif;
+
+    font-size:
+      24px;
+
+    font-weight:
+      700;
+
+    letter-spacing:
+      -0.055em;
+
+    line-height:
+      1.05;
+
+    margin-bottom:
+      14px;
+
+  }
+
+  .service-card p {
+
+    width:
+      100%;
+
+    font-family:
+      'Space Grotesk',
+      'Plus Jakarta Sans',
+      sans-serif;
+
+    font-size:
+      14px;
+
+    font-weight:
+      400;
+
+    letter-spacing:
+      -0.015em;
+
+    line-height:
+      1.7;
+
+    word-break:
+      break-word;
+
+    margin-bottom:
+      22px;
+
+  }
+
+  .service-tags {
+    gap:
+      8px;
+  }
+
+  .service-tags span {
+
+    padding:
+      8px 12px;
+
+    font-size:
+      11px;
+
+  }
+
+  .learn-btn {
+
+    margin-top:
+      18px;
+
+    font-size:
+      14px;
+
+  }
+
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+  .fade-in-el,
+  .service-card,
+  .service-card *,
+  .service-card::before,
+  .service-card::after {
+
+    animation:
+      none !important;
+
+    transition:
+      none !important;
+
+  }
+
+}

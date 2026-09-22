@@ -1,0 +1,684 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+
+/* ==========================
+   BUSINESS PAIN SECTION
+========================== */
+
+.pain-section {
+
+  padding: 72px 0;
+
+  position: relative;
+
+  overflow: hidden;
+
+  background:
+    var(--bg-primary);
+
+}
+
+.pain-container {
+
+  width: min(1340px, 92%);
+
+  margin: auto;
+
+  display: grid;
+
+  grid-template-columns:
+    0.95fr 1.05fr;
+
+  align-items: center;
+
+  gap: 42px;
+
+}
+
+
+/* ==========================
+   LEFT
+========================== */
+
+.pain-left {
+
+  max-width: 580px;
+
+}
+
+
+/* ==========================
+   PILL
+========================== */
+
+.pain-pill {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 14px 28px;
+
+  border-radius: 999px;
+
+  border:
+    1px solid var(--border);
+
+  background:
+    var(--accent-soft);
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: .84rem;
+
+  letter-spacing: .16em;
+
+  line-height: 1.05;
+
+  text-transform: uppercase;
+
+  font-weight: 700;
+
+  color:
+    var(--accent-primary);
+
+  margin-bottom: 28px;
+
+}
+
+
+/* ==========================
+   MAIN HEADING
+========================== */
+
+.pain-heading {
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size:
+    clamp(3.4rem, 5vw, 5rem);
+
+  font-weight: 700;
+
+  letter-spacing: -0.055em;
+
+  line-height: 1.05;
+
+  max-width: 560px;
+
+  background:
+    linear-gradient(
+      100deg,
+      var(--text-primary) 0%,
+      var(--text-primary) 62%,
+      var(--accent-deep) 82%,
+      var(--accent-primary) 100%
+    );
+
+  -webkit-background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  background-clip: text;
+
+}
+
+.pain-heading span {
+
+  display: block;
+
+  background:
+    linear-gradient(
+      100deg,
+      var(--text-primary) 0%,
+      var(--text-primary) 40%,
+      var(--accent-deep) 72%,
+      var(--accent-primary) 100%
+    );
+
+  -webkit-background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  background-clip: text;
+
+}
+
+
+/* ==========================
+   DESCRIPTION
+========================== */
+
+.pain-desc {
+
+  margin-top: 20px;
+
+  max-width: 510px;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 1.02rem;
+
+  font-weight: 400;
+
+  letter-spacing: -0.015em;
+
+  line-height: 1.7;
+
+  color:
+    var(--text-secondary);
+
+}
+
+
+/* ==========================
+   HELPER TEXT
+========================== */
+
+.pain-helper {
+
+  margin-top: 18px;
+
+  margin-bottom: 22px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: .95rem;
+
+  font-weight: 400;
+
+  letter-spacing: -0.015em;
+
+  line-height: 1.7;
+
+  color:
+    var(--text-secondary);
+
+}
+
+.pain-helper-arrow {
+
+  color:
+    var(--accent-primary);
+
+  animation:
+    arrowMove 1.8s infinite ease;
+
+}
+
+@keyframes arrowMove {
+
+  0% {
+
+    transform:
+      translateX(0);
+
+  }
+
+  50% {
+
+    transform:
+      translateX(5px);
+
+  }
+
+  100% {
+
+    transform:
+      translateX(0);
+
+  }
+
+}
+
+
+/* ==========================
+   BUTTONS
+========================== */
+
+.pain-tabs {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 14px;
+
+}
+
+.pain-tab {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  border: none;
+
+  cursor: pointer;
+
+  padding: 15px 22px;
+
+  border-radius: 999px;
+
+  background: var(--bg-surface);
+
+  border:
+    1px solid var(--border);
+
+  color:
+    var(--text-secondary);
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: .96rem;
+
+  font-weight: 600;
+
+  letter-spacing: -0.015em;
+
+  line-height: 1.4;
+
+  box-shadow:
+    0 4px 14px
+    rgba(var(--shadow-rgb), .035);
+
+  transition:
+    transform .35s ease,
+    border-color .35s ease,
+    box-shadow .35s ease,
+    background .35s ease,
+    color .35s ease;
+
+}
+
+.pain-tab svg {
+
+  width: 17px;
+
+  height: 17px;
+
+  color:
+    var(--accent-primary);
+
+}
+
+.pain-tab:hover {
+
+  transform:
+    translateY(-3px);
+
+  border-color:
+    var(--accent-tint-strong);
+
+  box-shadow:
+    0 10px 30px
+    rgba(var(--accent-rgb), .10);
+
+  color:
+    var(--accent-primary);
+
+  background:
+    var(--bg-surface-soft);
+
+}
+
+.pain-tab.active {
+
+  background:
+    var(--accent-soft);
+
+  border-color:
+    var(--accent-tint-strong);
+
+  color:
+    var(--accent-primary);
+
+  box-shadow:
+    0 12px 35px
+    rgba(var(--accent-rgb), .08);
+
+}
+
+
+/* ==========================
+   RIGHT GRID
+========================== */
+
+.pain-right {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 18px;
+
+}
+
+
+/* ==========================
+   CARD
+========================== */
+
+.pain-card {
+
+  min-height: 235px;
+
+  padding: 28px;
+
+  border-radius: 30px;
+
+  background: var(--bg-surface);
+
+  border:
+    1px solid var(--border);
+
+  box-shadow:
+    0 12px 40px
+    rgba(var(--shadow-rgb), .045);
+
+  transition:
+    transform .35s ease,
+    border-color .35s ease,
+    box-shadow .35s ease,
+    background .35s ease;
+
+}
+
+.pain-card:hover {
+
+  transform:
+    translateY(-6px);
+
+  border-color:
+    var(--accent-tint-strong);
+
+  box-shadow:
+    0 20px 55px
+    rgba(var(--shadow-rgb), .09);
+
+  background:
+    var(--bg-surface-soft);
+
+}
+
+
+/* ==========================
+   CARD ICON
+========================== */
+
+.pain-icon {
+
+  width: 62px;
+
+  height: 62px;
+
+  border-radius: 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-bottom: 18px;
+
+  color:
+    var(--accent-primary);
+
+  background:
+    var(--accent-soft);
+
+  border:
+    1px solid var(--border);
+
+  transition:
+    transform .35s ease,
+    background .35s ease,
+    border-color .35s ease,
+    box-shadow .35s ease;
+
+}
+
+.pain-card:hover .pain-icon {
+
+  transform:
+    translateY(-3px);
+
+  background:
+    var(--accent-soft-2);
+
+  border-color:
+    var(--accent-tint-strong);
+
+  box-shadow:
+    0 10px 28px
+    rgba(var(--accent-rgb), .10);
+
+}
+
+
+/* ==========================
+   CARD HEADING
+========================== */
+
+.pain-card h3 {
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 1.2rem;
+
+  font-weight: 700;
+
+  letter-spacing: -0.055em;
+
+  line-height: 1.05;
+
+  color:
+    var(--text-primary);
+
+  margin-bottom: 12px;
+
+}
+
+
+/* ==========================
+   CARD PARAGRAPH
+========================== */
+
+.pain-card p {
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: .96rem;
+
+  font-weight: 400;
+
+  letter-spacing: -0.015em;
+
+  line-height: 1.7;
+
+  color:
+    var(--text-secondary);
+
+}
+
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media (max-width: 1150px) {
+
+  .pain-container {
+
+    grid-template-columns:
+      1fr;
+
+    gap: 50px;
+
+  }
+
+  .pain-left {
+
+    max-width:
+      100%;
+
+  }
+
+  .pain-right {
+
+    grid-template-columns:
+      repeat(2, 1fr);
+
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .pain-section {
+
+    padding:
+      80px 0;
+
+  }
+
+  .pain-heading {
+
+    font-family:
+      'Space Grotesk',
+      'Plus Jakarta Sans',
+      sans-serif;
+
+    font-size:
+      3rem;
+
+    font-weight:
+      700;
+
+    letter-spacing:
+      -0.055em;
+
+    line-height:
+      1.05;
+
+  }
+
+  .pain-heading span {
+
+    background:
+      linear-gradient(
+        100deg,
+        var(--text-primary) 0%,
+        var(--accent-deep) 72%,
+        var(--accent-primary) 100%
+      );
+
+    -webkit-background-clip:
+      text;
+
+    -webkit-text-fill-color:
+      transparent;
+
+    background-clip:
+      text;
+
+  }
+
+  .pain-desc {
+
+    font-size:
+      .98rem;
+
+    font-weight:
+      400;
+
+    letter-spacing:
+      -0.015em;
+
+    line-height:
+      1.7;
+
+  }
+
+  .pain-right {
+
+    grid-template-columns:
+      1fr;
+
+  }
+
+  .pain-card {
+
+    min-height:
+      auto;
+
+  }
+
+  .pain-tabs {
+
+    gap:
+      10px;
+
+  }
+
+  .pain-tab {
+
+    padding:
+      14px 18px;
+
+    font-size:
+      .92rem;
+
+  }
+
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+  .pain-helper-arrow,
+  .pain-tab,
+  .pain-card,
+  .pain-icon {
+
+    animation:
+      none !important;
+
+    transition:
+      none !important;
+
+  }
+
+}

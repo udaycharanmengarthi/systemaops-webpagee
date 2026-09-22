@@ -1,0 +1,224 @@
+/* =========================================================
+   BOTTOM CTA — SYSTEMAOPS LIGHT THEME
+   ========================================================= */
+
+.bottom-cta {
+  padding: 90px 6% 70px;
+
+  background: var(--bg-primary);
+
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+}
+
+
+/* =========================================================
+   INNER
+   ========================================================= */
+
+.bottom-cta-inner {
+  max-width: 1380px;
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 50px;
+
+  padding: 56px;
+
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+
+/* =========================================================
+   LEFT
+   ========================================================= */
+
+.bottom-cta-left {
+  max-width: 760px;
+}
+
+
+/* =========================================================
+   PILL
+   ========================================================= */
+
+.bottom-cta-pill {
+  display: inline-flex;
+
+  padding: 12px 20px;
+
+  border-radius: 999px;
+
+  border: 1px solid var(--border);
+
+  background: var(--accent-soft);
+
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+
+  color: var(--accent-primary);
+}
+
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
+.bottom-cta-heading {
+  margin-top: 24px;
+
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(2.8rem, 5vw, 4.8rem);
+
+  line-height: 1.05;
+  letter-spacing: -.055em;
+  font-weight: 700;
+
+  color: var(--text-primary);
+}
+
+
+/* Slight green accent — same direction as the other sections */
+
+.bottom-cta-heading span {
+  display: block;
+
+  background: linear-gradient(
+    100deg,
+    var(--text-primary) 0%,
+    var(--text-primary) 62%,
+    var(--accent-deep) 82%,
+    var(--accent-primary) 100%
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+.bottom-cta-text {
+  margin-top: 22px;
+
+  max-width: 620px;
+
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.05rem;
+
+  font-weight: 400;
+  letter-spacing: -.015em;
+  line-height: 1.7;
+
+  color: var(--text-secondary);
+}
+
+
+/* =========================================================
+   RIGHT
+   ========================================================= */
+
+.bottom-cta-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+   ========================================================= */
+
+.bottom-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 20px 28px;
+
+  border-radius: 18px;
+
+  border: 1px solid var(--accent-hover);
+
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  letter-spacing: -.015em;
+  text-decoration: none;
+
+  color: var(--text-inverse);
+
+  background: var(--accent-primary);
+
+  box-shadow: 0 10px 24px rgba(var(--accent-rgb), .14);
+
+  transition:
+    transform .25s ease,
+    background .25s ease,
+    box-shadow .25s ease;
+}
+
+
+.bottom-cta-primary:hover {
+  transform: translateY(-2px);
+
+  background: var(--accent-hover);
+
+  box-shadow: 0 14px 30px rgba(var(--accent-rgb), .20);
+}
+
+
+/* =========================================================
+   SMALL TEXT
+   ========================================================= */
+
+.bottom-cta-mini {
+  margin-top: 14px;
+
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: .9rem;
+
+  font-weight: 400;
+  letter-spacing: -.015em;
+
+  color: var(--text-muted);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .bottom-cta {
+    padding: 70px 20px 50px;
+  }
+
+  .bottom-cta-inner {
+    flex-direction: column;
+    align-items: flex-start;
+
+    padding: 36px 0;
+  }
+
+  .bottom-cta-right {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .bottom-cta-primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .bottom-cta-heading {
+    font-size: 2.6rem;
+  }
+}

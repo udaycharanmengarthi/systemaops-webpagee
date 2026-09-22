@@ -1,0 +1,412 @@
+/* ================================================================
+   SERVICES MEGA MENU
+   Premium two-column SaaS mega menu with one identity color
+   per service.
+
+   Panel receives per-service vars from JSX:
+     --c       solid accent
+     --c-rgb   raw RGB channels
+     --c-sec   luminous variant (dark mode text/icons)
+     --c-text  controlled variant (light mode text/icons)
+=============================================================== */
+
+.smm-root {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* ── PANEL ── */
+
+.smm-panel {
+  position: fixed;
+  top: var(--nav-offset);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  width: min(1080px, calc(100vw - 40px));
+  max-height: calc(100vh - 140px);
+  overflow: hidden auto;
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.12);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 998;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    visibility 0.18s;
+}
+
+/* Dark: mostly opaque floating app panel — page content must not
+   bleed through. */
+[data-theme="dark"] .smm-panel {
+  background: rgba(8, 14, 24, 0.96);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.smm-panel--open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+  transform: translateX(-50%) translateY(0);
+}
+
+.smm-inner {
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+}
+
+.smm-cols {
+  display: flex;
+  gap: 8px;
+}
+
+/* ──────────────────────────────────────────────
+   LEFT: SERVICE LIST
+   ────────────────────────────────────────────── */
+
+.smm-list-col {
+  flex: 0 0 38%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.smm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.smm-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  color: var(--text-secondary);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.smm-item:hover {
+  background: rgba(var(--c-rgb), 0.05);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .smm-item:hover {
+  background: rgba(var(--c-rgb), 0.07);
+}
+
+.smm-item--active {
+  background: rgba(var(--c-rgb), 0.07);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+[data-theme="dark"] .smm-item--active {
+  background: rgba(var(--c-rgb), 0.10);
+}
+
+.smm-item-title {
+  flex: 1;
+}
+
+/* Accent indicator bar */
+
+.smm-item-bar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  border-radius: 999px;
+  background: var(--c);
+  transition: height 0.15s ease;
+}
+
+.smm-item--active .smm-item-bar {
+  height: 24px;
+}
+
+.smm-item-arrow {
+  flex-shrink: 0;
+  color: var(--c-text);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+[data-theme="dark"] .smm-item-arrow {
+  color: var(--c-sec);
+}
+
+.smm-item--active .smm-item-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.smm-item:focus-visible {
+  outline: 2px solid var(--c);
+  outline-offset: 2px;
+}
+
+/* ──────────────────────────────────────────────
+   FOOTER ROW — explore + brand booking CTA
+   ────────────────────────────────────────────── */
+
+.smm-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 10px;
+  padding: 12px 10px 6px;
+  border-top: 1px solid var(--border-soft);
+}
+
+[data-theme="dark"] .smm-footer {
+  border-top-color: rgba(255, 255, 255, 0.07);
+}
+
+.smm-explore {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-secondary);
+  transition: color 0.15s ease;
+}
+
+.smm-explore:hover {
+  color: var(--accent-primary);
+}
+
+.smm-explore:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Brand CTA — always SystemaOps green, never a service accent */
+
+.smm-book {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-inverse);
+  background: var(--accent-primary);
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+
+.smm-book:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.smm-book:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ──────────────────────────────────────────────
+   RIGHT: SERVICE PREVIEW
+   ────────────────────────────────────────────── */
+
+.smm-preview {
+  flex: 1 1 62%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* Preview surface is one step lighter than the menu */
+
+.smm-preview-art {
+  flex: 1;
+  min-height: 280px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--c-rgb), 0.28);
+  background: #FBFCFE;
+  animation: smm-media-in 0.18s ease;
+}
+
+[data-theme="dark"] .smm-preview-art {
+  border-color: rgba(var(--c-rgb), 0.30);
+  background: #0E1725;
+}
+
+.smm-preview-art svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes smm-media-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.smm-preview-meta {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 4px 10px 10px;
+  animation: smm-media-in 0.18s ease;
+}
+
+.smm-preview-eyebrow {
+  margin: 0 0 4px;
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-text);
+}
+
+[data-theme="dark"] .smm-preview-eyebrow {
+  color: var(--c-sec);
+}
+
+.smm-preview-title {
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0 0 3px;
+}
+
+.smm-preview-tagline {
+  font-family:
+    'Plus Jakarta Sans',
+    sans-serif;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 430px;
+}
+
+/* View service — compact accent action */
+
+.smm-preview-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  padding: 9px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--c-text);
+  background: rgba(var(--c-rgb), 0.10);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+[data-theme="dark"] .smm-preview-cta {
+  color: var(--c-sec);
+  background: rgba(var(--c-rgb), 0.14);
+}
+
+.smm-preview-cta:hover {
+  background: rgba(var(--c-rgb), 0.18);
+}
+
+[data-theme="dark"] .smm-preview-cta:hover {
+  background: rgba(var(--c-rgb), 0.22);
+}
+
+.smm-preview-cta:focus-visible {
+  outline: 2px solid var(--c);
+  outline-offset: 2px;
+}
+
+/* ──────────────────────────────────────────────
+   RESPONSIVE
+   ────────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .smm-panel {
+    width: min(920px, calc(100vw - 40px));
+  }
+}
+
+@media (max-width: 768px) {
+  .smm-panel {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smm-panel,
+  .smm-item,
+  .smm-item-bar,
+  .smm-item-arrow,
+  .smm-explore,
+  .smm-book,
+  .smm-preview-cta,
+  .smm-preview-art,
+  .smm-preview-meta {
+    transition: none;
+    animation: none;
+  }
+}

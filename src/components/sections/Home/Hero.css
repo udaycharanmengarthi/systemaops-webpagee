@@ -1,0 +1,1899 @@
+/* ================================================================
+   Hero.css
+   SystemaOps Hero Section
+   Light Enterprise Theme
+
+   DESIGN SOURCE:
+   Uses the same visual system as About.css.
+
+   - var(--bg-primary) main background
+   - var(--bg-secondary) alternate background
+   - #FFFFFF surfaces
+   - var(--text-primary) primary text
+   - var(--text-secondary) secondary text
+   - var(--text-muted) muted text
+   - var(--accent-primary) primary green
+   - var(--accent-hover) hover green
+   - var(--accent-soft-2) soft green
+   - var(--accent-soft) light green
+   - var(--border) borders
+   - var(--border-soft) soft borders
+   - Space Grotesk typography
+   - Clean enterprise visual language
+================================================================ */
+
+
+/* ================================================================
+   FONTS
+================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+
+/* ================================================================
+   COLOR SYSTEM
+================================================================ */
+
+:root {
+
+  --hero-bg: var(--bg-primary);
+
+  --hero-bg-alt: var(--bg-secondary);
+
+  --hero-surface: var(--bg-surface);
+
+  --hero-surface-soft: var(--bg-surface-soft);
+
+
+  /* TEXT */
+
+  --hero-text: var(--text-primary);
+
+  --hero-text-secondary: var(--text-secondary);
+
+  --hero-text-muted: var(--text-muted);
+
+
+  /* PRIMARY */
+
+  --hero-primary: var(--accent-primary);
+
+  --hero-primary-hover: var(--accent-hover);
+
+  --hero-primary-dark: var(--accent-soft-2);
+
+  --hero-primary-soft: var(--accent-soft);
+
+
+  /* BORDERS */
+
+  --hero-border: var(--border);
+
+  --hero-border-soft: var(--border-soft);
+
+
+  /* ICON */
+
+  --hero-icon: var(--accent-deep-2);
+}
+
+
+/* ================================================================
+   BASE
+================================================================ */
+
+*,
+*::before,
+*::after {
+
+  box-sizing:
+    border-box;
+
+  margin:
+    0;
+
+  padding:
+    0;
+}
+
+
+/* ================================================================
+   HERO
+================================================================ */
+
+.hero {
+
+  position:
+    relative;
+
+  min-height:
+    100vh;
+
+  background:
+    var(--hero-bg);
+
+  overflow:
+    hidden;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  padding:
+    110px 0 80px;
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-weight:
+    400;
+
+  letter-spacing:
+    -0.015em;
+
+  line-height:
+    1.7;
+}
+
+
+/* ================================================================
+   HERO BACKGROUND
+================================================================ */
+
+.hero-bg {
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  pointer-events:
+    none;
+
+  z-index:
+    0;
+}
+
+
+/* ================================================================
+   SOFT GREEN AMBIENT ELEMENTS
+================================================================ */
+
+.glow {
+
+  position:
+    absolute;
+
+  border-radius:
+    50%;
+
+  pointer-events:
+    none;
+
+  filter:
+    blur(120px);
+}
+
+
+/* ---------------------------------------------------------------
+   TOP LEFT
+---------------------------------------------------------------- */
+
+.glow-teal {
+
+  width:
+    620px;
+
+  height:
+    620px;
+
+  top:
+    -280px;
+
+  left:
+    -220px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(var(--accent-rgb), 0.075) 0%,
+      rgba(var(--accent-rgb), 0.025) 42%,
+      transparent 72%
+    );
+
+  opacity:
+    0.9;
+}
+
+
+/* ---------------------------------------------------------------
+   BOTTOM RIGHT
+---------------------------------------------------------------- */
+
+.glow-purple {
+
+  width:
+    500px;
+
+  height:
+    500px;
+
+  right:
+    -220px;
+
+  bottom:
+    -220px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(var(--accent-rgb), 0.055) 0%,
+      rgba(var(--accent-rgb), 0.02) 45%,
+      transparent 72%
+    );
+
+  opacity:
+    0.8;
+}
+
+
+/* ================================================================
+   HERO GRID
+================================================================ */
+
+.hero-grid {
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  background-image:
+
+    linear-gradient(
+      rgba(var(--shadow-rgb), 0.018) 1px,
+      transparent 1px
+    ),
+
+    linear-gradient(
+      90deg,
+      rgba(var(--shadow-rgb), 0.018) 1px,
+      transparent 1px
+    );
+
+  background-size:
+    52px 52px;
+
+  mask-image:
+    radial-gradient(
+      ellipse 80% 80% at 50% 50%,
+      black 10%,
+      transparent 100%
+    );
+
+  -webkit-mask-image:
+    radial-gradient(
+      ellipse 80% 80% at 50% 50%,
+      black 10%,
+      transparent 100%
+    );
+}
+
+
+/* ================================================================
+   HERO INNER
+================================================================ */
+
+.hero-inner {
+
+  position:
+    relative;
+
+  z-index:
+    1;
+
+  width:
+    100%;
+
+  max-width:
+    1240px;
+
+  margin:
+    0 auto;
+
+  padding:
+    0 48px;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    1.05fr 0.95fr;
+
+  gap:
+    56px;
+
+  align-items:
+    center;
+}
+
+
+/* ================================================================
+   LEFT CONTENT
+================================================================ */
+
+.hero-left {
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    30px;
+}
+
+
+/* ================================================================
+   HERO EYEBROW
+================================================================ */
+
+.hero-eyebrow {
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    8px;
+
+  width:
+    fit-content;
+
+  padding:
+    8px 18px;
+
+  border-radius:
+    999px;
+
+  background: var(--glass-bg);
+
+  border:
+    1px solid
+    var(--hero-border);
+
+  color:
+    var(--hero-primary);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    11px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.16em;
+
+  line-height:
+    1.05;
+
+  text-transform:
+    uppercase;
+
+  box-shadow:
+    0 3px 10px
+    rgba(var(--shadow-rgb), 0.025);
+}
+
+
+/* ================================================================
+   EYEBROW DOT
+================================================================ */
+
+.eyebrow-dot {
+
+  width:
+    5px;
+
+  height:
+    5px;
+
+  flex-shrink:
+    0;
+
+  border-radius:
+    50%;
+
+  background:
+    var(--hero-primary);
+
+  box-shadow:
+    0 0 0 4px
+    rgba(var(--accent-rgb), 0.08);
+
+  animation:
+    pulse-dot
+    2.4s
+    ease-in-out
+    infinite;
+}
+
+
+/* ================================================================
+   MAIN HERO HEADING
+================================================================ */
+
+.hero-heading {
+
+  max-width:
+    680px;
+
+  margin:
+    0;
+
+  color:
+    var(--hero-text);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    clamp(38px, 4.2vw, 58px);
+
+  font-weight:
+    700;
+
+  line-height:
+    1.05;
+
+  letter-spacing:
+    -0.055em;
+
+  text-align:
+    left;
+}
+
+
+/* ================================================================
+   HEADING GREEN ACCENT
+================================================================ */
+
+.heading-gradient {
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--text-primary) 0%,
+      var(--accent-primary) 100%
+    );
+
+  -webkit-background-clip:
+    text;
+
+  -webkit-text-fill-color:
+    transparent;
+
+  background-clip:
+    text;
+}
+
+
+/* ================================================================
+   HERO BODY
+================================================================ */
+
+.hero-body {
+
+  max-width:
+    520px;
+
+  color:
+    var(--hero-text-secondary);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    17px;
+
+  font-weight:
+    400;
+
+  line-height:
+    1.7;
+
+  letter-spacing:
+    -0.015em;
+
+  text-align:
+    left;
+}
+
+
+/* ================================================================
+   HERO ACTIONS
+================================================================ */
+
+.hero-actions {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  flex-wrap:
+    wrap;
+
+  gap:
+    16px;
+
+  margin-top:
+    10px;
+}
+
+
+/* ================================================================
+   BUTTON BASE
+================================================================ */
+
+.btn-cta,
+.btn-outline {
+
+  position:
+    relative;
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  gap:
+    10px;
+
+  height:
+    56px;
+
+  padding:
+    0 28px;
+
+  border-radius:
+    12px;
+
+  overflow:
+    hidden;
+
+  cursor:
+    pointer;
+
+  -webkit-tap-highlight-color:
+    transparent;
+
+  touch-action:
+    manipulation;
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    15px;
+
+  font-weight:
+    600;
+
+  line-height:
+    1.05;
+
+  letter-spacing:
+    -0.015em;
+
+  text-decoration:
+    none;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    color 0.25s ease;
+
+  will-change:
+    transform;
+}
+
+
+/* ================================================================
+   PRIMARY CTA
+================================================================ */
+
+.btn-cta {
+
+  border:
+    1px solid
+    var(--hero-primary);
+
+  background:
+    var(--hero-primary);
+
+  color: var(--text-inverse);
+
+  box-shadow:
+    0 8px 22px
+    rgba(var(--accent-rgb), 0.14);
+}
+
+
+/* ================================================================
+   CTA SHINE
+================================================================ */
+
+.btn-cta::before {
+
+  content:
+    "";
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  transform:
+    translateX(-120%);
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(255, 255, 255, 0.18),
+      transparent
+    );
+
+  transition:
+    transform 0.8s ease;
+}
+
+
+/* ================================================================
+   CTA HOVER
+================================================================ */
+
+.btn-cta:hover {
+
+  transform:
+    translateY(-2px);
+
+  background:
+    var(--hero-primary-hover);
+
+  border-color:
+    var(--hero-primary-hover);
+
+  box-shadow:
+    0 12px 28px
+    rgba(var(--accent-rgb), 0.20);
+}
+
+.btn-cta:hover::before {
+
+  transform:
+    translateX(120%);
+}
+
+
+/* ================================================================
+   CTA FOCUS
+================================================================ */
+
+.btn-cta:focus-visible {
+
+  outline:
+    2px solid
+    rgba(var(--accent-rgb), 0.35);
+
+  outline-offset:
+    4px;
+}
+
+
+/* ================================================================
+   OUTLINE BUTTON
+================================================================ */
+
+.btn-outline {
+
+  background:
+    var(--hero-surface);
+
+  border:
+    1px solid
+    var(--hero-border);
+
+  color:
+    var(--hero-text-secondary);
+
+  box-shadow:
+    0 5px 16px
+    rgba(var(--shadow-rgb), 0.035);
+}
+
+
+/* ================================================================
+   OUTLINE HOVER
+================================================================ */
+
+.btn-outline:hover {
+
+  transform:
+    translateY(-2px);
+
+  background:
+    var(--hero-surface-soft);
+
+  border-color:
+    rgba(var(--accent-rgb), 0.28);
+
+  color:
+    var(--hero-primary-hover);
+
+  box-shadow:
+    0 10px 24px
+    rgba(var(--shadow-rgb), 0.07);
+}
+
+
+/* ================================================================
+   OUTLINE FOCUS
+================================================================ */
+
+.btn-outline:focus-visible {
+
+  outline:
+    2px solid
+    rgba(var(--accent-rgb), 0.35);
+
+  outline-offset:
+    4px;
+}
+
+
+/* ================================================================
+   BUTTON ACTIVE
+================================================================ */
+
+.btn-cta:active,
+.btn-outline:active {
+
+  transform:
+    scale(0.97);
+}
+
+
+/* ================================================================
+   STATS
+================================================================ */
+
+.hero-stats {
+
+  display:
+    flex;
+
+  gap:
+    44px;
+
+  padding-top:
+    20px;
+
+  border-top:
+    1px solid
+    var(--hero-border-soft);
+}
+
+
+/* ================================================================
+   STAT ITEM
+================================================================ */
+
+.stat-item {
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    6px;
+}
+
+
+/* ================================================================
+   STAT NUMBER
+================================================================ */
+
+.stat-num {
+
+  color:
+    var(--hero-text);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    32px;
+
+  font-weight:
+    700;
+
+  line-height:
+    1.05;
+
+  letter-spacing:
+    -0.055em;
+}
+
+
+/* ================================================================
+   STAT LABEL
+================================================================ */
+
+.stat-label {
+
+  color:
+    var(--hero-text-muted);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    11px;
+
+  font-weight:
+    700;
+
+  line-height:
+    1.05;
+
+  letter-spacing:
+    0.10em;
+
+  text-transform:
+    uppercase;
+}
+
+
+/* ================================================================
+   RIGHT SIDE
+================================================================ */
+
+.hero-right {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+}
+
+
+/* ================================================================
+   NODE SCENE
+================================================================ */
+
+.node-scene {
+
+  position:
+    relative;
+
+  width:
+    100%;
+
+  max-width:
+    500px;
+
+  aspect-ratio:
+    1 / 1;
+}
+
+
+/* ================================================================
+   SVG CONNECTION LINES
+================================================================ */
+
+.node-svg {
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+  overflow:
+    visible;
+
+  z-index:
+    0;
+}
+
+
+/* ================================================================
+   CONNECTION LINE
+================================================================ */
+
+.conn-line {
+
+  stroke:
+    rgba(var(--accent-rgb), 0.16);
+
+  stroke-width:
+    0.7;
+
+  stroke-dasharray:
+    2.5 2.5;
+
+  fill:
+    none;
+
+  opacity:
+    0;
+
+  animation:
+    line-in
+    0.8s
+    ease
+    forwards;
+}
+
+
+/* ================================================================
+   CONNECTION DOT
+================================================================ */
+
+.conn-dot {
+
+  opacity:
+    0.75;
+
+  pointer-events:
+    none;
+}
+
+
+/* ================================================================
+   N8N NODE
+================================================================ */
+
+.n8n-node {
+
+  position:
+    absolute;
+
+  transform:
+    translate(-50%, -50%);
+
+  z-index:
+    2;
+
+  cursor:
+    pointer;
+
+  animation:
+    node-float
+    var(--dur, 6s)
+    ease-in-out
+    infinite;
+}
+
+
+/* ================================================================
+   FLOAT SPEEDS
+================================================================ */
+
+.n8n-node:nth-child(1) {
+  --dur: 5.8s;
+}
+
+.n8n-node:nth-child(2) {
+  --dur: 6.6s;
+}
+
+.n8n-node:nth-child(3) {
+  --dur: 7.2s;
+}
+
+.n8n-node:nth-child(4) {
+  --dur: 5.4s;
+}
+
+.n8n-node:nth-child(5) {
+  --dur: 6.9s;
+}
+
+.n8n-node:nth-child(6) {
+  --dur: 7.5s;
+}
+
+.n8n-node:nth-child(7) {
+  --dur: 6.2s;
+}
+
+.n8n-node:nth-child(8) {
+  --dur: 5.1s;
+}
+
+
+/* ================================================================
+   NODE GLOW
+================================================================ */
+
+.n8n-node__glow {
+
+  position:
+    absolute;
+
+  inset:
+    -8px;
+
+  border-radius:
+    50%;
+
+  background:
+    radial-gradient(
+      circle,
+      var(--c) 0%,
+      transparent 70%
+    );
+
+  opacity:
+    0.06;
+
+  animation:
+    halo-pulse
+    3s
+    ease-in-out
+    infinite;
+}
+
+
+/* ================================================================
+   NODE RING
+================================================================ */
+
+.n8n-node__ring {
+
+  position:
+    absolute;
+
+  inset:
+    -3px;
+
+  border-radius:
+    50%;
+
+  border:
+    1px solid
+    var(--c);
+
+  opacity:
+    0.20;
+
+  animation:
+    ring-expand
+    3.5s
+    ease-in-out
+    infinite;
+}
+
+
+/* ================================================================
+   NODE BODY
+================================================================ */
+
+.n8n-node__body {
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  border-radius:
+    50%;
+
+  background:
+    var(--hero-surface);
+
+  border:
+    1.5px solid
+    color-mix(
+      in srgb,
+      var(--c) 28%,
+      var(--hero-border)
+    );
+
+  box-shadow:
+
+    0 0 0 1px
+    rgba(var(--accent-rgb), 0.025)
+    inset,
+
+    0 10px 30px
+    rgba(var(--shadow-rgb), 0.07),
+
+    0 0 24px
+    color-mix(
+      in srgb,
+      var(--c) 8%,
+      transparent
+    );
+
+  backdrop-filter:
+    blur(8px);
+
+  transition:
+    transform 0.3s
+      cubic-bezier(.22, 1, .36, 1),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+
+/* ================================================================
+   NODE HOVER
+================================================================ */
+
+.n8n-node:hover
+.n8n-node__body {
+
+  transform:
+    scale(1.08);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--c) 45%,
+      var(--hero-border)
+    );
+
+  box-shadow:
+
+    0 0 0 1px
+    rgba(var(--accent-rgb), 0.05)
+    inset,
+
+    0 16px 42px
+    rgba(var(--shadow-rgb), 0.11),
+
+    0 0 34px
+    color-mix(
+      in srgb,
+      var(--c) 18%,
+      transparent
+    );
+}
+
+
+.n8n-node:hover
+.n8n-node__ring {
+
+  opacity:
+    0.42;
+}
+
+
+/* ================================================================
+   NODE LABEL
+================================================================ */
+
+.n8n-node__label {
+
+  position:
+    absolute;
+
+  top:
+    calc(100% + 6px);
+
+  left:
+    50%;
+
+  transform:
+    translateX(-50%);
+
+  white-space:
+    nowrap;
+
+  color:
+    var(--hero-text-muted);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    10px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.04em;
+
+  opacity:
+    0;
+
+  pointer-events:
+    none;
+
+  transition:
+    opacity 0.2s ease;
+}
+
+
+.n8n-node:hover
+.n8n-node__label {
+
+  opacity:
+    1;
+
+  color:
+    var(--c);
+}
+
+
+/* ================================================================
+   KEYFRAMES — NODE FLOAT
+================================================================ */
+
+@keyframes node-float {
+
+  0%,
+  100% {
+
+    transform:
+      translate(-50%, -50%)
+      translateY(0);
+  }
+
+  50% {
+
+    transform:
+      translate(-50%, -50%)
+      translateY(-11px);
+  }
+}
+
+
+/* ================================================================
+   KEYFRAMES — HALO
+================================================================ */
+
+@keyframes halo-pulse {
+
+  0%,
+  100% {
+
+    opacity:
+      0.05;
+
+    transform:
+      scale(1);
+  }
+
+  50% {
+
+    opacity:
+      0.11;
+
+    transform:
+      scale(1.15);
+  }
+}
+
+
+/* ================================================================
+   KEYFRAMES — RING
+================================================================ */
+
+@keyframes ring-expand {
+
+  0%,
+  100% {
+
+    opacity:
+      0.14;
+
+    transform:
+      scale(1);
+  }
+
+  50% {
+
+    opacity:
+      0.28;
+
+    transform:
+      scale(1.1);
+  }
+}
+
+
+/* ================================================================
+   KEYFRAMES — DOT
+================================================================ */
+
+@keyframes pulse-dot {
+
+  0%,
+  100% {
+
+    opacity:
+      1;
+
+    box-shadow:
+      0 0 0 4px
+      rgba(var(--accent-rgb), 0.08);
+  }
+
+  50% {
+
+    opacity:
+      0.45;
+
+    box-shadow:
+      0 0 0 7px
+      rgba(var(--accent-rgb), 0.035);
+  }
+}
+
+
+/* ================================================================
+   KEYFRAMES — CONNECTION
+================================================================ */
+
+@keyframes line-in {
+
+  to {
+
+    opacity:
+      1;
+  }
+}
+
+
+/* ================================================================
+   TABLET
+================================================================ */
+
+@media (max-width: 1024px) {
+
+  .hero-inner {
+
+    padding:
+      0 32px;
+
+    gap:
+      40px;
+  }
+
+  .hero-actions {
+
+    gap:
+      14px;
+  }
+
+  .btn-cta,
+  .btn-outline {
+
+    height:
+      54px;
+
+    padding:
+      0 24px;
+
+    font-size:
+      14px;
+  }
+}
+
+
+/* ================================================================
+   TABLET / SMALL LAPTOP
+================================================================ */
+
+@media (max-width: 920px) {
+
+  .hero-inner {
+
+    grid-template-columns:
+      1fr;
+
+    gap:
+      50px;
+
+    text-align:
+      center;
+
+    padding:
+      0 24px;
+  }
+
+
+  .hero-left {
+
+    align-items:
+      center;
+  }
+
+
+  .hero-eyebrow {
+
+    margin:
+      0 auto;
+  }
+
+
+  .hero-heading {
+
+    max-width:
+      760px;
+
+    text-align:
+      center;
+  }
+
+
+  .hero-body {
+
+    margin:
+      0 auto;
+
+    text-align:
+      center;
+  }
+
+
+  .hero-actions {
+
+    justify-content:
+      center;
+  }
+
+
+  .hero-stats {
+
+    justify-content:
+      center;
+  }
+
+
+  .node-scene {
+
+    max-width:
+      360px;
+
+    margin:
+      0 auto;
+  }
+}
+
+
+/* ================================================================
+   MOBILE
+================================================================ */
+
+@media (max-width: 768px) {
+
+  .desktop-only {
+
+    display:
+      none;
+  }
+
+
+  /* HERO */
+
+  .hero {
+
+    min-height:
+      auto;
+
+    padding:
+      120px 0 72px;
+  }
+
+
+  .hero-inner {
+
+    grid-template-columns:
+      1fr;
+
+    gap:
+      20px;
+
+    padding:
+      0 22px;
+  }
+
+
+  .hero-left {
+
+    align-items:
+      center;
+
+    max-width:
+      100%;
+
+    gap:
+      24px;
+  }
+
+
+  /* EYEBROW */
+
+  .hero-eyebrow {
+
+    padding:
+      8px 16px;
+
+    font-size:
+      10px;
+
+    letter-spacing:
+      0.14em;
+  }
+
+
+  /* HEADING */
+
+  .hero-heading {
+
+    max-width:
+      100%;
+
+    font-family:
+      'Space Grotesk',
+      sans-serif;
+
+    font-size:
+      clamp(42px, 12vw, 58px);
+
+    font-weight:
+      700;
+
+    line-height:
+      1.05;
+
+    letter-spacing:
+      -0.055em;
+
+    color:
+      var(--hero-text);
+
+    text-align:
+      center;
+  }
+
+
+  /* BODY */
+
+  .hero-body {
+
+    max-width:
+      100%;
+
+    font-family:
+      'Space Grotesk',
+      sans-serif;
+
+    font-size:
+      16px;
+
+    font-weight:
+      400;
+
+    line-height:
+      1.7;
+
+    letter-spacing:
+      -0.015em;
+
+    color:
+      var(--hero-text-secondary);
+
+    text-align:
+      center;
+  }
+
+
+  /* ACTIONS */
+
+  .hero-actions {
+
+    width:
+      100%;
+
+    display:
+      flex;
+
+    flex-direction:
+      column;
+
+    align-items:
+      stretch;
+
+    gap:
+      12px;
+
+    margin-top:
+      8px;
+  }
+
+
+  .btn-cta,
+  .btn-outline {
+
+    width:
+      100%;
+
+    height:
+      56px;
+
+    border-radius:
+      12px;
+
+    font-size:
+      15px;
+  }
+
+
+  /* STATS */
+
+  .hero-stats {
+
+    width:
+      100%;
+
+    display:
+      grid;
+
+    grid-template-columns:
+      repeat(3, 1fr);
+
+    gap:
+      18px;
+
+    justify-content:
+      center;
+
+    padding-top:
+      24px;
+
+    margin-top:
+      8px;
+
+    border-top:
+      1px solid
+      var(--hero-border-soft);
+
+    text-align:
+      center;
+  }
+
+
+  .stat-item {
+
+    align-items:
+      center;
+
+    min-width:
+      0;
+  }
+
+
+  .stat-num {
+
+    font-size:
+      28px;
+
+    white-space:
+      nowrap;
+  }
+
+
+  .stat-label {
+
+    font-size:
+      .68rem;
+
+    line-height:
+      1.4;
+
+    letter-spacing:
+      .06em;
+  }
+
+
+  /* NODE SCENE */
+
+  .hero-right {
+
+    width:
+      100%;
+  }
+
+
+  .node-scene {
+
+    width:
+      100%;
+
+    max-width:
+      320px;
+
+    margin:
+      0 auto;
+  }
+}
+
+
+/* ================================================================
+   SMALL MOBILE
+================================================================ */
+
+@media (max-width: 480px) {
+
+  .hero {
+
+    padding:
+      108px 0 64px;
+  }
+
+
+  .hero-inner {
+
+    padding:
+      0 18px;
+  }
+
+
+  .hero-heading {
+
+    font-size:
+      clamp(38px, 11vw, 50px);
+  }
+
+
+  .hero-body {
+
+    font-size:
+      15px;
+  }
+
+
+  .hero-stats {
+
+    gap:
+      14px;
+  }
+
+
+  .stat-num {
+
+    font-size:
+      25px;
+  }
+
+
+  .stat-label {
+
+    font-size:
+      .62rem;
+  }
+
+
+  .node-scene {
+
+    max-width:
+      290px;
+  }
+
+
+  .hero-eyebrow {
+
+    font-size:
+      9px;
+
+    padding:
+      7px 14px;
+  }
+
+
+  .btn-cta,
+  .btn-outline {
+
+    height:
+      54px;
+
+    font-size:
+      14px;
+  }
+}
+
+
+/* ================================================================
+   ACCESSIBILITY
+================================================================ */
+
+::selection {
+
+  background:
+    rgba(var(--accent-rgb), 0.16);
+
+  color:
+    var(--hero-text);
+}
+
+
+/* ================================================================
+   REDUCED MOTION
+================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .eyebrow-dot,
+  .n8n-node,
+  .n8n-node__glow,
+  .n8n-node__ring {
+
+    animation:
+      none;
+  }
+
+  .btn-cta,
+  .btn-outline,
+  .n8n-node__body,
+  .n8n-node__label {
+
+    transition:
+      none;
+  }
+}

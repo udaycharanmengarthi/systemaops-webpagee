@@ -1,0 +1,42 @@
+/* ================================================================
+   THEME TOGGLE
+   Minimal icon button, theme-aware via semantic tokens.
+=============================================================== */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.theme-toggle:hover {
+  background: var(--accent-soft);
+  color: var(--accent-primary);
+  border-color: var(--accent-border, var(--border));
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Below 900px the pill bar is tight; the toggle lives in the
+   mobile panel instead (theme-toggle--mobile). */
+@media (max-width: 900px) {
+  .theme-toggle:not(.theme-toggle--mobile) {
+    display: none;
+  }
+}

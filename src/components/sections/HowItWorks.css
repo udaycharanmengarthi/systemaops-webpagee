@@ -1,0 +1,767 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HOW IT WORKS SECTION
+========================================================= */
+
+.hiw-sec {
+  position: relative;
+
+  background: var(--bg-secondary);
+
+  padding: 120px 0;
+
+  border-top: 1px solid var(--border-soft);
+
+  overflow: hidden;
+
+  isolation: isolate;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  color: var(--text-primary);
+}
+
+
+/* =========================================================
+   AMBIENT BACKGROUND
+========================================================= */
+
+.hiw-sec::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 12% 30%,
+      rgba(var(--accent-rgb),.055),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 88% 40%,
+      rgba(var(--accent-rgb),.045),
+      transparent 38%
+    );
+
+  z-index: -2;
+
+  pointer-events: none;
+}
+
+
+.hiw-sec::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(var(--accent-rgb),.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(var(--accent-rgb),.025) 1px,
+      transparent 1px
+    );
+
+  background-size: 40px 40px;
+
+  mask-image:
+    radial-gradient(
+      circle at center,
+      black 35%,
+      transparent 85%
+    );
+
+  -webkit-mask-image:
+    radial-gradient(
+      circle at center,
+      black 35%,
+      transparent 85%
+    );
+
+  opacity: .6;
+
+  z-index: -1;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+.hiw-inner {
+  max-width: 1280px;
+
+  margin: 0 auto;
+
+  padding: 0 48px;
+}
+
+
+.hiw-header {
+  text-align: center;
+
+  margin-bottom: 80px;
+}
+
+
+/* =========================================================
+   STEPS
+========================================================= */
+
+.hiw-steps {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 20px;
+
+  position: relative;
+}
+
+
+/* =========================================================
+   STEP CARD
+========================================================= */
+
+.hiw-step {
+  --c: var(--accent-primary);
+
+  position: relative;
+
+  padding: 36px 30px;
+
+  border-radius: 30px;
+
+  background: var(--bg-surface);
+
+  border:
+    1px solid var(--border);
+
+  backdrop-filter:
+    blur(18px);
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 24px;
+
+  overflow: hidden;
+
+  transition:
+    transform .35s cubic-bezier(.22,1,.36,1),
+    border-color .3s ease,
+    box-shadow .35s ease,
+    background .35s ease;
+
+  box-shadow:
+    0 10px 30px rgba(var(--shadow-rgb),.04);
+}
+
+
+/* =========================================================
+   TOP ACCENT
+========================================================= */
+
+.hiw-step::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+
+  left: -40%;
+
+  width: 40%;
+
+  height: 2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      var(--c),
+      transparent
+    );
+
+  opacity: 0;
+}
+
+
+/* =========================================================
+   CARD GLOW
+========================================================= */
+
+.hiw-step::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(var(--accent-rgb),.055),
+      transparent 70%
+    );
+
+  opacity: 0;
+
+  transition:
+    opacity .3s ease;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.hiw-step:hover {
+  transform:
+    translateY(-8px);
+
+  border-color:
+    rgba(var(--accent-rgb),.35);
+
+  background:
+    var(--bg-surface-soft);
+
+  box-shadow:
+    0 22px 60px rgba(var(--shadow-rgb),.09),
+    0 0 40px rgba(var(--accent-rgb),.06);
+}
+
+
+.hiw-step:hover::before {
+  opacity: 1;
+
+  animation:
+    flowTop 1.2s linear infinite;
+}
+
+
+.hiw-step:hover::after {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   NUMBER
+========================================================= */
+
+.hiw-step__num {
+  width: 58px;
+
+  height: 58px;
+
+  border-radius: 18px;
+
+  background:
+    var(--accent-soft);
+
+  border:
+    1px solid var(--border);
+
+  color:
+    var(--accent-primary);
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  letter-spacing: -.03em;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  box-shadow:
+    0 0 28px rgba(var(--accent-rgb),.08);
+
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
+}
+
+
+.hiw-step:hover .hiw-step__num {
+  transform:
+    scale(1.06);
+
+  box-shadow:
+    0 0 42px rgba(var(--accent-rgb),.14);
+}
+
+
+/* =========================================================
+   CONNECTOR
+========================================================= */
+
+.hiw-connector {
+  position: absolute;
+
+  top: 62px;
+
+  right: -20px;
+
+  width: 40px;
+
+  height: 1px;
+
+  overflow: hidden;
+}
+
+
+.hiw-connector__line {
+  width: 100%;
+
+  height: 100%;
+
+  position: relative;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--border),
+      var(--border-soft)
+    );
+}
+
+
+.hiw-connector__line::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+
+  left: -50%;
+
+  width: 50%;
+
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      var(--c),
+      transparent
+    );
+
+  opacity: 0;
+}
+
+
+.hiw-step:hover
+.hiw-connector__line::after {
+  opacity: 1;
+
+  animation:
+    flowConnector 1s linear infinite;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.hiw-step__body {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.hiw-step__title {
+  margin: 0;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 20px;
+
+  font-weight: 700;
+
+  line-height: 1.05;
+
+  letter-spacing: -.055em;
+
+  color: var(--text-primary);
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.hiw-step__desc {
+  margin: 0;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 15px;
+
+  font-weight: 400;
+
+  line-height: 1.7;
+
+  letter-spacing: -.015em;
+
+  color: var(--text-secondary);
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes flowTop {
+
+  0% {
+    left: -40%;
+  }
+
+  100% {
+    left: 120%;
+  }
+
+}
+
+
+@keyframes flowConnector {
+
+  0% {
+    left: -50%;
+  }
+
+  100% {
+    left: 120%;
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 980px) {
+
+  .hiw-inner {
+    padding: 0 28px;
+  }
+
+  .hiw-steps {
+    grid-template-columns:
+      1fr 1fr;
+  }
+
+  .hiw-connector {
+    display: none;
+  }
+
+}
+
+
+@media (max-width: 640px) {
+
+  .hiw-sec {
+    padding: 100px 0;
+  }
+
+  .hiw-steps {
+    grid-template-columns:
+      1fr;
+  }
+
+  .hiw-step {
+    padding: 32px 24px;
+  }
+
+  .hiw-step__title {
+    font-size: 18px;
+  }
+
+  .hiw-step__desc {
+    font-size: 14px;
+  }
+
+}
+/* =================================================
+   HOW IT WORKS — TYPOGRAPHY FIX
+   Match the approved SystemaOps page headings
+================================================= */
+
+/* Section eyebrow */
+
+.hiw-sec .hiw-eyebrow {
+  display: inline-block;
+
+  margin-bottom: 18px;
+
+  font-family: 'Space Grotesk', sans-serif !important;
+
+  font-size: 0.78rem !important;
+
+  font-weight: 700 !important;
+
+  line-height: 1.2 !important;
+
+  letter-spacing: 0.16em !important;
+
+  text-transform: uppercase;
+
+  color: var(--accent-primary) !important;
+
+  -webkit-text-fill-color: var(--accent-primary) !important;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   MAIN SECTION HEADING
+================================================= */
+
+.hiw-sec .hiw-heading {
+  margin: 0 !important;
+
+  font-family: 'Space Grotesk', sans-serif !important;
+
+  font-size: clamp(3rem, 5vw, 4.5rem) !important;
+
+  font-weight: 700 !important;
+
+  line-height: 1.05 !important;
+
+  letter-spacing: -0.055em !important;
+
+  color: var(--text-primary) !important;
+
+  -webkit-text-fill-color: var(--text-primary) !important;
+
+  background: none !important;
+}
+
+
+/* Green accent — subtle, not AI-style */
+
+.hiw-sec .hiw-heading-accent {
+  font-family: 'Space Grotesk', sans-serif !important;
+
+  font-weight: 700 !important;
+
+  letter-spacing: -0.055em !important;
+
+  background: linear-gradient(
+    100deg,
+    var(--text-primary) 0%,
+    var(--text-primary) 62%,
+    var(--accent-deep) 82%,
+    var(--accent-primary) 100%
+  ) !important;
+
+  -webkit-background-clip: text !important;
+
+  -webkit-text-fill-color: transparent !important;
+
+  background-clip: text !important;
+}
+
+
+/* =================================================
+   SECTION DESCRIPTION
+================================================= */
+
+.hiw-sec .hiw-sub {
+  max-width: 850px;
+
+  margin: 20px auto 0 !important;
+
+  font-family: 'Space Grotesk', sans-serif !important;
+
+  font-size: 1.08rem !important;
+
+  font-weight: 400 !important;
+
+  line-height: 1.7 !important;
+
+  letter-spacing: -0.015em !important;
+
+  color: var(--text-secondary) !important;
+
+  -webkit-text-fill-color: var(--text-secondary) !important;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   STEP TITLES
+================================================= */
+
+.hiw-sec .hiw-step__title {
+  margin: 0 0 12px !important;
+
+  font-family: 'Space Grotesk', sans-serif !important;
+
+  font-size: clamp(1.35rem, 2vw, 1.65rem) !important;
+
+  font-weight: 700 !important;
+
+  line-height: 1.15 !important;
+
+  letter-spacing: -0.045em !important;
+
+  color: var(--text-primary) !important;
+
+  -webkit-text-fill-color: var(--text-primary) !important;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   STEP DESCRIPTION
+================================================= */
+
+.hiw-sec .hiw-step__desc {
+  margin: 0 !important;
+
+  font-family: 'Space Grotesk', sans-serif !important;
+
+  font-size: 1rem !important;
+
+  font-weight: 400 !important;
+
+  line-height: 1.7 !important;
+
+  letter-spacing: -0.015em !important;
+
+  color: var(--text-secondary) !important;
+
+  -webkit-text-fill-color: var(--text-secondary) !important;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   HEADER SPACING
+================================================= */
+
+.hiw-sec .hiw-header {
+  text-align: center;
+
+  margin-bottom: 64px;
+}
+
+
+/* =================================================
+   STEP NUMBER
+================================================= */
+
+.hiw-sec .hiw-step__num {
+  font-family: 'Space Grotesk', sans-serif !important;
+
+  font-size: 1.1rem !important;
+
+  font-weight: 700 !important;
+
+  letter-spacing: -0.03em !important;
+
+  color: var(--accent-primary) !important;
+
+  -webkit-text-fill-color: var(--accent-primary) !important;
+
+  background: var(--accent-soft) !important;
+
+  border-color: var(--border) !important;
+}
+
+
+/* =================================================
+   TABLET
+================================================= */
+
+@media (max-width: 900px) {
+
+  .hiw-sec .hiw-heading {
+    font-size: clamp(2.7rem, 7vw, 4rem) !important;
+  }
+
+}
+
+
+/* =================================================
+   MOBILE
+================================================= */
+
+@media (max-width: 600px) {
+
+  .hiw-sec .hiw-header {
+    margin-bottom: 44px;
+  }
+
+  .hiw-sec .hiw-heading {
+    font-size: clamp(2.35rem, 10vw, 3.2rem) !important;
+
+    letter-spacing: -0.05em !important;
+  }
+
+  .hiw-sec .hiw-sub {
+    font-size: 0.98rem !important;
+  }
+
+  .hiw-sec .hiw-step__title {
+    font-size: 1.35rem !important;
+  }
+
+  .hiw-sec .hiw-step__desc {
+    font-size: 0.95rem !important;
+  }
+
+}

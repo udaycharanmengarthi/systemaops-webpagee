@@ -1,0 +1,1559 @@
+/* ================================================================
+   Automation.css
+   SystemaOps Automation Page
+   Light Enterprise Theme
+
+   DESIGN SYSTEM:
+   Based directly on the SystemaOps About.css visual language.
+
+   - Light / clean backgrounds
+   - Dark readable typography
+   - SystemaOps green accent
+   - White enterprise cards
+   - Subtle borders and shadows
+   - No dark AI/SaaS styling
+   - No cyan / purple gradients
+================================================================ */
+
+
+/* ================================================================
+   FONTS
+================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+
+/* ================================================================
+   COLOR SYSTEM
+================================================================ */
+
+:root {
+
+  --automation-bg: var(--bg-primary);
+
+  --automation-bg-alt: var(--bg-secondary);
+
+  --automation-surface: var(--bg-surface);
+
+  --automation-surface-soft: var(--bg-surface-soft);
+
+
+  /* TEXT */
+
+  --automation-text: var(--text-primary);
+
+  --automation-text-secondary: var(--text-secondary);
+
+  --automation-text-muted: var(--text-muted);
+
+
+  /* PRIMARY */
+
+  --automation-primary: var(--accent-primary);
+
+  --automation-primary-hover: var(--accent-hover);
+
+  --automation-primary-dark: var(--accent-soft-2);
+
+  --automation-primary-soft: var(--accent-soft);
+
+
+  /* BORDERS */
+
+  --automation-border: var(--border);
+
+  --automation-border-soft: var(--border-soft);
+
+
+  /* ICON */
+
+  --automation-icon: var(--accent-deep-2);
+}
+
+
+/* ================================================================
+   AUTOMATION SECTION
+================================================================ */
+
+.automation-section {
+
+  padding:
+    150px 24px 110px;
+
+  background:
+    var(--automation-bg);
+
+  color:
+    var(--automation-text);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-weight:
+    400;
+
+  letter-spacing:
+    -0.015em;
+
+  line-height:
+    1.7;
+}
+
+
+/* ================================================================
+   AUTOMATION CONTAINER
+================================================================ */
+
+.automation-container {
+
+  max-width:
+    1320px;
+
+  margin:
+    0 auto;
+}
+
+
+/* ================================================================
+   HERO HEADER
+================================================================ */
+
+.automation-header {
+
+  max-width:
+    900px;
+
+  margin:
+    0 auto 100px;
+
+  text-align:
+    center;
+}
+
+
+/* ================================================================
+   AUTOMATION BADGE
+================================================================ */
+
+.automation-badge {
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  padding:
+    8px 18px;
+
+  border-radius:
+    999px;
+
+  background:
+    var(--automation-primary-soft);
+
+  border:
+    1px solid
+    var(--accent-tint);
+
+  color:
+    var(--automation-primary);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    11px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.16em;
+
+  line-height:
+    1.05;
+
+  text-transform:
+    uppercase;
+
+  box-shadow:
+    0 3px 10px
+    rgba(var(--shadow-rgb), 0.025);
+}
+
+
+/* ================================================================
+   MAIN HEADING
+================================================================ */
+
+.automation-heading {
+
+  margin-top:
+    28px;
+
+  color:
+    var(--automation-text);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    clamp(3rem, 7vw, 5.5rem);
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    -0.055em;
+
+  line-height:
+    1.05;
+}
+
+
+/* ================================================================
+   HEADING ACCENT
+================================================================ */
+
+.automation-heading span {
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--text-primary) 0%,
+      var(--accent-primary) 100%
+    );
+
+  -webkit-background-clip:
+    text;
+
+  -webkit-text-fill-color:
+    transparent;
+
+  background-clip:
+    text;
+}
+
+
+/* ================================================================
+   HERO DESCRIPTION
+================================================================ */
+
+.automation-description {
+
+  max-width:
+    760px;
+
+  margin:
+    32px auto;
+
+  color:
+    var(--automation-text-secondary);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    1.08rem;
+
+  font-weight:
+    400;
+
+  line-height:
+    1.7;
+
+  letter-spacing:
+    -0.015em;
+}
+
+
+/* ================================================================
+   TAGS
+================================================================ */
+
+.automation-tags {
+
+  display:
+    flex;
+
+  flex-wrap:
+    wrap;
+
+  justify-content:
+    center;
+
+  gap:
+    12px;
+}
+
+
+/* ================================================================
+   TAG
+================================================================ */
+
+.automation-tags span {
+
+  padding:
+    9px 16px;
+
+  border-radius:
+    999px;
+
+  border:
+    1px solid
+    var(--automation-border);
+
+  background:
+    var(--automation-surface);
+
+  color:
+    var(--automation-text-secondary);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    14px;
+
+  font-weight:
+    500;
+
+  line-height:
+    1.5;
+
+  letter-spacing:
+    -0.015em;
+
+  box-shadow:
+    0 3px 12px
+    rgba(var(--tint-rgb), 0.025);
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+.automation-tags span:hover {
+
+  transform:
+    translateY(-2px);
+
+  border-color:
+    rgba(var(--accent-rgb), 0.25);
+
+  color:
+    var(--automation-primary);
+
+  box-shadow:
+    0 7px 18px
+    rgba(var(--accent-rgb), 0.06);
+}
+
+
+/* ================================================================
+   PROCESS
+================================================================ */
+
+.process-heading-wrap {
+
+  text-align:
+    center;
+
+  margin-bottom:
+    64px;
+}
+
+
+/* ================================================================
+   PROCESS SMALL TITLE
+================================================================ */
+
+.process-small-title {
+
+  color:
+    var(--automation-primary);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    11px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.16em;
+
+  line-height:
+    1.05;
+
+  text-transform:
+    uppercase;
+}
+
+
+/* ================================================================
+   PROCESS MAIN HEADING
+================================================================ */
+
+.process-heading {
+
+  margin-top:
+    16px;
+
+  color:
+    var(--automation-text);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    clamp(2.4rem, 5vw, 4rem);
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    -0.055em;
+
+  line-height:
+    1.05;
+}
+
+
+/* ================================================================
+   PROCESS SUBTITLE
+================================================================ */
+
+.process-subtitle {
+
+  max-width:
+    650px;
+
+  margin:
+    18px auto 0;
+
+  color:
+    var(--automation-text-secondary);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    16px;
+
+  font-weight:
+    400;
+
+  line-height:
+    1.7;
+
+  letter-spacing:
+    -0.015em;
+}
+
+
+/* ================================================================
+   PROCESS GRID
+================================================================ */
+
+.process-grid {
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap:
+    24px;
+}
+
+
+/* ================================================================
+   PROCESS CARD
+================================================================ */
+
+.process-card {
+
+  position:
+    relative;
+
+  overflow:
+    hidden;
+
+  padding:
+    34px;
+
+  border-radius:
+    20px;
+
+  border:
+    1px solid
+    var(--automation-border);
+
+  background:
+    var(--automation-surface);
+
+  box-shadow:
+    0 10px 30px
+    rgba(var(--shadow-rgb), 0.045);
+
+  transition:
+    transform 0.3s
+      cubic-bezier(.22, 1, .36, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+/* ================================================================
+   CARD HOVER
+================================================================ */
+
+.process-card:hover {
+
+  transform:
+    translateY(-5px);
+
+  border-color:
+    rgba(var(--accent-rgb), 0.22);
+
+  box-shadow:
+    0 20px 45px
+    rgba(var(--shadow-rgb), 0.08);
+}
+
+
+/* ================================================================
+   CARD TOP LINE
+================================================================ */
+
+.card-top-line {
+
+  width:
+    100%;
+
+  height:
+    2px;
+
+  border-radius:
+    999px;
+
+  background:
+    var(--automation-primary);
+
+  margin-bottom:
+    30px;
+
+  opacity:
+    0.85;
+}
+
+
+/* ================================================================
+   BACKGROUND NUMBER
+================================================================ */
+
+.bg-number {
+
+  position:
+    absolute;
+
+  top:
+    18px;
+
+  right:
+    24px;
+
+  color:
+    rgba(var(--accent-rgb), 0.045);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    7rem;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    -0.055em;
+
+  line-height:
+    1.05;
+
+  pointer-events:
+    none;
+
+  user-select:
+    none;
+}
+
+
+/* ================================================================
+   CARD NUMBER
+================================================================ */
+
+.card-number {
+
+  color:
+    var(--automation-primary);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    13px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.08em;
+
+  line-height:
+    1.05;
+}
+
+
+/* ================================================================
+   CARD TITLE
+================================================================ */
+
+.card-title {
+
+  margin-top:
+    18px;
+
+  color:
+    var(--automation-text);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    2rem;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    -0.055em;
+
+  line-height:
+    1.05;
+}
+
+
+/* ================================================================
+   CARD DESCRIPTION
+================================================================ */
+
+.card-description {
+
+  margin-top:
+    16px;
+
+  color:
+    var(--automation-text-secondary);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    16px;
+
+  font-weight:
+    400;
+
+  line-height:
+    1.7;
+
+  letter-spacing:
+    -0.015em;
+}
+
+
+/* ================================================================
+   CARD FOOTER
+================================================================ */
+
+.card-footer {
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    16px;
+
+  margin-top:
+    28px;
+
+  padding-top:
+    20px;
+
+  border-top:
+    1px solid
+    var(--automation-border-soft);
+}
+
+
+/* ================================================================
+   CARD FOOTER TEXT
+================================================================ */
+
+.card-footer span {
+
+  color:
+    var(--automation-text-muted);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    14px;
+
+  font-weight:
+    400;
+
+  letter-spacing:
+    -0.015em;
+
+  line-height:
+    1.7;
+}
+
+
+.card-footer strong {
+
+  color:
+    var(--automation-text);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    14px;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    -0.015em;
+
+  line-height:
+    1.7;
+}
+
+
+/* ================================================================
+   CTA
+================================================================ */
+
+.automation-cta {
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    40px;
+
+  margin-top:
+    100px;
+
+  padding:
+    56px;
+
+  border-radius:
+    24px;
+
+  border:
+    1px solid
+    var(--accent-tint-strong);
+
+  background:
+    var(--automation-primary-dark);
+
+  box-shadow:
+    0 20px 50px
+    rgba(var(--shadow-rgb), 0.06);
+
+  position:
+    relative;
+
+  overflow:
+    hidden;
+}
+
+
+/* ================================================================
+   CTA DECORATIVE ELEMENT
+================================================================ */
+
+.automation-cta::before {
+
+  content:
+    "";
+
+  position:
+    absolute;
+
+  width:
+    240px;
+
+  height:
+    240px;
+
+  right:
+    -120px;
+
+  bottom:
+    -120px;
+
+  border-radius:
+    50%;
+
+  background:
+    rgba(var(--accent-rgb), 0.045);
+
+  pointer-events:
+    none;
+}
+
+
+.automation-cta::after {
+
+  content:
+    "";
+
+  position:
+    absolute;
+
+  left:
+    0;
+
+  top:
+    0;
+
+  width:
+    3px;
+
+  height:
+    100%;
+
+  background:
+    var(--automation-primary);
+
+  opacity:
+    0.65;
+
+  pointer-events:
+    none;
+}
+
+
+/* ================================================================
+   CTA MINI TITLE
+================================================================ */
+
+.cta-mini {
+
+  color:
+    var(--automation-primary);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    11px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.16em;
+
+  line-height:
+    1.05;
+
+  text-transform:
+    uppercase;
+}
+
+
+/* ================================================================
+   CTA HEADING
+================================================================ */
+
+.automation-cta h2 {
+
+  margin-top:
+    18px;
+
+  color:
+    var(--automation-text);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    3rem;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    -0.055em;
+
+  line-height:
+    1.05;
+
+  position:
+    relative;
+
+  z-index:
+    1;
+}
+
+
+/* ================================================================
+   CTA DESCRIPTION
+================================================================ */
+
+.automation-cta p {
+
+  max-width:
+    650px;
+
+  margin-top:
+    18px;
+
+  color:
+    var(--automation-text-secondary);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    16px;
+
+  font-weight:
+    400;
+
+  line-height:
+    1.7;
+
+  letter-spacing:
+    -0.015em;
+
+  position:
+    relative;
+
+  z-index:
+    1;
+}
+
+
+/* ================================================================
+   CTA BUTTON
+================================================================ */
+
+.automation-btn {
+
+  position:
+    relative;
+
+  z-index:
+    2;
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  height:
+    56px;
+
+  padding:
+    0 30px;
+
+  border:
+    1px solid
+    var(--automation-primary);
+
+  border-radius:
+    12px;
+
+  background:
+    var(--automation-primary);
+
+  color: var(--text-inverse);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    15px;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    -0.015em;
+
+  line-height:
+    1.05;
+
+  cursor:
+    pointer;
+
+  white-space:
+    nowrap;
+
+  box-shadow:
+    0 8px 22px
+    rgba(var(--accent-rgb), 0.14);
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+/* ================================================================
+   CTA BUTTON HOVER
+================================================================ */
+
+.automation-btn:hover {
+
+  transform:
+    translateY(-2px);
+
+  background:
+    var(--automation-primary-hover);
+
+  border-color:
+    var(--automation-primary-hover);
+
+  box-shadow:
+    0 12px 28px
+    rgba(var(--accent-rgb), 0.20);
+}
+
+
+/* ================================================================
+   CTA BUTTON FOCUS
+================================================================ */
+
+.automation-btn:focus-visible {
+
+  outline:
+    2px solid
+    rgba(var(--accent-rgb), 0.35);
+
+  outline-offset:
+    4px;
+}
+
+
+/* ================================================================
+   CTA BUTTON ACTIVE
+================================================================ */
+
+.automation-btn:active {
+
+  transform:
+    scale(0.97);
+}
+
+
+/* ================================================================
+   REDUCED MOTION
+================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .process-card,
+  .automation-btn,
+  .automation-tags span {
+
+    transition:
+      none !important;
+  }
+}
+
+
+/* ================================================================
+   RESPONSIVE — 1000px
+================================================================ */
+
+@media (max-width: 1000px) {
+
+  .process-grid {
+
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .automation-cta {
+
+    flex-direction:
+      column;
+
+    align-items:
+      center;
+
+    text-align:
+      center;
+  }
+
+
+  .automation-cta p {
+
+    margin-left:
+      auto;
+
+    margin-right:
+      auto;
+  }
+}
+
+
+/* ================================================================
+   RESPONSIVE — 768px
+================================================================ */
+
+@media (max-width: 768px) {
+
+  .automation-section {
+
+    padding:
+      120px 20px 80px;
+  }
+
+
+  .automation-header {
+
+    margin-bottom:
+      72px;
+  }
+
+
+  .automation-badge {
+
+    padding:
+      8px 15px;
+
+    font-size:
+      10px;
+  }
+
+
+  .automation-heading {
+
+    margin-top:
+      22px;
+
+    font-size:
+      clamp(2.6rem, 11vw, 4rem);
+
+    font-weight:
+      700;
+
+    letter-spacing:
+      -0.055em;
+
+    line-height:
+      1.05;
+  }
+
+
+  .automation-description {
+
+    margin:
+      24px auto;
+
+    font-size:
+      1rem;
+
+    font-weight:
+      400;
+
+    letter-spacing:
+      -0.015em;
+
+    line-height:
+      1.7;
+  }
+
+
+  .automation-tags {
+
+    gap:
+      10px;
+  }
+
+
+  .automation-tags span {
+
+    padding:
+      8px 14px;
+
+    font-size:
+      13px;
+  }
+
+
+  .process-heading-wrap {
+
+    margin-bottom:
+      48px;
+  }
+
+
+  .process-heading {
+
+    font-size:
+      clamp(2.2rem, 9vw, 3.2rem);
+
+    font-weight:
+      700;
+
+    letter-spacing:
+      -0.055em;
+
+    line-height:
+      1.05;
+  }
+
+
+  .process-subtitle {
+
+    font-size:
+      15px;
+
+    font-weight:
+      400;
+
+    letter-spacing:
+      -0.015em;
+
+    line-height:
+      1.7;
+  }
+
+
+  .process-grid {
+
+    grid-template-columns:
+      1fr;
+
+    gap:
+      18px;
+  }
+
+
+  .process-card {
+
+    padding:
+      30px;
+
+    border-radius:
+      20px;
+  }
+
+
+  .card-title {
+
+    font-size:
+      1.6rem;
+
+    font-weight:
+      700;
+
+    letter-spacing:
+      -0.055em;
+
+    line-height:
+      1.05;
+  }
+
+
+  .card-description {
+
+    font-size:
+      15px;
+
+    font-weight:
+      400;
+
+    letter-spacing:
+      -0.015em;
+
+    line-height:
+      1.7;
+  }
+
+
+  .bg-number {
+
+    font-size:
+      5.5rem;
+
+    top:
+      16px;
+
+    right:
+      20px;
+  }
+
+
+  .automation-cta {
+
+    margin-top:
+      72px;
+
+    padding:
+      40px 28px;
+
+    border-radius:
+      22px;
+
+    gap:
+      28px;
+  }
+
+
+  .automation-cta h2 {
+
+    font-size:
+      2rem;
+
+    font-weight:
+      700;
+
+    letter-spacing:
+      -0.055em;
+
+    line-height:
+      1.05;
+  }
+
+
+  .automation-cta p {
+
+    font-size:
+      15px;
+
+    font-weight:
+      400;
+
+    letter-spacing:
+      -0.015em;
+
+    line-height:
+      1.7;
+  }
+
+
+  .automation-btn {
+
+    width:
+      100%;
+
+    max-width:
+      320px;
+
+    height:
+      54px;
+
+    font-size:
+      14px;
+
+    border-radius:
+      12px;
+  }
+}
+
+
+/* ================================================================
+   SMALL MOBILE — 480px
+================================================================ */
+
+@media (max-width: 480px) {
+
+  .automation-section {
+
+    padding:
+      108px 18px 64px;
+  }
+
+
+  .automation-heading {
+
+    font-size:
+      clamp(2.35rem, 12vw, 3.2rem);
+  }
+
+
+  .automation-description {
+
+    font-size:
+      15px;
+  }
+
+
+  .automation-tags span {
+
+    font-size:
+      12px;
+
+    padding:
+      7px 12px;
+  }
+
+
+  .process-small-title,
+  .cta-mini {
+
+    font-size:
+      10px;
+
+    letter-spacing:
+      0.14em;
+  }
+
+
+  .process-heading {
+
+    font-size:
+      2rem;
+  }
+
+
+  .process-card {
+
+    padding:
+      26px;
+
+    border-radius:
+      18px;
+  }
+
+
+  .card-title {
+
+    font-size:
+      1.45rem;
+  }
+
+
+  .card-description {
+
+    font-size:
+      14px;
+  }
+
+
+  .card-footer span,
+  .card-footer strong {
+
+    font-size:
+      12px;
+  }
+
+
+  .automation-cta {
+
+    padding:
+      34px 22px;
+
+    border-radius:
+      20px;
+  }
+
+
+  .automation-cta h2 {
+
+    font-size:
+      1.75rem;
+  }
+
+
+  .automation-cta p {
+
+    font-size:
+      14px;
+  }
+
+
+  .automation-btn {
+
+    height:
+      52px;
+
+    font-size:
+      14px;
+  }
+}
+
+
+/* ================================================================
+   SELECTION
+================================================================ */
+
+::selection {
+
+  background:
+    rgba(var(--accent-rgb), 0.16);
+
+  color:
+    var(--automation-text);
+}

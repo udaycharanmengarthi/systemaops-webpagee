@@ -1,0 +1,10 @@
+User-agent: *
+
+Allow: /
+
+Disallow: /web/
+Disallow: /web/login
+Disallow: /login
+Disallow: /admin
+
+Sitemap: https://www.systemaops.com/sitemap.xml

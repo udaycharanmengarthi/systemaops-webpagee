@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+
+    <script>
+      /* Apply the saved/system theme before first paint to avoid a flash.
+         Mirrors ThemeProvider: localStorage -> OS preference -> light. */
+      (function () {
+        try {
+          var saved = localStorage.getItem("systemaops-theme");
+          var dark =
+            saved === "dark" ||
+            (saved !== "light" &&
+              window.matchMedia &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+          if (dark) {
+            document.documentElement.setAttribute("data-theme", "dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary SEO -->
+    <title>SystemaOps | AI Automation, Odoo ERP & Workflow Automation</title>
+
+    <meta
+      name="description"
+      content="SystemaOps provides AI Automation, Odoo ERP implementation, Workflow Automation, n8n Development, and Enterprise Software Solutions to help businesses automate and scale."
+    />
+
+    <meta
+      name="keywords"
+      content="SystemaOps, AI Automation, Odoo ERP, Workflow Automation, n8n, Enterprise Software, Digital Transformation"
+    />
+
+    <meta name="robots" content="index, follow" />
+
+    <link rel="canonical" href="https://www.systemaops.com/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="SystemaOps | AI Automation & Odoo ERP Solutions"
+    />
+    <meta
+      property="og:description"
+      content="Enterprise AI Automation, Odoo ERP, Workflow Automation and Software Solutions."
+    />
+    <meta property="og:url" content="https://www.systemaops.com/" />
+    <meta
+      property="og:image"
+      content="https://www.systemaops.com/favicon.svg"
+    />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="SystemaOps | AI Automation & Odoo ERP Solutions"
+    />
+    <meta
+      name="twitter:description"
+      content="Enterprise AI Automation, Odoo ERP, Workflow Automation and Software Solutions."
+    />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "SystemaOps",
+        "url": "https://www.systemaops.com",
+        "logo": "https://www.systemaops.com/favicon.svg",
+        "email": "info@systemaops.com"
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

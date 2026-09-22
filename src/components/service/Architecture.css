@@ -1,0 +1,419 @@
+/* =========================================================
+   SHARED ARCHITECTURE PRIMITIVES — theme-aware SVG system
+   diagrams. Light/dark handled with CSS vars; typography
+   follows the spec palette. No animation libraries.
+   ========================================================= */
+
+.arch {
+  width: 100%;
+}
+
+:root,
+[data-theme="light"] {
+  --arch-border: #DCE3EB;
+  --arch-border-strong: #C4CEDA;
+  --arch-line: #334155;
+  --arch-ink: #0F172A;
+  --arch-ink-soft: #475569;
+}
+
+[data-theme="dark"] {
+  --arch-border: #263447;
+  --arch-border-strong: #33465E;
+  --arch-line: #64748B;
+  --arch-ink: #F8FAFC;
+  --arch-ink-soft: #CBD5E1;
+}
+
+.arch-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  --acc: #22D3EE;
+}
+
+/* ── Surfaces ── */
+
+.arch-canvas {
+  fill: var(--bg-surface);
+  stroke: var(--arch-border);
+}
+
+.arch-node {
+  fill: var(--bg-surface-soft, #F7F9FC);
+  stroke: var(--arch-border-strong);
+  stroke-width: 1.5;
+}
+
+[data-theme="dark"] .arch-node {
+  fill: #131C2B;
+}
+
+.arch-node--focal {
+  stroke: var(--acc);
+  stroke-width: 2;
+}
+
+.arch-node--endpoint {
+  stroke: var(--acc);
+  stroke-width: 1.5;
+  stroke-dasharray: none;
+}
+
+/* ── Typography ── */
+
+.arch-t {
+  fill: var(--arch-ink);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.arch-t--sm {
+  font-size: 12px;
+}
+
+.arch-t--lg {
+  font-size: 18px;
+}
+
+.arch-t--on-acc {
+  fill: #0A1120;
+}
+
+.arch-s {
+  fill: var(--arch-ink-soft);
+  font-size: 10.5px;
+  font-weight: 500;
+}
+
+.arch-s--on-acc {
+  fill: #0A1120;
+  opacity: 0.8;
+}
+
+/* ── Connectors ── */
+
+.arch-conn line {
+  stroke: var(--arch-line);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.arch-conn polygon {
+  fill: var(--arch-line);
+}
+
+.arch-conn--hot line {
+  stroke: var(--acc);
+}
+
+.arch-conn--hot polygon {
+  fill: var(--acc);
+}
+
+.arch-conn--dim {
+  opacity: 0.3;
+}
+
+.arch-conn--ghost {
+  opacity: 0.45;
+}
+
+/* ── Activation ring ── */
+
+.arch-ring {
+  fill: none;
+  stroke: var(--acc);
+  stroke-width: 2;
+  opacity: 0;
+}
+
+.arch-hi {
+  fill: none;
+  stroke: var(--acc);
+  stroke-width: 2.5;
+  opacity: 0;
+}
+
+/* ── Caption ── */
+
+.arch-caption {
+  margin: 14px 4px 0;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-muted);
+  max-width: 560px;
+}
+
+.arch-caption strong {
+  color: var(--text-primary);
+}
+
+/* ── Compact variant swap ── */
+
+.arch-compact {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .arch-full {
+    display: none;
+  }
+
+  .arch-compact {
+    display: block;
+  }
+}
+
+/* =========================================================
+   ODOO PHASES — 7s loop
+   ========================================================= */
+
+.od-svg {
+  --acc: #8B7CFF;
+  --dur: 7s;
+}
+
+.od-svg .ph-src {
+  animation: od-src var(--dur) ease-in-out infinite;
+}
+
+@keyframes od-src {
+  0% { opacity: 0.45; }
+  12% { opacity: 1; }
+  86% { opacity: 1; }
+  96%, 100% { opacity: 0.45; }
+}
+
+.od-svg .ph-conn {
+  animation: od-conn var(--dur) ease-in-out infinite;
+}
+
+@keyframes od-conn {
+  0%, 5% { opacity: 0; }
+  13% { opacity: 1; }
+  86% { opacity: 1; }
+  96%, 100% { opacity: 0.2; }
+}
+
+.od-svg .ph-ring {
+  animation: od-ring var(--dur) ease-in-out infinite;
+}
+
+@keyframes od-ring {
+  0%, 42% { opacity: 0; }
+  52% { opacity: 1; }
+  62%, 100% { opacity: 0; }
+}
+
+.od-svg .ph-ops {
+  animation: od-ops var(--dur) ease-in-out infinite;
+}
+
+@keyframes od-ops {
+  0%, 62% { opacity: 0; }
+  72% { opacity: 1; }
+  82%, 100% { opacity: 0; }
+}
+
+/* =========================================================
+   AI PHASES — 8s loop
+   ========================================================= */
+
+.ai-svg {
+  --acc: #22D3EE;
+  --dur: 9s;
+}
+
+.ai-svg .ph-in {
+  animation: ai-in var(--dur) ease-in-out infinite;
+}
+
+@keyframes ai-in {
+  0% { opacity: 0.5; }
+  8% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.ai-svg .ph-ctx {
+  animation: ai-ctx var(--dur) ease-in-out infinite;
+}
+
+@keyframes ai-ctx {
+  0%, 6% { opacity: 0.5; }
+  16% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.ai-svg .ph-agent {
+  animation: ai-agent var(--dur) ease-in-out infinite;
+}
+
+@keyframes ai-agent {
+  0%, 16% { opacity: 0; }
+  26% { opacity: 1; }
+  38%, 100% { opacity: 0; }
+}
+
+.ai-svg .ph-tools {
+  animation: ai-tools var(--dur) ease-in-out infinite;
+}
+
+@keyframes ai-tools {
+  0%, 26% { opacity: 0.55; }
+  36% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0.55; }
+}
+
+.ai-svg .ph-d1 {
+  animation: ai-d1 var(--dur) ease-in-out infinite;
+}
+
+@keyframes ai-d1 {
+  0%, 55% { opacity: 0.55; }
+  65% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { opacity: 0.55; }
+}
+
+.ai-svg .ph-d2 {
+  animation: ai-d2 var(--dur) ease-in-out infinite;
+}
+
+@keyframes ai-d2 {
+  0%, 62% { opacity: 0.55; }
+  72% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { opacity: 0.55; }
+}
+
+.ai-svg .ph-d3 {
+  animation: ai-d3 var(--dur) ease-in-out infinite;
+}
+
+@keyframes ai-d3 {
+  0%, 70% { opacity: 0.55; }
+  80% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { opacity: 0.55; }
+}
+
+/* =========================================================
+   WORKFLOW PHASES — 12s loop, approve half + review half
+   ========================================================= */
+
+.wf-svg {
+  --acc: #F59E0B;
+  --dur: 12s;
+}
+
+.wf-svg .ph-pre {
+  animation: wf-pre var(--dur) ease-in-out infinite;
+}
+
+@keyframes wf-pre {
+  0% { opacity: 0.5; }
+  5% { opacity: 1; }
+  93% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.wf-svg .ph-cond {
+  animation: wf-cond var(--dur) ease-in-out infinite;
+}
+
+@keyframes wf-cond {
+  0%, 18% { opacity: 0.55; }
+  24% { opacity: 1; }
+  32% { opacity: 0.55; }
+  68% { opacity: 0.55; }
+  74% { opacity: 1; }
+  82% { opacity: 0.55; }
+  100% { opacity: 0.55; }
+}
+
+.wf-svg .ph-approve {
+  animation: wf-approve var(--dur) ease-in-out infinite;
+}
+
+@keyframes wf-approve {
+  0%, 26% { opacity: 0.5; }
+  34% { opacity: 1; }
+  46% { opacity: 1; }
+  52%, 100% { opacity: 0.5; }
+}
+
+.wf-svg .ph-review {
+  animation: wf-review var(--dur) ease-in-out infinite;
+}
+
+@keyframes wf-review {
+  0%, 74% { opacity: 0.5; }
+  82% { opacity: 1; }
+  94% { opacity: 1; }
+  98%, 100% { opacity: 0.5; }
+}
+
+.wf-svg .ph-act {
+  animation: wf-act var(--dur) ease-in-out infinite;
+}
+
+@keyframes wf-act {
+  0%, 36% { opacity: 0.55; }
+  44% { opacity: 1; }
+  50% { opacity: 0.55; }
+  86% { opacity: 0.55; }
+  94% { opacity: 1; }
+  99%, 100% { opacity: 0.55; }
+}
+
+.wf-svg .ph-cap-a {
+  animation: wf-cap-a var(--dur) ease-in-out infinite;
+}
+
+@keyframes wf-cap-a {
+  0%, 26% { opacity: 0; }
+  34% { opacity: 1; }
+  48% { opacity: 1; }
+  54%, 100% { opacity: 0; }
+}
+
+.wf-svg .ph-cap-b {
+  animation: wf-cap-b var(--dur) ease-in-out infinite;
+}
+
+@keyframes wf-cap-b {
+  0%, 76% { opacity: 0; }
+  84% { opacity: 1; }
+  96% { opacity: 1; }
+  99%, 100% { opacity: 0; }
+}
+
+/* ── Compact loops (simple top-to-bottom pulse) ── */
+
+.arch-compact .ph-c {
+  animation: arch-c 5s ease-in-out infinite;
+}
+
+@keyframes arch-c {
+  0% { opacity: 0.55; }
+  20% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0.55; }
+}
+
+/* ── Reduced motion: static completed architecture ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .arch-svg * {
+    animation: none !important;
+  }
+
+  .arch-pulses {
+    display: none;
+  }
+}

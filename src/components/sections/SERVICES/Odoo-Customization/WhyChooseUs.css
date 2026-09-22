@@ -1,0 +1,552 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+
+/* ==========================================
+   SECTION
+========================================== */
+
+.why-section {
+  position: relative;
+  overflow: hidden;
+  padding: 150px 0;
+
+  background:
+    var(--bg-secondary);
+}
+
+.why-container {
+  width: min(1280px, 92%);
+  margin: auto;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.why-top {
+  max-width: 1200px;
+  margin-bottom: 70px;
+}
+
+.why-label {
+  display: inline-flex;
+  margin-bottom: 18px;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.18em;
+
+  line-height: 1.05;
+
+  text-transform: uppercase;
+
+  color:
+    var(--accent-primary);
+}
+
+
+/* ==========================================
+   HEADING
+   Subtle SystemaOps green transition
+========================================== */
+
+.why-heading {
+  max-width: 1200px;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size:
+    clamp(3.8rem, 7vw, 6rem);
+
+  font-weight: 700;
+
+  letter-spacing: -0.055em;
+
+  line-height: 1.05;
+
+  margin-bottom: 22px;
+
+  background:
+    linear-gradient(
+      100deg,
+      var(--text-primary) 0%,
+      var(--text-primary) 62%,
+      var(--accent-deep) 82%,
+      var(--accent-primary) 100%
+    );
+
+  -webkit-background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  background-clip: text;
+}
+
+
+.why-sub {
+  max-width: 650px;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 18px;
+
+  font-weight: 400;
+
+  letter-spacing: -0.015em;
+
+  line-height: 1.7;
+
+  color:
+    var(--text-secondary);
+}
+
+
+/* ==========================================
+   RAIL
+   Horizontal line removed
+========================================== */
+
+.why-rail {
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 28px;
+
+  padding-top: 20px;
+}
+
+
+/* Completely remove horizontal rail line */
+
+.why-rail::before {
+  display: none !important;
+}
+
+
+/* Remove progress line */
+
+.rail-progress {
+  display: none !important;
+}
+
+
+/* ==========================================
+   CARD
+========================================== */
+
+.why-item {
+  position: relative;
+
+  min-height: 360px;
+
+  padding: 34px 30px;
+
+  border-radius: 30px;
+
+  overflow: hidden;
+
+  background: var(--bg-surface);
+
+  border:
+    1px solid var(--border);
+
+  box-shadow:
+    0 12px 40px
+    rgba(var(--shadow-rgb), 0.045),
+
+    inset 0 1px 0
+    rgba(255, 255, 255, 0.9);
+
+  transition:
+    transform 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease,
+    background 0.4s ease;
+}
+
+
+/* ==========================================
+   PREMIUM SPOTLIGHT
+========================================== */
+
+.why-item::before {
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(var(--accent-rgb), 0.08),
+      transparent 40%
+    );
+
+  opacity: 0.65;
+
+  pointer-events: none;
+}
+
+
+/* ==========================================
+   LEFT ACCENT
+========================================== */
+
+.card-accent {
+  position: absolute;
+
+  top: 30px;
+
+  left: 0;
+
+  width: 3px;
+
+  height: 0;
+
+  border-radius: 999px;
+
+  background:
+    var(--accent-primary);
+
+  transition:
+    height 0.4s ease;
+}
+
+
+/* ==========================================
+   HOVER
+========================================== */
+
+.why-item:hover {
+  transform:
+    translateY(-10px);
+
+  border-color:
+    var(--accent-tint-strong);
+
+  box-shadow:
+    0 28px 60px
+    rgba(var(--shadow-rgb), 0.09);
+
+  background:
+    var(--bg-surface-soft);
+}
+
+
+.why-item.active {
+  border-color:
+    var(--accent-tint-strong);
+}
+
+
+.why-item.active .card-accent {
+  height: 75%;
+}
+
+
+/* ==========================================
+   NUMBER
+========================================== */
+
+.why-number {
+  margin-bottom: 20px;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.14em;
+
+  line-height: 1.05;
+
+  color:
+    var(--text-muted);
+}
+
+
+/* ==========================================
+   ICON
+========================================== */
+
+.why-icon {
+  width: 70px;
+
+  height: 70px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-bottom: 28px;
+
+  border-radius: 20px;
+
+  background:
+    var(--accent-soft);
+
+  border:
+    1px solid var(--border);
+
+  color:
+    var(--accent-primary);
+
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    background 0.35s ease;
+}
+
+
+.why-icon svg {
+  transition:
+    transform 0.35s ease;
+}
+
+
+.why-item:hover .why-icon {
+  transform:
+    translateY(-4px);
+
+  border-color:
+    var(--accent-tint-strong);
+
+  background:
+    var(--accent-soft-2);
+
+  box-shadow:
+    0 0 28px
+    rgba(var(--accent-rgb), 0.10);
+}
+
+
+.why-item:hover .why-icon svg {
+  transform:
+    rotate(4deg)
+    scale(1.06);
+}
+
+
+.why-item.active .why-icon {
+  border-color:
+    var(--accent-tint-strong);
+
+  box-shadow:
+    0 0 34px
+    rgba(var(--accent-rgb), 0.08);
+}
+
+
+/* ==========================================
+   TEXT
+========================================== */
+
+.why-item h3 {
+  min-height: 64px;
+
+  margin-bottom: 16px;
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 24px;
+
+  line-height: 1.05;
+
+  letter-spacing: -0.055em;
+
+  font-weight: 700;
+
+  color:
+    var(--text-primary);
+}
+
+
+.why-item p {
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 15px;
+
+  font-weight: 400;
+
+  letter-spacing: -0.015em;
+
+  line-height: 1.7;
+
+  color:
+    var(--text-secondary);
+
+  margin-bottom: 32px;
+}
+
+
+/* ==========================================
+   BUTTON
+========================================== */
+
+.why-btn {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: auto;
+
+  border: none;
+
+  background:
+    transparent;
+
+  color:
+    var(--accent-primary);
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  letter-spacing: -0.015em;
+
+  line-height: 1.4;
+
+  cursor: pointer;
+}
+
+
+.why-btn svg {
+  transition:
+    transform 0.3s ease;
+}
+
+
+.why-item:hover .why-btn svg {
+  transform:
+    translate(3px, -3px);
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1100px) {
+
+  .why-rail {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .why-section {
+    padding: 100px 0;
+  }
+
+
+  .why-heading {
+    font-family:
+      'Space Grotesk',
+      'Plus Jakarta Sans',
+      sans-serif;
+
+    font-size:
+      clamp(2.8rem, 12vw, 4rem);
+
+    font-weight:
+      700;
+
+    letter-spacing:
+      -0.055em;
+
+    line-height:
+      1.05;
+  }
+
+
+  .why-sub {
+    font-family:
+      'Space Grotesk',
+      'Plus Jakarta Sans',
+      sans-serif;
+
+    font-size:
+      16px;
+
+    font-weight:
+      400;
+
+    letter-spacing:
+      -0.015em;
+
+    line-height:
+      1.7;
+  }
+
+
+  .why-rail {
+    grid-template-columns:
+      1fr;
+
+    padding-top:
+      10px;
+  }
+
+}
+
+
+/* ==========================================
+   REDUCED MOTION
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .why-item,
+  .why-item *,
+  .why-item::before,
+  .card-accent,
+  .why-btn svg {
+
+    transition:
+      none !important;
+  }
+
+}

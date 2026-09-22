@@ -1,0 +1,524 @@
+/* =================================================
+   WHY BUSINESSES STAY STUCK
+   SYSTEMAOPS LIGHT THEME
+================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+
+/* =================================================
+   SECTION
+================================================= */
+
+.why-sec {
+  position: relative;
+
+  background: var(--bg-secondary);
+
+  padding: 140px 0;
+
+  overflow: hidden;
+
+  isolation: isolate;
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+}
+
+
+/* =================================================
+   AMBIENT BACKGROUND
+================================================= */
+
+.why-bg-glow {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 15% 30%,
+      rgba(var(--accent-rgb),.055),
+      transparent 35%
+    ),
+
+    radial-gradient(
+      circle at 85% 40%,
+      rgba(var(--accent-rgb),.035),
+      transparent 40%
+    );
+
+  z-index: -1;
+}
+
+
+/* =================================================
+   LAYOUT
+================================================= */
+
+.why-inner {
+  max-width: 1320px;
+
+  margin: 0 auto;
+
+  padding: 0 48px;
+
+  display: grid;
+
+  grid-template-columns:
+    1.08fr 1fr;
+
+  gap: 84px;
+
+  align-items: center;
+}
+
+
+/* =================================================
+   LEFT
+================================================= */
+
+.why-left {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 28px;
+
+  max-width: 640px;
+}
+
+
+/* =================================================
+   EYEBROW
+================================================= */
+
+.why-sec .sec-eyebrow {
+  display: inline-block;
+
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  letter-spacing: .16em;
+
+  text-transform: uppercase;
+
+  color: var(--accent-primary) !important;
+
+  -webkit-text-fill-color: var(--accent-primary) !important;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   MAIN HEADING
+================================================= */
+
+.why-sec .sec-heading {
+  margin: 0;
+
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-size:
+    clamp(3.6rem, 6vw, 5.8rem);
+
+  font-weight: 700;
+
+  line-height: 1.05;
+
+  letter-spacing: -.055em;
+
+  color: var(--text-primary) !important;
+
+  -webkit-text-fill-color: var(--text-primary) !important;
+
+  text-wrap: balance;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   HEADING ACCENT
+================================================= */
+
+.why-sec .sec-heading--accent {
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-weight: 700;
+
+  letter-spacing: -.055em;
+
+  background:
+    linear-gradient(
+      100deg,
+      var(--text-primary) 0%,
+      var(--text-primary) 62%,
+      var(--accent-deep) 82%,
+      var(--accent-primary) 100%
+    ) !important;
+
+  -webkit-background-clip: text !important;
+
+  -webkit-text-fill-color: transparent !important;
+
+  background-clip: text !important;
+}
+
+
+/* =================================================
+   SUB TEXT
+================================================= */
+
+.why-sec .sec-sub {
+  max-width: 620px;
+
+  margin: 0;
+
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-size: 18px;
+
+  font-weight: 400;
+
+  line-height: 1.7;
+
+  letter-spacing: -.015em;
+
+  color: var(--text-secondary) !important;
+
+  -webkit-text-fill-color: var(--text-secondary) !important;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   BIG STATS
+================================================= */
+
+.why-bigstats {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
+
+  margin-top: 10px;
+
+  padding-top: 26px;
+
+  border-top:
+    1px solid var(--border);
+}
+
+
+/* =================================================
+   BIG STAT
+================================================= */
+
+.why-bigstat {
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+}
+
+
+/* =================================================
+   STAT NUMBER
+================================================= */
+
+.why-bigstat__n {
+  min-width: 110px;
+
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-size: 46px;
+
+  font-weight: 700;
+
+  line-height: .95;
+
+  letter-spacing: -.055em;
+
+  color: var(--accent-primary) !important;
+
+  -webkit-text-fill-color: var(--accent-primary) !important;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   STAT LABEL
+================================================= */
+
+.why-bigstat__l {
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-size: 15px;
+
+  font-weight: 500;
+
+  line-height: 1.7;
+
+  letter-spacing: -.015em;
+
+  color: var(--text-muted) !important;
+
+  -webkit-text-fill-color: var(--text-muted) !important;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   RIGHT GRID
+================================================= */
+
+.why-right {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 1px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius: 28px;
+
+  overflow: hidden;
+
+  background:
+    var(--border);
+
+  box-shadow:
+    0 18px 45px rgba(var(--shadow-rgb),.055);
+}
+
+
+/* =================================================
+   CARD
+================================================= */
+
+.why-point {
+  background: var(--bg-surface);
+
+  padding: 30px 26px;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 16px;
+
+  transition:
+    transform .28s ease,
+    background .28s ease,
+    box-shadow .28s ease;
+}
+
+
+/* =================================================
+   CARD HOVER
+================================================= */
+
+.why-point:hover {
+  background: var(--bg-surface-soft);
+
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 12px 28px rgba(var(--shadow-rgb),.055);
+}
+
+
+/* =================================================
+   DOT
+================================================= */
+
+.why-point__dot {
+  width: 10px;
+
+  height: 10px;
+
+  margin-top: 7px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: var(--accent-primary) !important;
+
+  box-shadow:
+    0 0 0 4px var(--accent-soft);
+
+}
+
+
+/* =================================================
+   CARD CONTENT
+================================================= */
+
+.why-point__title {
+  margin-bottom: 8px;
+
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  letter-spacing: -.045em;
+
+  color: var(--text-primary) !important;
+
+  -webkit-text-fill-color: var(--text-primary) !important;
+
+  background: none !important;
+}
+
+
+.why-point__desc {
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-size: 14px;
+
+  font-weight: 400;
+
+  line-height: 1.7;
+
+  letter-spacing: -.015em;
+
+  color: var(--text-secondary) !important;
+
+  -webkit-text-fill-color: var(--text-secondary) !important;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   RESPONSIVE — TABLET
+================================================= */
+
+@media (max-width: 980px) {
+
+  .why-inner {
+    grid-template-columns: 1fr;
+
+    gap: 64px;
+
+    padding: 0 28px;
+
+    text-align: center;
+  }
+
+
+  .why-left {
+    max-width: 100%;
+
+    align-items: center;
+  }
+
+
+  .why-right {
+    grid-template-columns: 1fr;
+  }
+
+
+  .why-bigstat {
+    justify-content: center;
+  }
+
+
+  .why-sec .sec-heading {
+    font-size:
+      clamp(3rem, 11vw, 4.8rem);
+
+    letter-spacing: -.055em;
+  }
+
+
+  .why-sec .sec-sub {
+    font-size: 16px;
+
+    margin-left: auto;
+
+    margin-right: auto;
+  }
+
+}
+
+
+/* =================================================
+   MOBILE
+================================================= */
+
+@media (max-width: 640px) {
+
+  .why-sec {
+    padding: 100px 0;
+  }
+
+
+  .why-point {
+    padding: 24px 20px;
+  }
+
+
+  .why-bigstat__n {
+    min-width: 90px;
+
+    font-size: 36px;
+  }
+
+
+  .why-point__title {
+    font-size: 17px;
+  }
+
+
+  .why-point__desc {
+    font-size: 13px;
+  }
+
+
+  .why-sec .sec-heading {
+    font-size:
+      clamp(2.7rem, 11vw, 4rem);
+
+    letter-spacing: -.055em;
+  }
+
+}

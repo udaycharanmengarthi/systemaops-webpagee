@@ -1,0 +1,495 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+
+/* =================================================
+   TESTIMONIALS SECTION
+   SYSTEMAOPS LIGHT THEME
+================================================= */
+
+.testimonials-sec {
+  position: relative;
+
+  background: var(--bg-primary);
+
+  padding: 140px 24px;
+
+  overflow: hidden;
+
+  isolation: isolate;
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+}
+
+
+/* =================================================
+   AMBIENT BACKGROUND
+================================================= */
+
+.testimonials-bg-glow {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(var(--accent-rgb), .055),
+      transparent 50%
+    );
+
+  z-index: -1;
+}
+
+
+/* =================================================
+   HEADER
+================================================= */
+
+.testimonials-header {
+  text-align: center;
+
+  max-width: 720px;
+
+  margin: 0 auto 64px auto;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 16px;
+}
+
+
+/* =================================================
+   EYEBROW
+================================================= */
+
+.testimonials-eyebrow {
+  display: inline-block;
+
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  letter-spacing: .16em;
+
+  text-transform: uppercase;
+
+  color: var(--accent-primary) !important;
+
+  -webkit-text-fill-color: var(--accent-primary) !important;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   MAIN HEADING
+================================================= */
+
+.testimonials-heading {
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-size:
+    clamp(2.8rem, 5vw, 4.5rem);
+
+  font-weight: 700;
+
+  line-height: 1.05;
+
+  letter-spacing: -.055em;
+
+  color: var(--text-primary) !important;
+
+  -webkit-text-fill-color: var(--text-primary) !important;
+
+  margin: 0;
+
+  text-wrap: balance;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   HEADING ACCENT
+   If the JSX contains an accent span
+================================================= */
+
+.testimonials-heading .accent,
+.testimonials-heading .heading-accent,
+.testimonials-heading .testimonials-accent {
+  background:
+    linear-gradient(
+      100deg,
+      var(--text-primary) 0%,
+      var(--text-primary) 62%,
+      var(--accent-deep) 82%,
+      var(--accent-primary) 100%
+    );
+
+  -webkit-background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  background-clip: text;
+}
+
+
+/* =================================================
+   SUBTITLE
+================================================= */
+
+.testimonials-sub {
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-size: 18px;
+
+  font-weight: 400;
+
+  line-height: 1.7;
+
+  letter-spacing: -.015em;
+
+  color: var(--text-secondary) !important;
+
+  -webkit-text-fill-color: var(--text-secondary) !important;
+
+  margin: 0;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   TESTIMONIAL GRID
+================================================= */
+
+.testimonials-grid {
+  display: flex;
+
+  gap: 28px;
+
+  justify-content: center;
+
+  align-items: flex-start;
+
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  position: relative;
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      #000 15%,
+      #000 85%,
+      transparent 100%
+    );
+
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      #000 15%,
+      #000 85%,
+      transparent 100%
+    );
+}
+
+
+/* =================================================
+   COLUMN WRAPPER
+================================================= */
+
+.tc-wrapper {
+  height: 520px;
+
+  overflow: hidden;
+
+  width: 320px;
+
+  flex-shrink: 0;
+}
+
+
+/* =================================================
+   SCROLLING COLUMN
+================================================= */
+
+.testimonials-grid > *:nth-child(2) .tc-inner {
+  animation-delay: -4s;
+}
+
+
+.tc-inner {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 24px;
+
+  animation:
+    scrollUp 20s linear infinite;
+}
+
+
+.tc-inner:hover {
+  animation-play-state: paused;
+}
+
+
+@keyframes scrollUp {
+
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-50%);
+  }
+
+}
+
+
+/* =================================================
+   TESTIMONIAL CARD
+================================================= */
+
+.tc-card {
+  background: var(--bg-surface);
+
+  border:
+    1px solid var(--border);
+
+  border-radius: 24px;
+
+  padding: 28px;
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  text-align: left;
+
+  box-shadow:
+    0 12px 32px rgba(var(--shadow-rgb), .045);
+
+  transition:
+    transform .28s ease,
+    background .28s ease,
+    border-color .28s ease,
+    box-shadow .28s ease;
+}
+
+
+/* =================================================
+   CARD HOVER
+================================================= */
+
+.tc-card:hover {
+  background: var(--bg-surface-soft);
+
+  transform: translateY(-4px);
+
+  border-color: var(--accent-tint-strong);
+
+  box-shadow:
+    0 18px 40px rgba(var(--shadow-rgb), .07);
+}
+
+
+/* =================================================
+   CARD TYPOGRAPHY
+================================================= */
+
+.tc-text {
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-size: 15px;
+
+  font-weight: 400;
+
+  line-height: 1.7;
+
+  letter-spacing: -.015em;
+
+  color: var(--text-secondary) !important;
+
+  -webkit-text-fill-color: var(--text-secondary) !important;
+
+  margin: 0 0 20px 0;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   AUTHOR
+================================================= */
+
+.tc-author {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+
+/* =================================================
+   AVATAR
+================================================= */
+
+.tc-avatar {
+  width: 42px;
+
+  height: 42px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  border:
+    1.5px solid var(--border);
+}
+
+
+/* =================================================
+   NAME
+================================================= */
+
+.tc-name {
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  letter-spacing: -.03em;
+
+  color: var(--text-primary) !important;
+
+  -webkit-text-fill-color: var(--text-primary) !important;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   ROLE
+================================================= */
+
+.tc-role {
+  font-family:
+    'Space Grotesk',
+    sans-serif !important;
+
+  font-size: 12px;
+
+  font-weight: 500;
+
+  line-height: 1.5;
+
+  letter-spacing: -.015em;
+
+  color: var(--text-muted) !important;
+
+  -webkit-text-fill-color: var(--text-muted) !important;
+
+  margin-top: 2px;
+
+  background: none !important;
+}
+
+
+/* =================================================
+   RESPONSIVE — TABLET
+================================================= */
+
+@media (max-width: 1024px) {
+
+  .testimonials-grid > *:nth-child(3) {
+    display: none;
+  }
+
+}
+
+
+/* =================================================
+   RESPONSIVE — MOBILE
+================================================= */
+
+@media (max-width: 768px) {
+
+  .testimonials-sec {
+    padding: 100px 0;
+  }
+
+
+  .testimonials-header {
+    padding: 0 24px;
+
+    margin-bottom: 48px;
+  }
+
+
+  .testimonials-heading {
+    font-size:
+      clamp(2.7rem, 10vw, 4rem);
+
+    letter-spacing: -.055em;
+  }
+
+
+  .testimonials-sub {
+    font-size: 16px;
+  }
+
+
+  .testimonials-grid > *:nth-child(2) {
+    display: none;
+  }
+
+
+  .tc-wrapper {
+    width: 100%;
+
+    max-width: 340px;
+
+    padding: 0 16px;
+  }
+
+
+  .tc-card {
+    padding: 24px;
+  }
+
+
+  .tc-text {
+    font-size: 15px;
+
+    line-height: 1.7;
+  }
+
+}
