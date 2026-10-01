@@ -1,0 +1,688 @@
+/* =========================================================
+   SHARED SERVICE-PRIMITIVE STYLES
+   Used by all six SystemaOps service pages.
+   Identity comes from --svc / --svc-rgb / --svc-text,
+   set on each page root. Global CTA green untouched.
+   ========================================================= */
+
+/* ── SERVICE TOKEN LAYER (aliases only — no competing
+      theme; every token points at the existing system) ── */
+
+.od-page,
+.wf-page,
+.ai2-page,
+.si-page,
+.dd-page,
+.do-page {
+  --service-bg: var(--bg-primary);
+  --service-surface: var(--bg-surface);
+  --service-surface-raised: var(--bg-elevated);
+  --service-border: var(--border);
+  --service-border-strong: var(--border-strong);
+  --service-text: var(--text-primary);
+  --service-text-muted: var(--text-muted);
+  --service-accent: var(--brand-primary);
+  --service-accent-soft: var(--accent-surface);
+  --service-shadow:
+    0 16px 40px rgba(16, 35, 38, 0.09),
+    0 2px 8px rgba(16, 35, 38, 0.05);
+  --service-shadow-hover:
+    0 20px 48px rgba(16, 35, 38, 0.12),
+    0 3px 10px rgba(16, 35, 38, 0.06);
+}
+
+/* ── PAGE BACKGROUND DEPTH: almost-invisible layered
+      teal light from top-center + faint lower shade.
+      Content stays first; the effect stays quiet. ── */
+
+.od-page,
+.wf-page,
+.ai2-page,
+.si-page,
+.dd-page,
+.do-page {
+  background-image:
+    radial-gradient(
+      900px 480px at 50% -120px,
+      rgba(var(--brand-rgb), 0.06),
+      transparent 70%
+    ),
+    radial-gradient(
+      1100px 600px at 50% 108%,
+      rgba(var(--brand-rgb), 0.04),
+      transparent 70%
+    );
+  background-repeat: no-repeat;
+}
+
+[data-theme="dark"] .od-page,
+[data-theme="dark"] .wf-page,
+[data-theme="dark"] .ai2-page,
+[data-theme="dark"] .si-page,
+[data-theme="dark"] .dd-page,
+[data-theme="dark"] .do-page {
+  background-image:
+    radial-gradient(
+      900px 480px at 50% -120px,
+      rgba(var(--brand-rgb), 0.09),
+      transparent 70%
+    ),
+    radial-gradient(
+      1100px 600px at 50% 108%,
+      rgba(var(--brand-rgb), 0.05),
+      transparent 70%
+    );
+}
+
+/* ── PAGE CTAs: subtle shadow + visible keyboard focus.
+      Covers od-/wf-/ai2-/si-/dd-/do-primary/secondary-btn. ── */
+
+[class$="-primary-btn"],
+[class$="-secondary-btn"] {
+  box-shadow: var(--shadow-sm);
+}
+
+[class$="-primary-btn"]:hover,
+[class$="-secondary-btn"]:hover {
+  box-shadow: var(--shadow-md);
+}
+
+[class$="-primary-btn"]:hover {
+  filter: brightness(1.07);
+}
+
+[class$="-primary-btn"]:focus-visible,
+[class$="-secondary-btn"]:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 3px;
+}
+
+/* ── LIGHT THEME BUTTON SPEC: solid teal primary that
+      brightens on hover; white secondary that tints.
+      Light-scoped so dark rendering never changes. ── */
+
+[data-theme="light"] .od-page [class$="-primary-btn"],
+[data-theme="light"] .wf-page [class$="-primary-btn"],
+[data-theme="light"] .ai2-page [class$="-primary-btn"],
+[data-theme="light"] .si-page [class$="-primary-btn"],
+[data-theme="light"] .dd-page [class$="-primary-btn"],
+[data-theme="light"] .do-page [class$="-primary-btn"] {
+  background: var(--brand-primary);
+  border: 1px solid var(--brand-primary);
+  color: #FFFFFF;
+}
+
+[data-theme="light"] .od-page [class$="-primary-btn"]:hover,
+[data-theme="light"] .wf-page [class$="-primary-btn"]:hover,
+[data-theme="light"] .ai2-page [class$="-primary-btn"]:hover,
+[data-theme="light"] .si-page [class$="-primary-btn"]:hover,
+[data-theme="light"] .dd-page [class$="-primary-btn"]:hover,
+[data-theme="light"] .do-page [class$="-primary-btn"]:hover {
+  background: var(--brand-hover);
+  border-color: var(--brand-hover);
+  filter: none;
+}
+
+[data-theme="light"] .od-page [class$="-secondary-btn"]:hover,
+[data-theme="light"] .wf-page [class$="-secondary-btn"]:hover,
+[data-theme="light"] .ai2-page [class$="-secondary-btn"]:hover,
+[data-theme="light"] .si-page [class$="-secondary-btn"]:hover,
+[data-theme="light"] .dd-page [class$="-secondary-btn"]:hover,
+[data-theme="light"] .do-page [class$="-secondary-btn"]:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--brand-primary);
+}
+
+/* CTA microinteraction: arrow glides 3px on hover. */
+
+[class$="-primary-btn"] svg,
+[class$="-secondary-btn"] svg {
+  transition: transform 0.15s ease;
+}
+
+[class$="-primary-btn"]:hover svg:last-child,
+[class$="-secondary-btn"]:hover svg:last-child {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class$="-primary-btn"] svg,
+  [class$="-secondary-btn"] svg {
+    transition: none;
+  }
+
+  [class$="-primary-btn"]:hover svg:last-child,
+  [class$="-secondary-btn"]:hover svg:last-child {
+    transform: none;
+  }
+}
+
+.svc-section {
+  padding: 90px 24px;
+}
+
+/* ── HERO VISUAL CAP: prevent diagram from dominating page ── */
+
+.od-hero-visual,
+.wf-hero-visual,
+.ai2-hero-visual,
+.si-hero-visual,
+.dd-hero-visual,
+.do-hero-visual {
+  max-width: 640px;
+  width: 100%;
+  margin-inline: auto;
+}
+
+/* ── ARCH FRAME CAP: keep architecture diagrams focused ── */
+
+.od-arch-frame,
+.wf-arch-frame,
+.ai2-arch-frame,
+.si-arch-frame,
+.dd-arch-frame,
+.do-arch-frame {
+  max-width: 920px;
+  margin-inline: auto;
+}
+
+/* ── PROCESS ITEM HOVER: subtle lift + brand surface ── */
+
+.od-process-item,
+.wf-process-item,
+.ai2-process-item,
+.si-process-item,
+.dd-process-item,
+.do-process-item,
+.ac-process-item {
+  transition:
+    transform 220ms ease,
+    border-top-color 220ms ease,
+    background-color 220ms ease,
+    box-shadow 220ms ease;
+  border-radius: 12px;
+}
+
+.od-process-item:hover,
+.wf-process-item:hover,
+.ai2-process-item:hover,
+.si-process-item:hover,
+.dd-process-item:hover,
+.do-process-item:hover,
+.ac-process-item:hover {
+  transform: translateY(-2px);
+  border-top-color: var(--brand-primary);
+  background: var(--bg-surface-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .od-process-item p,
+[data-theme="light"] .wf-process-item p,
+[data-theme="light"] .ai2-process-item p,
+[data-theme="light"] .si-process-item p,
+[data-theme="light"] .dd-process-item p,
+[data-theme="light"] .do-process-item p {
+  color: var(--text-secondary);
+}
+
+.svc-section--tight {
+  padding-top: 40px;
+}
+
+.svc-container {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.svc-container--narrow {
+  max-width: 820px;
+}
+
+.svc-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--svc-text, var(--accent-primary));
+}
+
+[data-theme="dark"] .svc-eyebrow {
+  color: var(--svc, var(--accent-primary));
+}
+
+/* Shared: uppercase removal across all page eyebrow/tag/role labels.
+   Each page's .xx-eyebrow matches here; content is already title-cased. */
+
+.od-eyebrow,
+.wf-eyebrow,
+.ai2-eyebrow,
+.si-eyebrow,
+.dd-eyebrow,
+.do-eyebrow,
+.about-eyebrow {
+  text-transform: none;
+  letter-spacing: 0.08em;
+}
+
+.od-ba-label,
+.wf-ba-label,
+.si-ba-label,
+.od-check,
+.wf-check,
+.si-check,
+.ai2-appr-label,
+.ai2-cmp-title,
+.dc-metric-label,
+.dc-banner {
+  text-transform: none;
+  letter-spacing: 0.08em;
+}
+
+[data-theme="dark"] .svc-eyebrow {
+  color: var(--svc, var(--accent-primary));
+}
+
+.svc-title {
+  margin: 14px 0 18px;
+  font-size: clamp(30px, 3.6vw, 46px);
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  color: var(--text-primary);
+  max-width: 780px;
+}
+
+.svc-desc {
+  max-width: 720px;
+  margin: 0 0 36px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+/* ── TECHNOLOGY ── */
+
+.svc-tech-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.svc-tech-group {
+  padding: 26px 28px;
+  border-radius: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--service-shadow);
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.svc-tech-group:hover {
+  transform: translateY(-2px);
+  border-color: rgba(var(--svc-rgb, var(--accent-rgb)), 0.35);
+  box-shadow: var(--service-shadow-hover);
+}
+
+.svc-tech-role {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--svc-text, var(--accent-primary));
+  margin-bottom: 14px;
+}
+
+[data-theme="dark"] .svc-tech-role {
+  color: var(--svc, var(--accent-primary));
+}
+
+.svc-tech-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.svc-tech-pill {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: var(--bg-surface-soft, var(--bg-surface-hover));
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 14px;
+  transition: border-color 0.15s ease;
+}
+
+.svc-tech-pill:hover {
+  border-color: rgba(var(--svc-rgb, var(--accent-rgb)), 0.45);
+}
+
+/* ── REAL WORK ── */
+
+.svc-work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.svc-work-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 28px;
+  border-radius: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--w, var(--svc, var(--accent-primary)));
+  text-decoration: none;
+  box-shadow: var(--service-shadow);
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.svc-work-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(var(--w-rgb, var(--svc-rgb, var(--accent-rgb))), 0.45);
+  box-shadow: var(--service-shadow-hover);
+}
+
+.svc-work-category {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--w-text, var(--svc-text, var(--accent-primary)));
+}
+
+[data-theme="dark"] .svc-work-category {
+  color: var(--w, var(--svc, var(--accent-primary)));
+}
+
+.svc-work-card h3 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.svc-work-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.svc-work-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.svc-work-tags span {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-surface-soft, var(--bg-surface-hover));
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.svc-work-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--w-text, var(--svc-text, var(--accent-primary)));
+}
+
+[data-theme="dark"] .svc-work-link {
+  color: var(--w, var(--svc, var(--accent-primary)));
+}
+
+/* ── FAQ ── */
+
+.svc-faq {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+}
+
+.svc-faq-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.svc-faq-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.svc-faq-button:hover {
+  color: var(--svc-text, var(--accent-primary));
+}
+
+.svc-faq-chevron {
+  flex-shrink: 0;
+  color: var(--svc-text, var(--accent-primary));
+  transition: transform 0.2s ease;
+}
+
+.svc-faq-item--open .svc-faq-chevron {
+  transform: rotate(180deg);
+}
+
+.svc-faq-answer {
+  padding: 0 4px 22px;
+  animation: svc-faq-in 0.2s ease;
+}
+
+.svc-faq-answer p {
+  margin: 0;
+  max-width: 680px;
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+@keyframes svc-faq-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ── RELATED ── */
+
+.svc-rel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.svc-rel-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 28px;
+  border-radius: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  overflow: hidden;
+  box-shadow: var(--service-shadow);
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.svc-rel-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(var(--svc-rgb, var(--accent-rgb)), 0.4);
+  box-shadow: var(--service-shadow-hover);
+}
+
+.svc-rel-card h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.svc-rel-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.svc-rel-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--svc-text, var(--accent-primary));
+}
+
+[data-theme="dark"] .svc-rel-link {
+  color: var(--svc, var(--accent-primary));
+}
+
+/* ── RESPONSIVE ── */
+
+@media (max-width: 960px) {
+  .svc-work-grid,
+  .svc-rel-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .svc-tech-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .svc-section {
+    padding: 70px 18px;
+  }
+
+  .svc-work-grid,
+  .svc-rel-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .svc-faq-button {
+    font-size: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-work-card,
+  .svc-rel-card,
+  .svc-tech-group,
+  .svc-tech-pill,
+  .svc-faq-chevron,
+  .svc-faq-answer {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* =========================================================
+   TABLET (768–1023px): intentional vertical composition.
+   Heroes stack (content, then full-width visual, then
+   supporting UI). Dense grids relax to two columns.
+   Page-level rules below 960px/640px still win on mobile
+   because page stylesheets load after this shared file.
+   ========================================================= */
+
+@media (max-width: 1023px) {
+.od-hero-inner,
+.wf-hero-inner,
+.ai2-hero-inner,
+.si-hero-inner,
+.dd-hero-inner,
+.do-hero-inner,
+.ac-hero-inner {
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+
+.od-hero-copy,
+.wf-hero-copy,
+.ai2-hero-copy,
+.si-hero-copy,
+.dd-hero-copy,
+.do-hero-copy,
+.ac-hero-copy {
+  max-width: 700px;
+}
+
+  .od-hero-desc,
+  .wf-hero-desc,
+  .ai2-hero-desc,
+  .si-hero-desc,
+  .dd-hero-desc,
+  .do-hero-desc {
+    max-width: 640px;
+  }
+
+  .ai2-ws-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wf-cap-grid,
+  .si-grid,
+  .do-grid,
+  .dd-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .od-process,
+  .wf-process,
+  .ai2-process,
+  .si-process,
+  .do-process,
+  .dd-process,
+  .ac-process {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .si-order-steps {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .si-order-steps::before,
+  .si-order-steps--play::after {
+    display: none;
+  }
+
+  .svc-section {
+    padding: 72px 24px;
+  }
+}

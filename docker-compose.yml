@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: ./Server
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+
+  frontend:
+    build:
+      context: ./systemaops-webpage
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend

@@ -1,0 +1,376 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================================================
+   SYSTEMAOPS V2 DESIGN TOKENS
+   Single source of truth for the entire visual system.
+
+   Light theme is the default. Dark theme activates via
+   [data-theme="dark"] on the <html> element (managed by
+   ThemeProvider).
+
+   Components must consume these tokens. No hard-coded
+   theme colors in components.
+=============================================================== */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* ── Navigation offset (floating pill bar height + safe gap) ── */
+  --nav-offset: 112px;
+
+  /* ── Backgrounds (page, sections, cards) ── */
+  --bg-primary: #F7F9FC;
+  --bg-secondary: #F1F5F8;
+  --bg-surface: #FFFFFF;
+  --bg-surface-soft: #F4F7FA;
+  --bg-surface-hover: #EDF2F6;
+  --bg-subtle: #F1F5F8;
+  --bg-subtle-2: #E9EEF3;
+  --bg-elevated: #FFFFFF;
+
+  /* ── Diagram visibility tokens (light: visible muted slate-teal) ── */
+  --dg-line: #93AFB8;
+  --dg-line-soft: #C2D2DA;
+  --dg-border: #B9C9D2;
+  --dg-node-fill: #FFFFFF;
+
+  /* ── Text (deep ink + readable muted slate)
+     Hierarchy: primary (headings/labels) > secondary (body copy)
+     > muted (metadata/eyebrows/helper text). Body copy must never
+     fall below --text-secondary for WCAG AA readability. ── */
+  --text-primary: #0B1720;
+  --text-secondary: #526B78;
+  --text-muted: #6B818C;
+  --text-disabled: #93A7AB;
+  --text-inverse: #FFFFFF;
+  --text-on-accent: #FFFFFF;
+
+  /* ── Borders (clearly visible, neutral slate) ── */
+  --border: #D7E0E8;
+  --border-soft: #E3EAF0;
+  --border-strong: #C3D0DA;
+  --border-subtle: #E3EAF0;
+
+  /* ── Accents (controlled teal + optional blue) ── */
+  --accent: #159A9C;
+  --accent-primary: #159A9C;
+  --accent-secondary: #20A7A0;
+  --accent-hover: #118587;
+  --accent-deep: #0E6F70;
+  --accent-deep-2: #0C5E5F;
+  --accent-surface: #E7F4F4;
+  --accent-surface-soft: #DBEDED;
+  --accent-soft: var(--accent-surface);
+  --accent-soft-2: var(--accent-surface-soft);
+  --accent-tint: #C4DEDD;
+  --accent-tint-strong: #9CC5C4;
+  --brand-gold: #E8B831;
+
+  /* ── Brand (single SystemaOps identity for service pages, nav, CTAs) ── */
+  --brand-primary: #159A9C;
+  --brand-secondary: #20A7A0;
+  --brand-deep: #0E6F70;
+  --brand-gold: #E8B831;
+  --brand-rgb: 21, 154, 156;
+  --brand-hover: #118587;
+  --brand-soft: #E7F4F4;
+  --brand-blue: #2F6FED;
+  --brand-blue-rgb: 47, 111, 237;
+  --page-background: #F7F9FC;
+
+  /* ── Premium CTA surfaces ── */
+  --cta-background: #08151D;
+  --cta-surface: #10232D;
+  --cta-text: #F7FBFC;
+  --cta-text-soft: #AFC0CA;
+
+  /* ── Radii ── */
+  --radius-card: 24px;
+  --radius-cta: 48px;
+
+  /* ── Status ── */
+  --success: #287A59;
+  --warning: #A66B1F;
+  --error: #A24D43;
+  --error-soft: #F5E8E6;
+
+  /* ── Form controls ── */
+  --input-bg: #FFFFFF;
+  --input-border: #CFE0DF;
+  --input-placeholder: #5F7A80;
+
+  /* ── Menus ── */
+  --menu-bg: #FFFFFF;
+  --menu-hover: #F2F8F7;
+  --menu-active: #E7F4F2;
+
+  /* ── Component surfaces ── */
+  --navbar-bg: #FFFFFF;
+  --glass-bg: rgba(255, 255, 255, 0.96);
+  --footer-bg: #0C1F21;
+  --footer-bg-soft: #0A1A1C;
+  --footer-surface: #F1F6F6;
+  --footer-text: #C3D8D8;
+  --footer-text-strong: #FFFFFF;
+  --footer-muted: #7E9A9B;
+  --footer-accent: #3BA3A1;
+  --footer-accent-hover: #4FBDBB;
+  --footer-accent-deep: #1A7F7F;
+
+  /* ── Shadows (premium card depth) ── */
+  --shadow-sm: 0 1px 2px rgba(11, 23, 32, 0.06);
+  --shadow-md:
+    0 8px 30px rgba(11, 23, 32, 0.05);
+  --shadow-lg: 0 16px 40px rgba(11, 23, 32, 0.09);
+
+  /* ── Raw RGB channels (for rgba(var(--x-rgb), a)) ── */
+  --shadow-rgb: 11, 23, 32;
+  --tint-rgb: 21, 154, 156;
+  --accent-rgb: 21, 154, 156;
+  --inverse-rgb: 255, 255, 255;
+
+  /* ── Legacy component tokens (consume semantic tokens) ── */
+  --color-bg: var(--bg-primary);
+  --color-surface: var(--bg-surface);
+  --color-border: var(--border);
+  --color-accent: var(--accent-primary);
+  --color-accent-2: var(--accent-secondary);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+
+  --text-1: var(--text-primary);
+  --text-2: var(--text-muted);
+  --text-3: var(--text-secondary);
+  --text-h: var(--text-primary);
+  --bg-2: var(--bg-secondary);
+  --border-hover: var(--border-strong);
+  --accent-bg: var(--accent-soft);
+  --accent-border: rgba(21, 154, 156, 0.32);
+  --social-bg: #EDF2F6;
+  --shadow: var(--shadow-md);
+
+  --radius-sm: 0.5rem;
+  --radius-lg: 1rem;
+  --font-display: 'Inter', sans-serif;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* ── Navigation offset (floating pill bar height + safe gap) ── */
+  --nav-offset: 112px;
+
+  /* ── Backgrounds (deep logo-teal ink) ── */
+  --bg-primary: #071315;
+  --bg-secondary: #0A1A1D;
+  --bg-surface: #0B1E21;
+  --bg-surface-soft: #0E2428;
+  --bg-surface-hover: #123034;
+  --bg-subtle: #0A1A1D;
+  --bg-subtle-2: #0E2428;
+  --bg-elevated: #0E2428;
+
+  /* ── Diagram visibility tokens (dark: brand-tinted lines) ── */
+  --dg-line: #5F8A8A;
+  --dg-line-soft: #34504F;
+  --dg-border: #3D6869;
+  --dg-node-fill: #0D2326;
+
+  /* ── Text (high readability on dark teal)
+     Same hierarchy as light: primary > secondary > muted. ── */
+  --text-primary: #EFF7F7;
+  --text-secondary: #B6CFCF;
+  --text-muted: #829EA0;
+  --text-disabled: #5A7375;
+  --text-inverse: #062A2A;
+  --text-on-accent: #062A2A;
+
+  /* ── Borders (visible teal-ink lines) ── */
+  --border: #1B3336;
+  --border-soft: #142728;
+  --border-strong: #2A4B4E;
+  --border-subtle: #162B2D;
+
+  /* ── Accents (logo light teal #3BA3A1 family) ── */
+  --accent: #3BA3A1;
+  --accent-primary: #3BA3A1;
+  --accent-secondary: #4FBDBB;
+  --accent-hover: #4FBDBB;
+  --accent-deep: #1A7F7F;
+  --accent-deep-2: #2A9D9C;
+  --accent-surface: rgba(59, 163, 161, 0.14);
+  --accent-surface-soft: rgba(59, 163, 161, 0.20);
+  --accent-soft: rgba(59, 163, 161, 0.12);
+  --accent-soft-2: rgba(59, 163, 161, 0.18);
+  --accent-tint: rgba(59, 163, 161, 0.10);
+  --accent-tint-strong: rgba(59, 163, 161, 0.30);
+
+  /* ── Status ── */
+  --success: #3BA3A1;
+  --warning: #D9A54E;
+  --error: #FF8D8D;
+  --error-soft: rgba(255, 141, 141, 0.14);
+
+  /* ── Form controls ── */
+  --input-bg: #0B1E21;
+  --input-border: #2A4B4E;
+  --input-placeholder: #829EA0;
+
+  /* ── Menus ── */
+  --menu-bg: rgba(11, 30, 33, 0.98);
+  --menu-hover: #123034;
+  --menu-active: rgba(59, 163, 161, 0.16);
+
+  /* ── Component surfaces (glass) ── */
+  --navbar-bg: rgba(7, 19, 21, 0.78);
+  --glass-bg: rgba(11, 30, 33, 0.88);
+  --footer-bg: #050F10;
+  --footer-bg-soft: #071315;
+  --footer-surface: #0B1E21;
+  --footer-text: #B6CFCF;
+  --footer-text-strong: #EFF7F7;
+  --footer-muted: #829EA0;
+  --footer-accent: #3BA3A1;
+  --footer-accent-hover: #4FBDBB;
+  --footer-accent-deep: #1A7F7F;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.50);
+  --shadow-lg: 0 30px 60px rgba(0, 0, 0, 0.65);
+
+  /* ── Raw RGB channels (for rgba(var(--x-rgb), a)) ── */
+  --shadow-rgb: 0, 0, 0;
+  --tint-rgb: 59, 163, 161;
+  --accent-rgb: 59, 163, 161;
+  --inverse-rgb: 6, 42, 42;
+
+  /* ── Legacy component tokens (consume semantic tokens) ── */
+  --color-bg: var(--bg-primary);
+  --color-surface: var(--bg-surface);
+  --color-border: var(--border);
+  --color-accent: var(--accent-primary);
+  --color-accent-2: var(--accent-secondary);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+
+  --text-1: var(--text-primary);
+  --text-2: var(--text-muted);
+  --text-3: var(--text-secondary);
+  --text-h: var(--text-primary);
+  --bg-2: var(--bg-secondary);
+  --border-hover: var(--border-strong);
+  --accent-bg: var(--accent-soft);
+  --accent-border: rgba(59, 163, 161, 0.32);
+  --social-bg: rgba(255, 255, 255, 0.04);
+  --shadow: var(--shadow-md);
+  --brand-gold: #E8B831;
+
+  /* ── Brand (single SystemaOps identity for service pages, nav, CTAs) ── */
+  --brand-primary: #3BA3A1;
+  --brand-secondary: #4FBDBB;
+  --brand-deep: #1A7F7F;
+  --brand-rgb: 59, 163, 161;
+}
+
+/* ================================================================
+   DOCUMENT-LEVEL THEMED BACKGROUND
+   The single source of the page background. Sections with their
+   own backgrounds paint over it; transparent gaps simply show
+   the theme.
+=============================================================== */
+
+html {
+  background-color: var(--bg-primary);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  margin: 0;
+  min-height: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+  font-family: sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+}
+
+/* Anchored sections stop below the floating navbar, never under it */
+[id] {
+  scroll-margin-top: var(--nav-offset);
+}
+
+main {
+  background-color: var(--bg-primary);
+}
+
+/* ================================================================
+   THEMED PHONE / EMAIL LINKS
+   Prevents default browser-blue styling on tel: and mailto: links.
+   They keep working as native tel:/mailto: links.
+=============================================================== */
+
+a[href^="tel:"],
+a[href^="mailto:"] {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+
+a[href^="tel:"]:hover,
+a[href^="mailto:"]:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+a[href^="tel:"]:active,
+a[href^="mailto:"]:active {
+  color: var(--accent-hover);
+}
+
+a[href^="tel:"]:focus-visible,
+a[href^="mailto:"]:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ================================================================
+   FORMS — base themed controls (fallback for any native input
+   that does not yet consume tokens explicitly)
+=============================================================== */
+
+input,
+select,
+textarea {
+  color: var(--text-primary);
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--input-placeholder);
+  opacity: 1;
+}
+
+/* Reveal animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}

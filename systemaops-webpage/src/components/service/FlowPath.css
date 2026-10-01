@@ -1,0 +1,54 @@
+/* =========================================================
+   FLOW PATH — flowing light along curved SVG path
+   No dots, no particles. Smooth illuminated segment.
+   ========================================================= */
+
+.flow-group {
+  /* ensure paths don't clip */
+  overflow: visible;
+}
+
+.flow-light {
+  stroke-dasharray: 14 86;
+  stroke-dashoffset: 100;
+  animation: flow-travel var(--flow-duration, 3s) linear infinite;
+  animation-delay: var(--flow-delay, 0s);
+  /* soft glow on the traveling segment */
+  filter: drop-shadow(0 0 4px var(--brand-primary));
+  opacity: 0.95;
+}
+
+@keyframes flow-travel {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+/* Respect reduced motion — static lines only */
+@media (prefers-reduced-motion: reduce) {
+  .flow-light {
+    animation: none !important;
+    display: none;
+  }
+}
+
+/* Theme-aware base line colors */
+:root,
+[data-theme="light"] {
+  --flow-base: #CBD5E1;
+}
+
+[data-theme="dark"] {
+  --flow-base: #334155;
+}

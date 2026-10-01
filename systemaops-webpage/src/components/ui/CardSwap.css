@@ -1,0 +1,356 @@
+.card-swap-container {
+
+  position: absolute;
+
+  bottom: 0;
+
+  right: 0;
+
+  transform: translate(5%, 20%);
+
+  transform-origin: bottom right;
+
+  perspective: 900px;
+
+  overflow: visible;
+
+}
+
+
+/* Base card — overridden by so-card class */
+
+.card {
+
+  position: absolute;
+
+  top: 50%;
+
+  left: 50%;
+
+  border-radius: 20px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: #0C0E18;
+
+  transform-style: preserve-3d;
+
+  will-change: transform;
+
+  backface-visibility: hidden;
+
+  -webkit-backface-visibility: hidden;
+
+  cursor: pointer;
+
+  transition: border-color 0.3s;
+
+}
+
+
+.card:hover {
+
+  border-color: rgba(0, 212, 170, 0.3);
+
+}
+
+
+/* SystemaOps branded card styles */
+
+.so-card {
+
+  padding: 32px 28px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  background: #0C0E18;
+
+  position: relative;
+
+  overflow: hidden;
+
+}
+
+
+/* Top glow accent per card */
+
+.so-card::before {
+
+  content: '';
+
+  position: absolute;
+
+  top: -60px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  width: 200px;
+
+  height: 100px;
+
+  border-radius: 50%;
+
+  filter: blur(48px);
+
+  opacity: 0.15;
+
+  pointer-events: none;
+
+  background: var(--accent, #1A7F7F);
+
+}
+
+
+.so-card__top {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+}
+
+
+.so-card__icon {
+
+  width: 48px;
+
+  height: 48px;
+
+  border-radius: 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: color-mix(in srgb, var(--accent, #1A7F7F) 12%, transparent);
+
+  border: 1px solid color-mix(in srgb, var(--accent, #1A7F7F) 25%, transparent);
+
+  color: var(--accent, #1A7F7F);
+
+  font-size: 22px;
+
+}
+
+
+.so-card__quote {
+
+  font-size: 28px;
+
+  color: var(--accent, #1A7F7F);
+
+  opacity: 0.4;
+
+  font-family: Georgia, serif;
+
+  line-height: 1;
+
+}
+
+
+.so-card__body {
+
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+}
+
+
+.so-card__tag {
+
+  display: inline-block;
+
+  font-family: 'Plus Jakarta Sans', sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.1em;
+
+  text-transform: uppercase;
+
+  color: var(--accent, #1A7F7F);
+
+  background: color-mix(in srgb, var(--accent, #1A7F7F) 10%, transparent);
+
+  border: 1px solid color-mix(in srgb, var(--accent, #1A7F7F) 20%, transparent);
+
+  padding: 3px 9px;
+
+  border-radius: 999px;
+
+  width: fit-content;
+
+}
+
+
+.so-card__heading {
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 20px;
+
+  font-weight: 700;
+
+  color: #EEEEF2;
+
+  letter-spacing: -0.04em;
+
+  line-height: 1.25;
+
+}
+
+
+.so-card__text {
+
+  font-family: 'Plus Jakarta Sans', sans-serif;
+
+  font-size: 13px;
+
+  color: rgba(255, 255, 255, 0.38);
+
+  line-height: 1.72;
+
+}
+
+
+.so-card__bottom {
+
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+  padding-top: 16px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+}
+
+
+.so-card__person {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+
+}
+
+
+.so-card__name {
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  color: #EEEEF2;
+
+  letter-spacing: -0.025em;
+
+}
+
+
+.so-card__role {
+
+  font-family: 'Plus Jakarta Sans', sans-serif;
+
+  font-size: 11px;
+
+  color: rgba(255, 255, 255, 0.3);
+
+}
+
+
+.so-card__metric {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: 1px;
+
+}
+
+
+.so-card__metric-num {
+
+  font-family:
+    'Space Grotesk',
+    'Plus Jakarta Sans',
+    sans-serif;
+
+  font-size: 20px;
+
+  font-weight: 700;
+
+  color: var(--accent, #1A7F7F);
+
+  letter-spacing: -0.04em;
+
+}
+
+
+.so-card__metric-label {
+
+  font-family: 'Plus Jakarta Sans', sans-serif;
+
+  font-size: 10px;
+
+  color: rgba(255, 255, 255, 0.25);
+
+  text-align: right;
+
+}
+
+
+@media (max-width: 768px) {
+
+  .card-swap-container {
+
+    transform: scale(0.75) translate(25%, 25%);
+
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .card-swap-container {
+
+    transform: scale(0.55) translate(25%, 25%);
+
+  }
+
+}

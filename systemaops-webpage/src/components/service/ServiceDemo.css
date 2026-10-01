@@ -1,0 +1,228 @@
+/* =========================================================
+   SHARED SERVICE-DEMO PRIMITIVES
+   Used by the six SystemaOps service-page interactive demos.
+
+   Rules:
+   - Signals communicate data flow and replay once per
+     selection (SMIL repeatCount="1", remounted via key).
+     Nothing loops forever except subtle status dots.
+   - Timing: micro 150-250ms, state 200-350ms,
+     path travel 600-1000ms, full runs 3-5s.
+   - Brand tokens only. No per-service hues.
+   ========================================================= */
+
+/* ── Keyboard: every demo tab must show focus ── */
+
+[role="tablist"] [role="tab"]:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* ── Caption swap: fade + rise once per selection.
+       Remount with key={activeId} to replay. ── */
+
+.demo-caption-swap {
+  animation: demo-fade-up 0.22s ease-out;
+}
+
+@keyframes demo-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Active connector: single draw-in per selection.
+       Remount with key={activeId} to replay. ── */
+
+.demo-draw {
+  stroke-dasharray: 7 6;
+  animation: demo-draw 0.7s ease-out 1;
+}
+
+@keyframes demo-draw {
+  from {
+    stroke-dashoffset: 26;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── Core response ping: one soft ring per selection ── */
+
+.demo-ping {
+  fill: none;
+  stroke: var(--brand-primary);
+  stroke-width: 2;
+  opacity: 0;
+  animation: demo-ping 0.9s ease-out 1;
+  pointer-events: none;
+}
+
+@keyframes demo-ping {
+  0% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ── Demo controls: brand primary + ghost ── */
+
+.demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.demo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--brand-deep);
+  background: var(--brand-primary);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+[data-theme="dark"] .demo-btn {
+  color: #062a2a;
+}
+
+.demo-btn:hover:not(:disabled) {
+  background: var(--brand-deep);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Light theme: primary action brightens instead of darkening. */
+
+[data-theme="light"] .demo-btn:hover:not(:disabled) {
+  background: var(--brand-hover);
+  border-color: var(--brand-hover);
+}
+
+.demo-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.demo-btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.demo-btn:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 3px;
+}
+
+.demo-btn--ghost {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  box-shadow: none;
+}
+
+.demo-btn--ghost:hover:not(:disabled) {
+  background: var(--bg-surface-hover);
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Status line: text with polite live region ── */
+
+.demo-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* ── Stage chips (AI request flow, DevOps timeline) ── */
+
+.demo-stages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.demo-stage {
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.demo-stage--on {
+  border-color: rgba(var(--brand-rgb), 0.55);
+  background: rgba(var(--brand-rgb), 0.08);
+  color: var(--text-primary);
+}
+
+.demo-stage--now {
+  border-color: var(--brand-primary);
+  background: var(--brand-primary);
+  color: #fff;
+}
+
+[data-theme="dark"] .demo-stage--now {
+  color: #062a2a;
+}
+
+.demo-stage-sep {
+  color: var(--text-disabled);
+  font-size: 12px;
+}
+
+/* ── Reduced motion: state changes only ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-caption-swap,
+  .demo-draw,
+  .demo-ping {
+    animation: none;
+  }
+
+  .demo-pulses {
+    display: none;
+  }
+
+  .demo-btn,
+  .demo-btn--ghost,
+  .demo-stage {
+    transition: none;
+  }
+
+  .demo-btn:hover:not(:disabled) {
+    transform: none;
+  }
+}

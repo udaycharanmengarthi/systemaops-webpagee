@@ -1,0 +1,57 @@
+/* ================================================================
+   SYS-FLOW — shared fiber-optic flow layer.
+   Thin muted-teal base paths + tiny gold signal particles.
+   Theme-aware via --dg-line / --brand-gold tokens.
+   ================================================================ */
+
+.sys-flow-base {
+  fill: none;
+  stroke: var(--dg-line, #93afb8);
+  stroke-width: 1;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+[data-theme="dark"] .sys-flow-base {
+  opacity: 0.6;
+}
+
+.sys-flow-base--dashed {
+  /* Fractional units: base paths normalize to pathLength 1,
+     so dashes scale proportionally on every connector. */
+  stroke-dasharray: 0.11 0.08;
+  opacity: 0.5;
+}
+
+/* One-time entrance trace (viewport-gated by the caller via
+   draw={inView}); per-path delay through --fd. */
+.sys-flow--draw .sys-flow-base:not(.sys-flow-base--dashed) {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: sys-flow-draw 0.7s ease-out forwards;
+  animation-delay: var(--fd, 0s);
+}
+
+@keyframes sys-flow-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Gold data particle: tiny bright center + soft static glow
+   (the glow comes from the per-instance SVG filter). */
+.sys-flow-particle {
+  fill: var(--brand-gold, #e8b831);
+}
+
+/* Reduced motion: static structure stays, particles stop. */
+@media (prefers-reduced-motion: reduce) {
+  .sys-flow-particle {
+    display: none;
+  }
+
+  .sys-flow--draw .sys-flow-base:not(.sys-flow-base--dashed) {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}

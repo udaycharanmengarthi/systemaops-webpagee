@@ -1,0 +1,387 @@
+/* =========================================================
+   DEVOPS CONTROL ROOM — interactive observability demo.
+   Brand tokens only. Status semantics use the theme status
+   tokens (--success / --warning / --error).
+   ========================================================= */
+
+.dc-room {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 620px;
+}
+
+/* ── Top row: services + status badge ── */
+
+.dc-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dc-services {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dc-svc {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 14px;
+}
+
+.dc-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--success);
+  flex-shrink: 0;
+}
+
+.dc-dot--warn {
+  background: var(--warning);
+}
+
+.dc-dot--bad {
+  background: var(--error);
+}
+
+.dc-dot--live {
+  animation: dc-blink 1s ease-in-out infinite;
+}
+
+@keyframes dc-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.dc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.dc-badge .dc-dot {
+  background: var(--success);
+}
+
+.dc-badge--warning {
+  border-color: var(--warning);
+}
+
+.dc-badge--warning .dc-dot {
+  background: var(--warning);
+}
+
+.dc-badge--incident {
+  border-color: var(--error);
+}
+
+.dc-badge--incident .dc-dot {
+  background: var(--error);
+}
+
+.dc-badge--recovered {
+  border-color: var(--brand-primary);
+}
+
+.dc-badge--recovered .dc-dot {
+  background: var(--brand-primary);
+}
+
+/* ── Main split: signals left, incident panel right ── */
+
+.dc-main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.dc-main--split {
+  grid-template-columns: minmax(0, 1fr) 300px;
+}
+
+.dc-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.dc-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* ── Metrics ── */
+
+.dc-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.dc-metric {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dc-metric-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.dc-metric-value {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.dc-health--healthy {
+  color: var(--success);
+  font-size: 18px;
+}
+
+.dc-health--warning {
+  color: var(--warning);
+  font-size: 18px;
+}
+
+.dc-health--incident {
+  color: var(--error);
+  font-size: 18px;
+}
+
+.dc-health--recovered {
+  color: var(--brand-primary);
+  font-size: 18px;
+}
+
+.dc-spark {
+  display: block;
+  width: 100%;
+  height: 36px;
+  margin-top: 4px;
+}
+
+/* ── Timeline inside the health card ── */
+
+.dc-timeline {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dc-timeline li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-disabled);
+}
+
+.dc-timeline li span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  flex-shrink: 0;
+}
+
+.dc-timeline li.dc-tl--done {
+  color: var(--text-primary);
+}
+
+.dc-timeline li.dc-tl--done span {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+
+.dc-timeline li time {
+  margin-left: auto;
+  font-family: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+  font-size: 11px;
+  color: var(--text-disabled);
+  font-variant-numeric: tabular-nums;
+}
+
+.dc-timeline li.dc-tl--done time {
+  color: var(--text-muted);
+}
+
+/* ── Log stream ── */
+
+.dc-logs {
+  list-style: none;
+  margin: 0;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  font-family: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  min-height: 118px;
+}
+
+.dc-logs li {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dc-log--fresh {
+  color: var(--text-primary);
+  animation: demo-fade-up 0.25s ease-out;
+}
+
+/* ── Incident + response cards ── */
+
+.dc-card {
+  border-radius: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  animation: demo-fade-up 0.25s ease-out;
+}
+
+.dc-card strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+
+.dc-card p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.dc-card--incident {
+  border-left: 3px solid var(--error);
+}
+
+.dc-card--response {
+  border-left: 3px solid var(--brand-primary);
+}
+
+.dc-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin: 10px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.dc-status-row strong {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--text-primary);
+}
+
+.dc-banner {
+  margin: 0;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: rgba(var(--brand-rgb), 0.1);
+  border: 1px solid rgba(var(--brand-rgb), 0.4);
+  color: var(--brand-deep);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-align: center;
+  animation: demo-fade-up 0.3s ease-out;
+}
+
+[data-theme="dark"] .dc-banner {
+  color: var(--brand-primary);
+}
+
+.dc-recovered {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--brand-deep);
+}
+
+[data-theme="dark"] .dc-recovered {
+  color: var(--brand-primary);
+}
+
+/* ── Responsive: stack inside the scrollable frame ── */
+
+@media (max-width: 1100px) {
+  .dc-main--split {
+    grid-template-columns: 1fr;
+  }
+
+  .dc-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .dc-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .dc-logs li {
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dc-dot--live,
+  .dc-log--fresh,
+  .dc-card {
+    animation: none;
+  }
+}

@@ -1,0 +1,384 @@
+/* =================================================
+   PRIVACY PAGE — SYSTEMAOPS LIGHT THEME
+================================================= */
+
+.privacy-page {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+
+  min-height: 100vh;
+
+  padding:
+    160px 24px 120px;
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+}
+
+
+/* =================================================
+   CONTAINER
+================================================= */
+
+.privacy-container {
+  max-width: 860px;
+
+  margin: 0 auto;
+}
+
+
+/* =================================================
+   HEADER
+================================================= */
+
+.privacy-header {
+  border-bottom:
+    1px solid var(--border);
+
+  padding-bottom: 32px;
+
+  margin-bottom: 56px;
+}
+
+
+/* =================================================
+   LABEL
+================================================= */
+
+.privacy-label {
+  display: block;
+
+  margin-bottom: 14px;
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size: .78rem;
+
+  font-weight: 700;
+
+  letter-spacing: .16em;
+
+  line-height: 1.2;
+
+  text-transform: uppercase;
+
+  color: var(--accent-primary);
+}
+
+
+/* =================================================
+   MAIN TITLE
+================================================= */
+
+.privacy-title {
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size:
+    clamp(2.8rem, 5vw, 4.5rem);
+
+  line-height: 1.05;
+
+  letter-spacing: -.055em;
+
+  font-weight: 700;
+
+  color: var(--text-primary);
+
+  margin: 0;
+}
+
+
+/* =================================================
+   DATE
+================================================= */
+
+.privacy-date {
+  margin-top: 18px;
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  color: var(--text-muted);
+
+  font-size: .95rem;
+
+  font-weight: 400;
+
+  letter-spacing: -.015em;
+
+  line-height: 1.7;
+}
+
+
+/* =================================================
+   CONTENT
+================================================= */
+
+.privacy-content {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 48px;
+}
+
+
+/* =================================================
+   SECTION
+================================================= */
+
+.privacy-section,
+.privacy-block {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+
+/* =================================================
+   SECTION HEADING
+================================================= */
+
+.privacy-section h2,
+.privacy-block h2 {
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size: 1.55rem;
+
+  font-weight: 700;
+
+  letter-spacing: -.045em;
+
+  line-height: 1.15;
+
+  color: var(--text-primary);
+
+  margin: 0;
+}
+
+
+/* =================================================
+   PARAGRAPHS + LIST ITEMS
+================================================= */
+
+.privacy-section p,
+.privacy-section li,
+.privacy-block p,
+.privacy-block li {
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size: 1.02rem;
+
+  font-weight: 400;
+
+  line-height: 1.8;
+
+  letter-spacing: -.015em;
+
+  color: var(--text-secondary);
+
+  margin: 0;
+}
+
+
+/* =================================================
+   LIST
+================================================= */
+
+.privacy-section ul,
+.privacy-block ul {
+  padding-left: 22px;
+
+  margin: 0;
+}
+
+
+.privacy-section li,
+.privacy-block li {
+  margin-bottom: 10px;
+}
+
+
+/* =================================================
+   CONTACT
+================================================= */
+
+.privacy-contact {
+  color: var(--accent-primary);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-weight: 700;
+
+  letter-spacing: -.015em;
+}
+
+
+/* =================================================
+   DIVIDER
+================================================= */
+
+.privacy-divider {
+  height: 1px;
+
+  background: var(--border-soft);
+}
+
+
+/* =================================================
+   LINKS
+================================================= */
+
+.privacy-section a,
+.privacy-block a,
+.privacy-contact a {
+  color: var(--accent-primary);
+
+  text-decoration: none;
+
+  font-weight: 600;
+
+  transition:
+    color .2s ease;
+}
+
+
+.privacy-section a:hover,
+.privacy-block a:hover,
+.privacy-contact a:hover {
+  color: var(--accent-hover);
+
+  text-decoration: underline;
+}
+
+
+.privacy-cookie-btn {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 10px 20px;
+
+  border-radius: 999px;
+
+  border: 1px solid var(--brand-deep);
+
+  background: transparent;
+
+  color: var(--brand-deep);
+
+  font-family:
+    'Space Grotesk',
+    sans-serif;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background .2s ease,
+    color .2s ease;
+}
+
+
+.privacy-cookie-btn:hover {
+  background: var(--brand-primary);
+
+  border-color: var(--brand-primary);
+
+  color: var(--text-inverse);
+}
+
+
+[data-theme="dark"] .privacy-cookie-btn {
+  color: var(--brand-secondary);
+
+  border-color: var(--brand-secondary);
+}
+
+
+[data-theme="dark"] .privacy-cookie-btn:hover {
+  background: var(--brand-primary);
+
+  border-color: var(--brand-primary);
+
+  color: var(--text-inverse);
+}
+
+
+.privacy-cookie-btn:focus-visible {
+  outline: 2px solid var(--brand-primary);
+
+  outline-offset: 3px;
+}
+
+
+/* =================================================
+   SELECTION
+================================================= */
+
+.privacy-page ::selection {
+  background: var(--accent-soft-2);
+
+  color: var(--text-primary);
+}
+
+
+/* =================================================
+   MOBILE
+================================================= */
+
+@media (max-width: 768px) {
+
+  .privacy-page {
+    padding:
+      120px 20px 80px;
+  }
+
+
+  .privacy-title {
+    font-size: 2.5rem;
+
+    letter-spacing: -.05em;
+  }
+
+
+  .privacy-section h2,
+  .privacy-block h2 {
+    font-size: 1.3rem;
+
+    letter-spacing: -.035em;
+  }
+
+
+  .privacy-section p,
+  .privacy-section li,
+  .privacy-block p,
+  .privacy-block li {
+    font-size: .98rem;
+
+    line-height: 1.8;
+  }
+
+
+  .privacy-content {
+    gap: 40px;
+  }
+
+}
