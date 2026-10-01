@@ -1,11 +1,10 @@
 // src/models/CareerApplication.js
 import mongoose from "mongoose";
-
-function oneYearFromNow() {
-  const d = new Date();
-  d.setFullYear(d.getFullYear() + 1);
-  return d;
-}
+import {
+  expiresAtFor,
+  isValidDate,
+  oneYearFromNow,
+} from "../utils/retention.js";
 
 const careerApplicationSchema = new mongoose.Schema(
   {
@@ -90,8 +89,26 @@ const careerApplicationSchema = new mongoose.Schema(
       index: { expireAfterSeconds: 0 },
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    /* Canonical collection. Do NOT rename without a data migration:
+       production records and the TTL index live here. */
+    collection: "careerapplications",
+  }
 );
+
+/* Safety net: never persist a missing/invalid expiresAt. Prefers the
+   record's own createdAt (exact policy); falls back to now. Valid
+   explicit values (controllers, backfill) are never overwritten. */
+careerApplicationSchema.pre("validate", function () {
+  if (!isValidDate(this.expiresAt)) {
+    try {
+      this.expiresAt = expiresAtFor(this.createdAt);
+    } catch {
+      this.expiresAt = oneYearFromNow();
+    }
+  }
+});
 
 const CareerApplication = mongoose.model(
   "CareerApplication",

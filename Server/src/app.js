@@ -3,12 +3,20 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
-import mongoSanitize from "express-mongo-sanitize";
+import { mongoSanitizeBody } from "./middleware/mongoSanitize.js";
 
 import contactRoutes from "./routes/contact.routes.js";
 import careerRoutes  from "./routes/career.routes.js";
 
 const app = express();
+
+/* Behind the production reverse proxy all client connections arrive
+   from one hop away; trust exactly that hop so rate limiting and
+   logging see real client IPs. Leave unset for direct deployments,
+   where trusting X-Forwarded-For would allow IP spoofing. */
+if (process.env.TRUST_PROXY === "1" || process.env.TRUST_PROXY === "true") {
+  app.set("trust proxy", 1);
+}
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
 
@@ -32,7 +40,9 @@ app.use(
 
 app.use(express.json({ limit: "100kb" }));
 app.use(express.urlencoded({ extended: true, limit: "100kb" }));
-app.use(mongoSanitize());
+/* Express 5-safe MongoDB operator sanitizer (body + params).
+   See src/middleware/mongoSanitize.js for the rationale. */
+app.use(mongoSanitizeBody);
 
 const formLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

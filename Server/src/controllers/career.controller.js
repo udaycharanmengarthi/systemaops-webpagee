@@ -1,6 +1,7 @@
 // src/controllers/career.controller.js
 import validator from "validator";
 import CareerApplication from "../models/CareerApplication.js";
+import { expiresAtFor } from "../utils/retention.js";
 import { sendFounderEmail } from "../services/mail.service.js";
 
 const PRIVACY_VERSION = "2026-01-01";
@@ -97,8 +98,9 @@ export const submitCareerApplication = async (req, res) => {
       });
     }
 
-    const expiresAt = new Date();
-    expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+    /* One capture instant drives both timestamps so that
+       expiresAt = createdAt + 1 calendar year, exactly. */
+    const submittedAt = new Date();
 
     // Save to MongoDB
     const application = await CareerApplication.create({
@@ -113,8 +115,9 @@ export const submitCareerApplication = async (req, res) => {
       resumeUrl,
       privacyAccepted: true,
       privacyVersion: typeof privacyVersion === "string" ? privacyVersion.slice(0, 32) : PRIVACY_VERSION,
-      privacyAcceptedAt: new Date(),
-      expiresAt,
+      privacyAcceptedAt: submittedAt,
+      createdAt: submittedAt,
+      expiresAt: expiresAtFor(submittedAt),
     });
 
     // Notify founder via email (escaped, never blocks success)

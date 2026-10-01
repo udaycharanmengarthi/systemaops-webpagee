@@ -1,5 +1,6 @@
 import validator from "validator";
 import Contact from "../models/Contact.js";
+import { expiresAtFor } from "../utils/retention.js";
 import { sendFounderEmail } from "../services/mail.service.js";
 
 const PRIVACY_VERSION = "2026-01-01";
@@ -72,8 +73,9 @@ export const submitContact = async (req, res) => {
       });
     }
 
-    const expiresAt = new Date();
-    expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+    /* One capture instant drives both timestamps so that
+       expiresAt = createdAt + 1 calendar year, exactly. */
+    const submittedAt = new Date();
 
     // Save to DB
     const contact = await Contact.create({
@@ -84,8 +86,9 @@ export const submitContact = async (req, res) => {
       message,
       privacyAccepted: true,
       privacyVersion: typeof privacyVersion === "string" ? privacyVersion.slice(0, 32) : PRIVACY_VERSION,
-      privacyAcceptedAt: new Date(),
-      expiresAt,
+      privacyAcceptedAt: submittedAt,
+      createdAt: submittedAt,
+      expiresAt: expiresAtFor(submittedAt),
     });
 
     // Send founder email (never blocks success, never leaks details)

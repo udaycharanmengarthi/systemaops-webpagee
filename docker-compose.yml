@@ -1,16 +1,60 @@
+# SystemaOps production stack — single public entrypoint.
+#
+#   Browser -> proxy:80 -+-> /api/* -> backend:5000
+#                      +-> /*      -> frontend:3000 (SPA)
+#
+# MongoDB is EXTERNAL (MongoDB Atlas) and is intentionally NOT
+# managed here. Provide it via MONGO_URI in the `.env` file next
+# to this compose file (see Server/.env.example). The backend
+# fails fast at boot when MONGO_URI is missing.
 services:
+  proxy:
+    build:
+      context: ./proxy
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
   backend:
     build:
       context: ./Server
-    ports:
-      - "5000:5000"
+    expose:
+      - "5000"
     env_file:
       - .env
+    environment:
+      # Behind the proxy all traffic arrives one hop away; trust it
+      # so rate limiting sees real client IPs. Never enable this
+      # for direct (non-proxied) deployments.
+      TRUST_PROXY: "1"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:5000/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 25s
 
   frontend:
     build:
       context: ./systemaops-webpage
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
+    expose:
+      - "3000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s

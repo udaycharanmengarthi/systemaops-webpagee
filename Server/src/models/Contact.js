@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
-
-function oneYearFromNow() {
-  const d = new Date();
-  d.setFullYear(d.getFullYear() + 1);
-  return d;
-}
+import {
+  expiresAtFor,
+  isValidDate,
+  oneYearFromNow,
+} from "../utils/retention.js";
 
 const contactSchema = new mongoose.Schema(
   {
@@ -70,7 +69,23 @@ const contactSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    /* Canonical collection. Do NOT rename without a data migration:
+       production records and the TTL index live here. */
+    collection: "contacts",
   }
 );
+
+/* Safety net: never persist a missing/invalid expiresAt. Prefers the
+   record's own createdAt (exact policy); falls back to now. Valid
+   explicit values (controllers, backfill) are never overwritten. */
+contactSchema.pre("validate", function () {
+  if (!isValidDate(this.expiresAt)) {
+    try {
+      this.expiresAt = expiresAtFor(this.createdAt);
+    } catch {
+      this.expiresAt = oneYearFromNow();
+    }
+  }
+});
 
 export default mongoose.model("Contact", contactSchema);
