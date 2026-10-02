@@ -226,7 +226,7 @@ const BusinessPain = () => {
           {CONTENT[active].map(
             (item, index) => (
               <div
-                className={`pain-card${active === 'default' ? ' pain-card--gold' : ''}`}
+                className="pain-card"
                 key={activeText[index][0]}
               >
                 <div className="pain-icon">

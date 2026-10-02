@@ -1,34 +1,55 @@
 /**
  * seo/Meta.jsx — Reusable per-page SEO head component.
+ * Uses centralized SEO configuration from seoConfig.js and routeSeo.js.
+ * Language-aware hreflang implementation.
  */
 
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../i18n/useLanguage";
-
-const SITE_NAME = "SystemaOps";
-const BASE_URL = "https://www.systemaops.com";
-
-const DEFAULT_OG_IMAGE = `${BASE_URL}/og-image.png`;
-
-const DEFAULT_DESCRIPTION =
-  "SystemaOps provides AI Automation, Odoo ERP, Workflow Automation, n8n Development and Enterprise Software Solutions.";
+import {
+  SITE_NAME,
+  BASE_URL,
+  DEFAULT_OG_IMAGE,
+} from "./seoConfig";
+import { getRouteSeo } from "./routeSeo";
+import { buildTitle, buildDescription } from "./routeSeo";
+import { getCanonicalUrl } from "./canonical";
+import { generateHreflangLinks } from "./routeSeo";
+import { getOgImage, getOgType } from "./routeSeo";
 
 export default function Meta({
   title,
-  description = DEFAULT_DESCRIPTION,
+  description,
   canonical,
   keywords,
-  ogImage = DEFAULT_OG_IMAGE,
+  ogImage,
   ogType = "website",
   noIndex = false,
+  routePath,
 }) {
   const { language } = useLanguage();
 
-  const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
+  // Determine the route path if not provided
+  const resolvedRoutePath = routePath || "/";
+
+  // Get route-specific SEO config (falls back to defaults)
+  const routeSeo = getRouteSeo(resolvedRoutePath);
+
+  // Build title: page title takes precedence, otherwise route config, then site name
+  const fullTitle = buildTitle(title, routeSeo.title.replace(`| ${SITE_NAME}`, "").trim() || SITE_NAME);
+
+  // Build description: page prop > route config > site default
+  const fullDescription = buildDescription(description, routeSeo.description);
+
+  // Canonical URL with trailing slash consistency
+  const canonicalUrl = canonical
+    ? getCanonicalUrl(canonical)
+    : getCanonicalUrl(resolvedRoutePath);
+
+  // Current language URL path
+  let basePath = resolvedRoutePath;
 
   // Remove trailing slash unless the path is "/"
-  let basePath = canonical || "/";
-
   if (basePath.endsWith("/") && basePath.length > 1) {
     basePath = basePath.slice(0, -1);
   }
@@ -39,24 +60,25 @@ export default function Meta({
       ? basePath
       : `/${language}${basePath === "/" ? "" : basePath}`;
 
-  const canonicalUrl = canonical
-    ? `${BASE_URL}${currentPath}`
-    : undefined;
+  const canonicalUrlFull = `${BASE_URL}${currentPath}`;
 
-  // Alternate language URLs
-  const enUrl = `${BASE_URL}${basePath}`;
+  // Generate hreflang links - language-aware
+  // Only generate links for supported languages
+  const hreflangLinks = generateHreflangLinks(basePath, language);
 
-  const deUrl = `${BASE_URL}/de${
-    basePath === "/" ? "" : basePath
-  }`;
+  // Open Graph image: page override or default
+  const finalOgImage = ogImage ? getOgImage(ogImage) : DEFAULT_OG_IMAGE;
 
-  const nlUrl = `${BASE_URL}/nl${
-    basePath === "/" ? "" : basePath
-  }`;
+  // Open Graph type
+  const finalOgType = getOgType(ogType);
+
+  // Twitter card
+  const twitterCard = "summary_large_image";
+  const twitterSite = "@SystemaOpsTech";
 
   return (
     <Helmet>
-      {/* Language */}
+      {/* Language html attribute */}
       <html lang={language} />
 
       {/* Primary SEO */}
@@ -64,7 +86,7 @@ export default function Meta({
 
       <meta
         name="description"
-        content={description}
+        content={fullDescription}
       />
 
       {keywords && (
@@ -91,29 +113,14 @@ export default function Meta({
       {/* Hreflang */}
       {canonical && (
         <>
-          <link
-            rel="alternate"
-            href={enUrl}
-            hrefLang="en"
-          />
-
-          <link
-            rel="alternate"
-            href={deUrl}
-            hrefLang="de"
-          />
-
-          <link
-            rel="alternate"
-            href={nlUrl}
-            hrefLang="nl"
-          />
-
-          <link
-            rel="alternate"
-            href={enUrl}
-            hrefLang="x-default"
-          />
+          {hreflangLinks.map((link, i) => (
+            <link
+              key={i}
+              rel={link.rel}
+              href={link.href}
+              hreflang={link.hreflang}
+            />
+          ))}
         </>
       )}
 
@@ -130,18 +137,18 @@ export default function Meta({
 
       <meta
         property="og:description"
-        content={description}
+        content={fullDescription}
       />
 
       <meta
         property="og:type"
-        content={ogType}
+        content={finalOgType}
       />
 
       {canonicalUrl && (
         <meta
           property="og:url"
-          content={canonicalUrl}
+          content={canonicalUrlFull}
         />
       )}
 
@@ -151,14 +158,14 @@ export default function Meta({
           language === "en"
             ? "en_US"
             : language === "de"
-            ? "de_DE"
-            : "nl_NL"
+              ? "de_DE"
+              : "nl_NL"
         }
       />
 
       <meta
         property="og:image"
-        content={ogImage}
+        content={finalOgImage}
       />
 
       <meta
@@ -174,12 +181,12 @@ export default function Meta({
       {/* Twitter */}
       <meta
         name="twitter:card"
-        content="summary_large_image"
+        content={twitterCard}
       />
 
       <meta
         name="twitter:site"
-        content="@SystemaOpsTech"
+        content={twitterSite}
       />
 
       <meta
@@ -189,12 +196,12 @@ export default function Meta({
 
       <meta
         name="twitter:description"
-        content={description}
+        content={fullDescription}
       />
 
       <meta
         name="twitter:image"
-        content={ogImage}
+        content={finalOgImage}
       />
     </Helmet>
   );

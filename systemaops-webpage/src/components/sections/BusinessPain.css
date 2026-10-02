@@ -480,25 +480,8 @@
 
 }
 
-/* ── Gold logo accent: "Growing teams break manual systems"
-      default cards only. Icon treatment is scoped to these four
-      cards so the experiment stays isolated and reversible. ── */
-
-.pain-card--gold .pain-icon {
-  color: var(--brand-gold);
-
-  background: rgba(232, 184, 49, .10);
-
-  border-color: rgba(232, 184, 49, .28);
-}
-
-.pain-card--gold:hover .pain-icon {
-  background: rgba(232, 184, 49, .16);
-
-  border-color: rgba(232, 184, 49, .45);
-
-  box-shadow: 0 10px 28px rgba(232, 184, 49, .14);
-}
+/* ── Brand green icons only: all pain cards use var(--accent-primary)
+      with var(--accent-soft) background from .pain-icon above. ── */
 
 
 /* ==========================

@@ -1,46 +1,57 @@
 /**
  * OrganizationSchema.jsx — Reusable JSON-LD Organization schema.
  *
- * Usage (in a page component):
- *   import OrganizationSchema from '../seo/schema/OrganizationSchema';
- *   ...
- *   <OrganizationSchema />
+ * Uses the organizationSchema utility from structuredData.js for consistent output.
+ * Only includes verified social profiles. No fabricated business information.
  *
- * TODO: Fill in sameAs, logo, and contactPoint with real verified data.
- * DO NOT fabricate any business information.
+ * Import with custom data, or use buildOrganizationSchemaFromFooter() for
+ * data derived from the Footer component's company info.
  */
 
+import { organizationSchema, buildOrganizationSchemaFromFooter } from "../structuredData";
 import { Helmet } from "react-helmet-async";
 
-const organizationData = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "SystemaOps",
-  url: "https://www.systemaops.com",
-  // TODO: Replace with actual logo URL once available.
-  logo: "https://www.systemaops.com/favicon.svg",
-  email: "info@systemaops.com",
-  // TODO: Add verified social profile URLs.
-  sameAs: [
-    "https://www.linkedin.com/company/107682944/",
-    "https://www.instagram.com/systemaops",
-    "https://x.com/SystemaOpsTech",
-    "https://www.facebook.com/profile.php?id=61580745634197",
-    "https://www.youtube.com/@SystemaOps-ai",
-  ],
-  // TODO: Add address details if applicable.
-  address: {
-    "@type": "PostalAddress",
-    addressCountry: "IN",
-  },
-};
+/**
+ * Render organization schema with provided data.
+ * @param {object} props - Optional overrides
+ *   - siteName: string (default: "SystemaOps")
+ *   - description: string (default: from company description)
+ *   - url: string (default: BASE_URL)
+ *   - logo: string (optional, absolute URL)
+ *   - socialProfiles: array of { name, url } (optional, verified only)
+ */
+function OrganizationSchema({ 
+  siteName, 
+  description, 
+  url, 
+  logo, 
+  socialProfiles 
+}) {
+  const schemaData = organizationSchema(
+    siteName || "SystemaOps",
+    description,
+    url || "https://www.systemaops.com",
+    logo,
+    socialProfiles
+  );
 
-export default function OrganizationSchema() {
+  if (!schemaData) return null;
+
   return (
     <Helmet>
       <script type="application/ld+json">
-        {JSON.stringify(organizationData)}
+        {JSON.stringify(schemaData)}
       </script>
     </Helmet>
   );
 }
+
+/**
+ * Build organization schema from Footer component data.
+ * Uses real company data from the footer - never fabricated.
+ */
+OrganizationSchema.buildOrganizationSchemaFromFooter = 
+  (companyName, companyDescription, contactEmail) =>
+  buildOrganizationSchemaFromFooter(companyName, companyDescription, contactEmail);
+
+export default OrganizationSchema;

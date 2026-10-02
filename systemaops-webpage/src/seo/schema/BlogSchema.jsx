@@ -1,23 +1,13 @@
 /**
  * BlogSchema.jsx — Reusable JSON-LD BlogPosting schema.
  *
- * Usage:
- *   import BlogSchema from '../seo/schema/BlogSchema';
- *   ...
- *   <BlogSchema
- *     title="Blog Post Title"
- *     description="Post excerpt..."
- *     slug="blog-post-slug"
- *     datePublished="2025-01-01"
- *     dateModified="2025-01-15"
- *     authorName="Author Name"
- *     image="https://www.systemaops.com/blog/image.png"
- *   />
+ * Uses the articleSchema utility from structuredData.js for consistent output.
+ * Only includes fields that actually exist in the blog data.
+ * TODO: Replace with verified author name once available.
  */
 
+import { articleSchema } from "../structuredData";
 import { Helmet } from "react-helmet-async";
-
-const BASE_URL = "https://www.systemaops.com";
 
 export default function BlogSchema({
   title,
@@ -25,44 +15,44 @@ export default function BlogSchema({
   slug,
   datePublished,
   dateModified,
-  // TODO: Replace with verified author name once available.
   authorName = "SystemaOps Team",
   image,
 }) {
-  if (!title || !slug) return null;
-
-  const schemaData = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
+  // Build the article data object for the utility
+  const articleData = {
     headline: title,
-    description: description || "",
-    url: `${BASE_URL}/blog/${slug}`,
-    datePublished: datePublished || "",
-    dateModified: dateModified || datePublished || "",
-    image: image || `${BASE_URL}/og-image.png`,
-    author: {
-      "@type": "Organization",
-      name: authorName,
-      url: BASE_URL,
-    },
+    description,
+    image,
+    datePublished,
+    dateModified,
+    author: authorName,
+  };
+
+  // If we have a publisher, add it
+  // (the articleSchema utility will include it if provided in the right shape)
+
+  const schemaData = articleSchema(articleData);
+
+  if (!schemaData) return null;
+
+  // Add publisher information that articleSchema may not include
+  const enhancedSchemaData = {
+    ...schemaData,
     publisher: {
       "@type": "Organization",
       name: "SystemaOps",
-      logo: {
-        "@type": "ImageObject",
-        url: `${BASE_URL}/favicon.svg`,
-      },
+      url: "https://www.systemaops.com",
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${BASE_URL}/blog/${slug}`,
+      "@id": `/blog/${slug}`,
     },
   };
 
   return (
     <Helmet>
       <script type="application/ld+json">
-        {JSON.stringify(schemaData)}
+        {JSON.stringify(enhancedSchemaData)}
       </script>
     </Helmet>
   );

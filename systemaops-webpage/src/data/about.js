@@ -67,7 +67,7 @@ export const fieldPosts = [
     excerpt:
       "Meeting technology leaders, AI innovators, partners and businesses from across the world — and the conversations that came out of it.",
     image: "/about/event-photo.jpg",
-    url: "https://www.linkedin.com/posts/systemaops_gitexaieurope-gitex2026-berlin-activity-7479389229152665600-FZFw",
+    url: "https://lnkd.in/p/gNfDFtEE",
   },
   {
     id: "gitex-day1",
@@ -79,13 +79,13 @@ export const fieldPosts = [
     url: "https://www.linkedin.com/posts/systemaops_gitexaieurope-gitex2026-berlin-activity-7478288335426224128-K2jD",
   },
   {
-    id: "gitex-day1-ai",
-    category: "Events · GITEX AI Europe · Day 1",
-    title: "Day 1 — AI, technology and innovation",
+    id: "unleash-hannover",
+    category: "EVENTS · UNLEASH STARTUP CONVENTION",
+    title: "UNLEASH Startup Convention Hannover",
     excerpt:
-      "First day at GITEX AI Europe: conversations around AI, technology and innovation with people from different industries.",
+      "Attending the UNLEASH Startup Convention in Hannover — connecting with founders, innovators, technology leaders and the startup ecosystem while exploring new ideas, partnerships and opportunities.",
     image: "/about/day1-ai-photo.jpg",
-    url: "https://www.linkedin.com/posts/systemaops_gitexaieurope-gitex2026-artificialintelligence-activity-7477763133529493504-tcZk",
+    url: "https://lnkd.in/p/gpCBs-ic",
   },
 ];
 

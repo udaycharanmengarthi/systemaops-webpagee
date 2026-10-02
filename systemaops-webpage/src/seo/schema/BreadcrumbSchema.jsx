@@ -7,39 +7,35 @@
  *   <BreadcrumbSchema
  *     items={[
  *       { name: 'Home', href: '/' },
- *       { name: 'Blog', href: '/blogs' },
- *       { name: 'Post Title', href: '/blog/post-slug' },
+ *       { name: 'Services', href: '/#services' },
+ *       { name: 'AI Automation', href: '/ai-automation' },
  *     ]}
  *   />
  *
  * @param {Array} items - Array of { name: string, href: string }
  *   href values should be relative paths (e.g. '/about').
  *   They will be prefixed with the base URL automatically.
+ *   They must correspond exactly to the visible page hierarchy.
  */
 
-import { Helmet } from "react-helmet-async";
-
-const BASE_URL = "https://www.systemaops.com";
+import { breadcrumbsSchema } from "../structuredData";
 
 export default function BreadcrumbSchema({ items = [] }) {
-  if (!items.length) return null;
+  // Filter items that have both name and href
+  const validItems = items.filter(
+    item => item && item.name && item.href
+  );
 
-  const schemaData = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: items.map(({ name, href }, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name,
-      item: `${BASE_URL}${href}`,
-    })),
-  };
+  if (validItems.length === 0) return null;
+
+  // Use the breadcrumbsSchema utility for consistent output
+  const schemaData = breadcrumbsSchema(validItems);
+
+  if (!schemaData) return null;
 
   return (
-    <Helmet>
-      <script type="application/ld+json">
-        {JSON.stringify(schemaData)}
-      </script>
-    </Helmet>
+    <script type="application/ld+json">
+      {JSON.stringify(schemaData)}
+    </script>
   );
 }

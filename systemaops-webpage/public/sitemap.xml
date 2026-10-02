@@ -1,40 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://www.systemaops.com/</loc>
 <priority>1.0</priority>
+<changefreq>daily</changefreq>
+</url>
+
+<url>
+<loc>https://www.systemaops.com/about</loc>
+<priority>0.8</priority>
+<changefreq>monthly</changefreq>
 </url>
 
 <url>
 <loc>https://www.systemaops.com/contact</loc>
-<priority>0.9</priority>
+<priority>0.7</priority>
+<changefreq>monthly</changefreq>
 </url>
 
 <url>
 <loc>https://www.systemaops.com/careers</loc>
+<priority>0.5</priority>
+<changefreq>monthly</changefreq>
+</url>
+
+<url>
+<loc>https://www.systemaops.com/blogs</loc>
 <priority>0.8</priority>
+<changefreq>weekly</changefreq>
+</url>
+
+<url>
+<loc>https://www.systemaops.com/privacy-policy</loc>
+<priority>0.3</priority>
+<changefreq>yearly</changefreq>
+</url>
+
+<url>
+<loc>https://www.systemaops.com/faqs</loc>
+<priority>0.6</priority>
+<changefreq>monthly</changefreq>
+</url>
+
+<!-- Service pages -->
+<url>
+<loc>https://www.systemaops.com/ai-automation</loc>
+<priority>0.9</priority>
+<changefreq>monthly</changefreq>
 </url>
 
 <url>
 <loc>https://www.systemaops.com/odoo-customization</loc>
 <priority>0.9</priority>
+<changefreq>monthly</changefreq>
 </url>
 
 <url>
 <loc>https://www.systemaops.com/workflow-automation</loc>
 <priority>0.9</priority>
+<changefreq>monthly</changefreq>
 </url>
 
 <url>
-<loc>https://www.systemaops.com/n8n-development</loc>
-<priority>0.9</priority>
+<loc>https://www.systemaops.com/system-integrations</loc>
+<priority>0.8</priority>
+<changefreq>monthly</changefreq>
 </url>
 
 <url>
-<loc>https://www.systemaops.com/privacy-policy</loc>
-<priority>0.6</priority>
+<loc>https://www.systemaops.com/data-document-automation</loc>
+<priority>0.8</priority>
+<changefreq>monthly</changefreq>
+</url>
+
+<url>
+<loc>https://www.systemaops.com/devops-observability</loc>
+<priority>0.8</priority>
+<changefreq>monthly</changefreq>
+</url>
+
+<url>
+<loc>https://www.systemaops.com/ai-consulting</loc>
+<priority>0.7</priority>
+<changefreq>monthly</changefreq>
 </url>
 
 </urlset>

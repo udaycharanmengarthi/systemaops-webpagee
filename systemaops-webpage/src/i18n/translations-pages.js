@@ -354,10 +354,10 @@ export const pagesTranslations = {
     },
 
     blog: {
-      listingMetaTitle: "Blog — Insights & Resources",
-      listingMetaDesc: "Read the latest insights, guides, and resources from SystemaOps on AI automation, Odoo ERP, workflow automation, and intelligent business operations.",
+      listingMetaTitle: "AI Automation, Odoo & Workflow Blog",
+      listingMetaDesc: "Guides on AI automation, Odoo ERP, n8n development and workflow automation — practical insights from the SystemaOps operations team.",
       insights: "Insights & Resources",
-      ourBlog: "Our Blog",
+      ourBlog: "AI Automation, Odoo & Workflow Insights",
       listingDesc: "Guides and insights on AI automation, Odoo ERP, n8n development, and workflow systems — written by the SystemaOps operations team.",
       comingSoon: "Articles coming soon.",
       readArticle: "Read Article",
@@ -603,10 +603,10 @@ export const pagesTranslations = {
     },
 
     blog: {
-      listingMetaTitle: "Blog — Inzichten & Bronnen",
-      listingMetaDesc: "Lees de laatste inzichten, gidsen en bronnen van SystemaOps over AI-automatisering en Odoo ERP.",
+      listingMetaTitle: "AI-automatisering, Odoo & Workflow Blog",
+      listingMetaDesc: "Praktische gidsen over AI-automatisering, Odoo ERP, n8n-ontwikkeling en workflow-automatisering van het SystemaOps-team.",
       insights: "Inzichten & Bronnen",
-      ourBlog: "Onze Blog",
+      ourBlog: "AI-automatisering, Odoo & Workflow-inzichten",
       listingDesc: "Gidsen en inzichten over AI-automatisering, Odoo ERP, n8n-ontwikkeling en workflowsystemen.",
       comingSoon: "Artikelen komen binnenkort.",
       readArticle: "Lees Artikel",
@@ -852,10 +852,10 @@ export const pagesTranslations = {
     },
 
     blog: {
-      listingMetaTitle: "Blog — Einblicke & Ressourcen",
-      listingMetaDesc: "Lesen Sie die neuesten Einblicke, Leitfäden und Ressourcen von SystemaOps.",
+      listingMetaTitle: "KI-Automatisierung, Odoo & Workflow Blog",
+      listingMetaDesc: "Praxisleitfäden zu KI-Automatisierung, Odoo ERP, n8n-Entwicklung und Workflow-Automatisierung vom SystemaOps-Team.",
       insights: "Einblicke & Ressourcen",
-      ourBlog: "Unser Blog",
+      ourBlog: "KI-Automatisierung, Odoo & Workflow-Einblicke",
       listingDesc: "Leitfäden und Einblicke in AI-Automatisierung, Odoo ERP und Workflow-Systeme.",
       comingSoon: "Artikel kommen bald.",
       readArticle: "Artikel Lesen",
