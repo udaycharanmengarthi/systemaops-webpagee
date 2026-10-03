@@ -8,11 +8,54 @@ import {
   Clock,
   Building2,
   ArrowRight,
-  CheckCircle2,
   ChevronDown,
   Search,
+  Send,
 } from "lucide-react";
 import { useLanguage } from "../../i18n/LanguageContext";
+
+/* ── SEND SOUND (Web Audio, no assets) ──
+   One ~180ms soft blip on submit click only (user gesture,
+   so autoplay policies are satisfied). Extremely quiet.
+   Skipped when reduced motion is preferred. Failures are
+   silent — sound is purely decorative. */
+const playSendSound = () => {
+  try {
+    if (typeof window === "undefined") return;
+    if (
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+    const Ctx =
+      window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    const ctx = new Ctx();
+    const t0 = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(520, t0);
+    osc.frequency.exponentialRampToValueAtTime(880, t0 + 0.12);
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.exponentialRampToValueAtTime(0.05, t0 + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.18);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(t0);
+    osc.stop(t0 + 0.2);
+    osc.onended = () => {
+      try {
+        ctx.close();
+      } catch {
+        /* ignore */
+      }
+    };
+  } catch {
+    /* silent: sound is optional */
+  }
+};
 
 /* ── COUNTRY DATA ── */
 const COUNTRY_CODES = [
@@ -251,11 +294,33 @@ function CountryDropdown({ selected, onChange }) {
 export default function ContactUs() {
   const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
-  const [showToast, setShowToast] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [formError, setFormError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [privacyError, setPrivacyError] = useState("");
   const [selectedCountry, setSelectedCountry] = useState(COUNTRY_CODES[0]);
+  const [flight, setFlight] = useState("idle");
+  const flightTimers = useRef([]);
+
+  useEffect(
+    () => () => {
+      flightTimers.current.forEach(clearTimeout);
+      flightTimers.current = [];
+    },
+    []
+  );
+
+  const wait = (ms) =>
+    new Promise((resolve) => {
+      const id = setTimeout(resolve, ms);
+      flightTimers.current.push(id);
+    });
+
+  const prefersReducedMotion = () =>
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -270,7 +335,9 @@ export default function ContactUs() {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
+  if (loading) return;
   setFormError("");
+  setPhoneError("");
   setPrivacyError("");
 
   if (!privacyAccepted) {
@@ -280,7 +347,7 @@ const handleSubmit = async (e) => {
 
   const digits = formData.phone.replace(/\D/g, "");
   if (digits.length !== selectedCountry.digits) {
-    setFormError(
+    setPhoneError(
       t("contact.phoneError", {
         country: selectedCountry.country,
         code: selectedCountry.code,
@@ -291,6 +358,9 @@ const handleSubmit = async (e) => {
   }
 
   setLoading(true);
+  setFlight("flying");
+  playSendSound();
+  const flightStartedAt = Date.now();
 
   try {
     const response = await fetch("/api/contact", {
@@ -310,12 +380,16 @@ const handleSubmit = async (e) => {
     });
 
     if (response.ok) {
-      setShowToast(true);
-
-      setTimeout(() => {
-        setShowToast(false);
-      }, 4000);
-
+      /* Sync with the flight (~1s): if the API is faster, hold
+         the sending state for the remainder; if slower, the
+         plane waits parked at the mailbox. */
+      if (!prefersReducedMotion()) {
+        const elapsed = Date.now() - flightStartedAt;
+        if (elapsed < 950) await wait(950 - elapsed);
+        setFlight("landed");
+        await wait(250);
+      }
+      setSubmitted(true);
       setFormData({
         firstName: "",
         lastName: "",
@@ -326,13 +400,23 @@ const handleSubmit = async (e) => {
       });
       setPrivacyAccepted(false);
     } else {
+      setFlight("idle");
       setFormError(t("careers.errors.generic"));
     }
   } catch {
+    setFlight("idle");
     setFormError(t("careers.errors.server"));
+  } finally {
+    setLoading(false);
   }
+};
 
-  setLoading(false);
+const handleSendAnother = () => {
+  setSubmitted(false);
+  setFlight("idle");
+  setFormError("");
+  setPhoneError("");
+  setPrivacyError("");
 };
 
 return (
@@ -352,14 +436,6 @@ return (
     </Helmet>
 
     <main className="contact-section">
-      <div className={`premium-toast ${showToast ? "show-toast" : ""}`}>
-        <CheckCircle2 size={22} />
-        <div>
-          <h4>{t("contact.toastTitle")}</h4>
-          <p>{t("contact.toastText")}</p>
-        </div>
-      </div>
-
       <div className="contact-bg">
         <div className="grid-overlay" />
         <div className="orb orb-1" />
@@ -419,13 +495,30 @@ return (
         </section>
 
         {/* RIGHT */}
-        <section className="contact-form-card">
-          <h2>{t("contact.formTitle")}</h2>
+        <section className="contact-form-card" aria-live="polite">
+          <h2>{submitted ? t("contact.successTitle") : t("contact.formTitle")}</h2>
           <p className="contact-form-sub">
-            {t("contact.formSub")}
+            {submitted ? t("contact.successText") : t("contact.formSub")}
           </p>
 
-          <form className="contact-form" onSubmit={handleSubmit}>
+          {submitted ? (
+            <div className="contact-success" role="status">
+              <span className="contact-success-check" aria-hidden="true">
+                <svg viewBox="0 0 52 52">
+                  <circle cx="26" cy="26" r="24" />
+                  <path d="M15 27l7 7 15-16" />
+                </svg>
+              </span>
+              <button
+                type="button"
+                className="contact-again-btn"
+                onClick={handleSendAnother}
+              >
+                {t("contact.sendAnother")}
+              </button>
+            </div>
+          ) : (
+          <form className="contact-form" onSubmit={handleSubmit} aria-busy={loading}>
             <div className="contact-row">
               <div className="contact-input-group">
                 <label>{t("contact.firstName")}</label>
@@ -481,17 +574,25 @@ return (
                   name="phone"
                   placeholder={`${selectedCountry.digits}-${t("contact.placeholders.phoneDigits")}`}
                   value={formData.phone}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setFormData((prev) => ({
                       ...prev,
                       phone: e.target.value.replace(/\D/g, ""),
-                    }))
-                  }
+                    }));
+                    if (phoneError) setPhoneError("");
+                  }}
                   maxLength={selectedCountry.digits}
                   required
                   style={{ flex: 1 }}
+                  aria-invalid={Boolean(phoneError)}
+                  aria-describedby={phoneError ? "contact-phone-error" : undefined}
                 />
               </div>
+              {phoneError && (
+                <p className="contact-error" role="alert" id="contact-phone-error">
+                  {phoneError}
+                </p>
+              )}
             </div>
 
             <div className="contact-input-group">
@@ -544,11 +645,44 @@ return (
               </p>
             )}
 
-            <button type="submit" className="contact-submit-btn" disabled={loading}>
-              {loading ? t("contact.sending") : t("contact.submit")}
-              <ArrowRight size={18} />
+            <button
+              type="submit"
+              className={`contact-submit-btn${loading ? " is-loading" : ""}`}
+              disabled={loading}
+              aria-busy={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="cu-spinner" aria-hidden="true" />
+                  {t("contact.sending")}
+                </>
+              ) : (
+                <>
+                  {t("contact.submit")}
+                  <ArrowRight size={18} aria-hidden="true" />
+                </>
+              )}
             </button>
           </form>
+          )}
+          {!submitted && flight !== "idle" && (
+            <div
+              className={`cu-flight${flight === "landed" ? " is-landed" : " is-flying"}`}
+              aria-hidden="true"
+            >
+              <span className="cu-mailbox">
+                <svg viewBox="0 0 64 56">
+                  <rect x="8" y="22" width="48" height="26" rx="7" className="cu-mailbox-body" />
+                  <rect x="25" y="30" width="14" height="4" rx="2" className="cu-mailbox-slot" />
+                  <line x1="47" y1="22" x2="47" y2="10" className="cu-mailbox-pole" />
+                  <rect x="47" y="4" width="12" height="8" rx="2" className="cu-mailbox-flag" />
+                </svg>
+              </span>
+              <span className="cu-plane">
+                <Send size={22} strokeWidth={2} />
+              </span>
+            </div>
+          )}
         </section>
       </div>
     </main>

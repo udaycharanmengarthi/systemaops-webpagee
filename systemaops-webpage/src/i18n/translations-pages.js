@@ -451,7 +451,12 @@ export const pagesTranslations = {
       sending: "Sending...",
       submit: "Submit Request",
       toastTitle: "Request Received",
-      toastText: "We'll be in touch shortly to discuss your automation needs."
+      toastText: "We'll be in touch shortly to discuss your automation needs.",
+      successEyebrow: "Request received",
+      successTitle: "Request sent successfully",
+      successText: "Thanks for contacting SystemaOps. Our team will get back to you shortly.",
+      sendAnother: "Send another request",
+      steps: ["Request", "In Review", "Response"],
     },
 
     /* ================================
@@ -700,7 +705,12 @@ export const pagesTranslations = {
       sending: "Verzenden...",
       submit: "Aanvraag Indienen",
       toastTitle: "Aanvraag Ontvangen",
-      toastText: "We nemen binnenkort contact met u op om uw automatiseringsbehoeften te bespreken."
+      toastText: "We nemen binnenkort contact met u op om uw automatiseringsbehoeften te bespreken.",
+      successTitle: "Aanvraag succesvol verzonden",
+      successText: "Bedankt voor uw contact met SystemaOps. Ons team neemt binnenkort contact met u op.",
+      sendAnother: "Nog een aanvraag sturen",
+      successEyebrow: "Aanvraag ontvangen",
+      steps: ["Aanvraag", "In beoordeling", "Reactie"],
     },
 
     /* ================================
@@ -949,7 +959,12 @@ export const pagesTranslations = {
       sending: "Senden...",
       submit: "Anfrage Senden",
       toastTitle: "Anfrage Erhalten",
-      toastText: "Wir werden uns in Kürze bei Ihnen melden, um Ihre Automatisierungsanforderungen zu besprechen."
+      toastText: "Wir werden uns in Kürze bei Ihnen melden, um Ihre Automatisierungsanforderungen zu besprechen.",
+      successTitle: "Anfrage erfolgreich gesendet",
+      successText: "Vielen Dank für Ihre Kontaktaufnahme mit SystemaOps. Unser Team meldet sich in Kürze bei Ihnen.",
+      sendAnother: "Weitere Anfrage senden",
+      successEyebrow: "Anfrage erhalten",
+      steps: ["Anfrage", "In Prüfung", "Antwort"],
     },
 
     /* ================================

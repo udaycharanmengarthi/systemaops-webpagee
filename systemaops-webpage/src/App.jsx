@@ -17,7 +17,6 @@ import ButtonCta from "./components/sections/ButtonCta";
 import WorkflowSystem from "./components/sections/WorkflowSystem";
 import HowItWorks from "./components/sections/HowItWorks";
 import OperationalImpact from "./components/sections/OperationalImpact";
-import Testimonials from "./components/sections/Testimonials";
 
 /* OTHER PAGES */
 import About from "./components/sections/About";
@@ -83,7 +82,6 @@ function HomePage() {
       <WorkflowSystem />
       <HowItWorks />
       <OperationalImpact />
-      <Testimonials />
 
       <ButtonCta />
     </>
