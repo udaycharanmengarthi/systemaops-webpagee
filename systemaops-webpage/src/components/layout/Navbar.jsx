@@ -36,6 +36,74 @@ const Navbar = () => {
     };
   }, [mobileOpen]);
 
+  // Close on Escape + reset mobile state when leaving mobile widths
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setMobileOpen(false);
+        setServicesOpen(false);
+      }
+    };
+
+    const mq = window.matchMedia("(min-width: 769px)");
+    const onViewportChange = (e) => {
+      if (e.matches) {
+        setMobileOpen(false);
+        setServicesOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    if (typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", onViewportChange);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      if (typeof mq.removeEventListener === "function") {
+        mq.removeEventListener("change", onViewportChange);
+      }
+    };
+  }, [mobileOpen]);
+
+  /* Escape closes the drawer; crossing into desktop viewport
+     resets mobile navigation state entirely. */
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+
+    const closeMobileNav = () => {
+      setMobileOpen(false);
+      setServicesOpen(false);
+    };
+
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") closeMobileNav();
+    };
+
+    const viewport = window.matchMedia("(min-width: 769px)");
+    const onViewportChange = (e) => {
+      if (e.matches) closeMobileNav();
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    if (typeof viewport.addEventListener === "function") {
+      viewport.addEventListener("change", onViewportChange);
+    } else if (typeof viewport.addListener === "function") {
+      viewport.addListener(onViewportChange);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      if (typeof viewport.removeEventListener === "function") {
+        viewport.removeEventListener("change", onViewportChange);
+      } else if (typeof viewport.removeListener === "function") {
+        viewport.removeListener(onViewportChange);
+      }
+    };
+  }, [mobileOpen]);
+
   // Navbar scroll animation
   useEffect(() => {
     let ticking = false;
@@ -184,6 +252,8 @@ const Navbar = () => {
             className="nb-hamburger"
             onClick={() => setMobileOpen(true)}
             aria-label={t("nav.openMenu")}
+            aria-expanded={mobileOpen}
+            aria-controls="nb-mobile-drawer"
           >
             <Menu size={24} />
           </button>
@@ -218,6 +288,10 @@ const Navbar = () => {
         {mobileOpen && (
           <motion.div
             className="nb-mobile"
+            id="nb-mobile-drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("nav.openMenu")}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -295,11 +369,13 @@ const Navbar = () => {
               <div className="nb-acc">
                 <button
                   className="nb-acc-btn"
-                  onClick={() =>
-                    setServicesOpen((v) => !v)
-                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setServicesOpen((v) => !v);
+                  }}
                   type="button"
                   aria-expanded={servicesOpen}
+                  aria-controls="nb-services-submenu"
                 >
                   <span>
                     {t("nav.services")}
@@ -341,6 +417,7 @@ const Navbar = () => {
                         ease: "easeInOut",
                       }}
                       className="nb-acc-body"
+                      id="nb-services-submenu"
                     >
                       {servicesMenu.map((service) => (
                         <Link

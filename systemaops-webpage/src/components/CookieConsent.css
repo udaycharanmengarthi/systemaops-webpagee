@@ -25,6 +25,10 @@
 
   width: min(880px, 100%);
 
+  max-height: calc(100dvh - 48px);
+
+  overflow-y: auto;
+
   background: var(--bg-surface);
 
   border: 1px solid var(--border);
@@ -34,6 +38,8 @@
   box-shadow: var(--shadow-lg);
 
   padding: 18px 20px;
+
+  padding-bottom: calc(18px + env(safe-area-inset-bottom));
 
   display: flex;
 
@@ -318,16 +324,28 @@
 
 
 @media (max-width: 640px) {
+  .cookie-root {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+  }
+
   .cookie-card {
     padding: 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+
+    max-height: 85dvh;
   }
 
   .cookie-actions {
     justify-content: stretch;
+    flex-direction: column;
   }
 
   .cookie-btn {
     flex: 1;
+    width: 100%;
+    min-height: 44px;
   }
 }
 

@@ -252,6 +252,8 @@
 
   font-weight: 600;
 
+  overflow-wrap: anywhere;
+
   transition:
     color .2s ease;
 }

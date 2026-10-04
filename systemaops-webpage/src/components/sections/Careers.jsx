@@ -433,7 +433,7 @@ const EXTRA = `
 
     left: 0;
 
-    width: 300px;
+    width: min(300px, calc(100vw - 48px));
 
     z-index: 9999;
 
@@ -1058,13 +1058,41 @@ const EXTRA = `
       grid-template-columns: 1fr;
     }
 
+    .apply-overlay {
+      padding: 12px;
+    }
+
     .apply-modal {
       padding: 32px 22px;
+
+      max-height: 92dvh;
+    }
+
+    .apply-modal-close {
+      width: 44px;
+
+      height: 44px;
     }
 
     .no-openings-card,
     .how-we-care {
       padding: 44px 28px;
+    }
+
+  }
+
+  @media(max-width: 380px) {
+
+    .af-phone-row {
+      flex-direction: column;
+    }
+
+    .acd-wrap {
+      width: 100%;
+    }
+
+    .apply-modal {
+      padding: 28px 18px;
     }
 
   }

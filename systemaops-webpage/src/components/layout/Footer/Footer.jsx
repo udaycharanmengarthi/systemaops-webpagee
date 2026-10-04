@@ -616,20 +616,54 @@ export default function Footer() {
         ====================================================== */}
 
         <div className="sys-footer-baseline">
-          <p>
+          <p className="sys-footer-copyright">
             &copy; {t("footer.copyright")}
           </p>
-          <button
-            type="button"
-            className="sys-footer-cookie-btn"
-            onClick={() =>
-              window.dispatchEvent(
-                new CustomEvent("open-cookie-settings"),
-              )
-            }
+
+          <nav
+            className="sys-footer-legal"
+            aria-label={t("footer.links.legal")}
           >
-            {t("cookie.settings")}
-          </button>
+            <a
+              href="/privacy-policy"
+              className="sys-footer-legal-link"
+            >
+              {t("footer.links.privacy")}
+            </a>
+
+            <span
+              className="sys-footer-legal-sep"
+              aria-hidden="true"
+            >
+              ·
+            </span>
+
+            <a
+              href="/privacy-policy#cookies"
+              className="sys-footer-legal-link"
+            >
+              {t("legal.cookieTitle")}
+            </a>
+
+            <span
+              className="sys-footer-legal-sep"
+              aria-hidden="true"
+            >
+              ·
+            </span>
+
+            <button
+              type="button"
+              className="sys-footer-legal-link"
+              onClick={() =>
+                window.dispatchEvent(
+                  new CustomEvent("open-cookie-settings"),
+                )
+              }
+            >
+              {t("cookie.settings")}
+            </button>
+          </nav>
         </div>
       </div>
     </footer>

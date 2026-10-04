@@ -404,6 +404,7 @@ whyUs: {
         faqs: "FAQs",
         privacy: "Privacy Policy",
         support: "Live Support",
+        legal: "Legal",
       },
       address: "Remote / Global Operations",
       copyright: "2026 SystemaOps. All rights reserved.",
@@ -811,6 +812,7 @@ whyUs: {
         faqs: "FAQ's",
         privacy: "Privacybeleid",
         support: "Live support",
+        legal: "Juridisch",
       },
       address: "Remote / wereldwijde operatie",
       copyright: "2026 SystemaOps. Alle rechten voorbehouden.",compliance: {
@@ -1230,6 +1232,7 @@ odooCta: {
       n8n: "N8N-Entwicklung",
       privacy: "Datenschutz",
       support: "Live-Support",
+      legal: "Rechtliches",
     },
     address: "Remote / globale Zusammenarbeit",
     copyright: "2026 SystemaOps. Alle Rechte vorbehalten.",compliance: {

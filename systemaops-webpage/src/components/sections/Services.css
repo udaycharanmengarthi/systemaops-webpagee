@@ -386,6 +386,13 @@
   .svc-card .svc-desc {
     font-size: 15px;
   }
+
+  .svc-popular {
+    top: 14px;
+    right: 14px;
+    padding: 6px 10px;
+    font-size: 10px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -108,6 +108,16 @@ const FlagImg = ({ iso2, size = 24 }) => (
   />
 );
 
+/* ── API BASE ──
+   Same-origin by default: under `npm run dev` the Vite proxy
+   forwards /api → http://localhost:5000. For preview/production
+   builds served without that proxy, set VITE_API_BASE_URL
+   (e.g. http://localhost:5000). The endpoint path and payload
+   (the API contract) are unchanged. */
+const API_BASE_URL = (
+  import.meta.env?.VITE_API_BASE_URL || ""
+).replace(/\/+$/, "");
+
 function CountryDropdown({ selected, onChange }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -363,7 +373,7 @@ const handleSubmit = async (e) => {
   const flightStartedAt = Date.now();
 
   try {
-    const response = await fetch("/api/contact", {
+    const response = await fetch(`${API_BASE_URL}/api/contact`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

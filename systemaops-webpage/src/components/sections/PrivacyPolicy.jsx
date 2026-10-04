@@ -59,7 +59,7 @@ export default function PrivacyPolicy() {
               <p>{legal.rightsText}</p>
             </div>
 
-            <div className="privacy-block">
+            <div className="privacy-block" id="cookies">
               <h2>{legal.cookieTitle}</h2>
 
               <p>{legal.cookieText}</p>

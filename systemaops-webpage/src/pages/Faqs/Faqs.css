@@ -149,6 +149,12 @@
   line-height: 1.7;
   color: var(--text-muted);
   max-width: 720px;
+  overflow-wrap: anywhere;
+}
+
+.faqs-a a,
+.faqs-cta a {
+  overflow-wrap: anywhere;
 }
 
 .faqs-cta {

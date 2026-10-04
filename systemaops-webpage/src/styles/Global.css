@@ -1,0 +1,137 @@
+/* ================================================================
+   SYSTEMAOPS GLOBAL RESPONSIVE SYSTEM
+   Loaded after index.css (see main.jsx). Desktop-first guards:
+   nothing here changes desktop appearance — rules only
+   constrain overflow and collapse layouts at small widths.
+   ================================================================ */
+
+/* ── Box model + overflow safety ── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow-x: clip;
+}
+
+/* ── Media never overflows its container ── */
+
+img,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+svg {
+  max-width: 100%;
+}
+
+/* ── Flex/grid children may shrink instead of overflowing ── */
+
+.app-root :is(div, section, article, ul, ol, form, table) {
+  min-width: 0;
+}
+
+/* ── Long links / addresses wrap instead of overflowing ── */
+
+a,
+p,
+li,
+span {
+  overflow-wrap: break-word;
+}
+
+/* ── Tables: scroll inside their own container ── */
+
+.table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Consistent responsive page container ── */
+
+.so-container {
+  width: 100%;
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+@media (max-width: 1024px) {
+  .so-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .so-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* ── Forms: full-width controls on small screens ── */
+
+@media (max-width: 640px) {
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* ── Touch targets for key mobile controls ── */
+
+@media (max-width: 768px) {
+  .nb-hamburger {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+
+  .nb-mobile-close {
+    width: 44px;
+    height: 44px;
+  }
+
+  .theme-toggle--mobile {
+    width: 44px;
+    height: 44px;
+  }
+
+  .nb-sub {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* ── Extra-tight phones: relieve navbar crowding ── */
+
+@media (max-width: 380px) {
+  .nb-bar {
+    padding-left: 14px;
+    padding-right: 14px;
+    gap: 8px;
+  }
+
+  .nb-logo span {
+    font-size: 15px;
+  }
+}

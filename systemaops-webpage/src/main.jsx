@@ -8,6 +8,7 @@ import { LanguageProvider } from "./i18n/LanguageContext";
 import ThemeProvider from "./theme/ThemeProvider";
 
 import "./index.css";
+import "./styles/Global.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

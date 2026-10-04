@@ -1036,6 +1036,9 @@
   justify-content:
     space-between;
 
+  flex-shrink:
+    0;
+
   height:
     46px;
 
@@ -1205,6 +1208,9 @@
 
   background:
     var(--bg-subtle) !important;
+
+  overflow:
+    hidden;
 }
 
 

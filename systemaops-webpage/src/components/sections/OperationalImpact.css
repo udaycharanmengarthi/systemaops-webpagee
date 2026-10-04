@@ -959,3 +959,59 @@
     height: 180px;
   }
 }
+
+
+/* =================================================
+   RESPONSIVE — SMALL PHONES
+   Single-column metrics, stacked stat strip,
+   wrapping flow track. No horizontal squeeze.
+================================================= */
+
+@media (max-width: 480px) {
+
+  .oi-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .mtile {
+    padding: 20px 18px 18px;
+  }
+
+  .oi-strip {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 12px;
+
+    padding: 18px;
+  }
+
+  .strip-item {
+    align-items: flex-start;
+  }
+
+  .strip-lbl {
+    white-space: normal;
+  }
+
+  .strip-div {
+    width: 100%;
+
+    height: 1px;
+  }
+
+  .flow-track {
+    flex-wrap: wrap;
+
+    gap: 8px;
+  }
+
+  .flow-node {
+    white-space: normal;
+  }
+
+  .flow-wire {
+    width: 28px;
+  }
+}

@@ -17,6 +17,18 @@ export const CTA_SERVICE_IDS = [
   "integration",
 ];
 
+/* ServiceVisual variant per service id. "data" (Data & Document
+   Automation, a workflow capability) reuses the linear chain. */
+const CTA_VISUAL_VARIANTS = {
+  ai: "ai-pipeline",
+  odoo: "odoo-hub",
+  workflow: "workflow-graph",
+  devops: "aiops-dashboard",
+  consulting: "consulting-roadmap",
+  integration: "integration-mesh",
+  data: "doc-chain",
+};
+
 export function buildCTADiagram(t, serviceId) {
   const raw =
     t(`serviceDetail.${serviceId}.ctaOrbit.diagram`) || {};
@@ -25,6 +37,7 @@ export function buildCTADiagram(t, serviceId) {
     center: raw.center || "",
     centerSub: raw.centerSub || "",
     nodes,
+    variant: CTA_VISUAL_VARIANTS[serviceId] || "odoo-hub",
   };
 }
 

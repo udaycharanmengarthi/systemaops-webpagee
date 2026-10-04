@@ -1214,18 +1214,21 @@ html {
 }
 
 .faq-body {
-  max-height: 0;
+  display: grid;
+  grid-template-rows: 0fr;
   overflow: hidden;
 
   transition:
-    max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .faq-body.open {
-  max-height: 500px;
+  grid-template-rows: 1fr;
 }
 
 .faq-body-inner {
+  min-height: 0;
+  overflow: hidden;
   padding: 0 22px 20px;
 }
 
