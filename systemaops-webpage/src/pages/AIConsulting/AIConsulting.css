@@ -490,7 +490,24 @@
 
 /* ── RESPONSIVE ── */
 
-@media (max-width: 1023px) {
+@media (min-width: 768px) and (max-width: 1023px) {
+  .ac-hero-inner {
+    grid-template-columns: 1fr;
+    gap: clamp(40px, 4vw, 64px);
+  }
+
+  .ac-hero-copy {
+    order: 1;
+    max-width: 700px;
+    min-width: 0;
+  }
+
+  .ac-hero-visual {
+    order: 2;
+    min-width: 0;
+    width: 100%;
+  }
+
   .ac-cap-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -506,17 +523,43 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 767px) {
   .ac-hero {
-    padding: 110px 18px 70px;
+    padding: 110px 18px 56px;
+  }
+
+  .ac-hero-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .ac-hero-copy {
+    order: 1;
+    max-width: 100%;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .ac-hero-actions {
+    width: 100%;
+  }
+
+  .ac-hero-visual {
+    order: 2;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .ac-section {
-    padding: 70px 18px;
+    padding: 56px 18px;
   }
 
   .ac-title {
-    font-size: 38px;
+    font-size: clamp(32px, 8vw, 38px);
+    text-wrap: balance;
   }
 
   .ac-cap-grid,

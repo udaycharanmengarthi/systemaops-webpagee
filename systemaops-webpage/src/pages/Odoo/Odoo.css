@@ -44,103 +44,60 @@
   align-items: center;
 }
 
-.od-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  line-height: 1;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: var(--svc-text);
+/* Desktop: text left, visual right */
+@media (min-width: 1024px) {
+  .od-hero-inner {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 48px;
+  }
 }
 
-.od-title {
-  margin: 22px 0;
-  font-size: clamp(40px, 5vw, 64px);
-  line-height: 1.06;
-  letter-spacing: -0.045em;
-  font-weight: 700;
-  color: var(--text-primary);
+/* Tablet: stacked composition - content above visual */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .od-hero-inner {
+    grid-template-columns: 1fr;
+    gap: clamp(40px, 4vw, 64px);
+  }
+
+  .od-hero-copy {
+    order: 1;
+    max-width: 700px;
+  }
+
+  .od-hero-visual {
+    order: 2;
+  }
 }
 
-.od-title-accent {
-  color: var(--svc-text);
-}
+/* Mobile: text first, then CTA, then visual */
+@media (max-width: 767px) {
+  .od-hero {
+    padding: 104px 18px 48px;
+  }
 
-[data-theme="dark"] .od-title-accent {
-  color: var(--svc);
-}
+  .od-hero-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
 
-.od-hero-desc {
-  max-width: 540px;
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.8;
-  color: var(--text-secondary);
-}
+  .od-hero-copy {
+    max-width: 100%;
+    order: 1;
+  }
 
-.od-hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-top: 32px;
-  flex-wrap: wrap;
-}
+  .od-hero-actions {
+    width: 100%;
+    justify-content: center;
+    order: 2;
+  }
 
-.od-primary-btn,
-.od-secondary-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  min-height: 48px;
-  padding: 0 22px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-}
-
-.od-primary-btn {
-  color: var(--text-on-accent);
-  background: var(--accent-secondary);
-  border: 1px solid var(--accent-secondary);
-}
-
-.od-primary-btn:hover {
-  transform: translateY(-2px);
-}
-
-.od-secondary-btn {
-  color: var(--text-primary);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-strong);
-}
-
-.od-secondary-btn:hover {
-  transform: translateY(-2px);
-  border-color: rgba(var(--svc-rgb), 0.5);
-}
-
-.od-hero-visual {
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 24px 16px;
-  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
-}
-
-[data-theme="dark"] .od-hero-visual {
-  background: rgba(8, 14, 24, 0.6);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.3);
-}
-
-.od-hero-svg {
-  display: block;
-  width: 100%;
-  height: auto;
+  .od-hero-svg {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    order: 3;
+  }
 }
 
 .od-node {
@@ -405,6 +362,39 @@
 
 .od-arch-svg--compact {
   display: none;
+}
+
+/* Desktop: full diagram */
+@media (min-width: 1024px) {
+  .od-arch-svg--full {
+    display: block;
+  }
+
+  .od-arch-svg--compact {
+    display: none;
+  }
+}
+
+/* Tablet: show compact diagram, hide full */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .od-arch-svg--full {
+    display: none;
+  }
+
+  .od-arch-svg--compact {
+    display: block;
+  }
+}
+
+/* Mobile: show compact diagram, hide full */
+@media (max-width: 767px) {
+  .od-arch-svg--full {
+    display: none;
+  }
+
+  .od-arch-svg--compact {
+    display: block;
+  }
 }
 
 /* Connectors: thin, engineered. Main flow segments carry arrows. */
@@ -742,10 +732,22 @@
 
 /* ── RESPONSIVE ── */
 
-@media (max-width: 960px) {
+@media (max-width: 1023px) {
   .od-hero-inner {
     grid-template-columns: 1fr;
-    gap: 36px;
+    gap: clamp(40px, 4vw, 64px);
+  }
+
+  .od-hero-copy {
+    order: 1;
+    max-width: 700px;
+    min-width: 0;
+  }
+
+  .od-hero-visual {
+    order: 2;
+    min-width: 0;
+    width: 100%;
   }
 
   .od-before-after {
@@ -774,9 +776,35 @@
   }
 }
 
-@media (max-width: 640px) {
+/* Mobile: below 767px - content first, CTA second, diagram third */
+@media (max-width: 767px) {
   .od-hero {
-    padding: 110px 18px 70px;
+    padding: 110px 18px 56px;
+  }
+
+  .od-hero-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .od-hero-copy {
+    order: 1;
+    max-width: 100%;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .od-hero-actions {
+    width: 100%;
+  }
+
+  .od-hero-visual {
+    order: 2;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .od-section {
@@ -784,7 +812,8 @@
   }
 
   .od-title {
-    font-size: 38px;
+    font-size: clamp(32px, 8vw, 38px);
+    text-wrap: balance;
   }
 
   .od-solve,

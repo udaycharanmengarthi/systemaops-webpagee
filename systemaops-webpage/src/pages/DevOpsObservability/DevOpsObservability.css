@@ -664,10 +664,22 @@
 
 /* ── RESPONSIVE ── */
 
-@media (max-width: 960px) {
+@media (max-width: 1023px) {
   .do-hero-inner {
     grid-template-columns: 1fr;
-    gap: 36px;
+    gap: clamp(40px, 4vw, 64px);
+  }
+
+  .do-hero-copy {
+    order: 1;
+    max-width: 700px;
+    min-width: 0;
+  }
+
+  .do-hero-visual {
+    order: 2;
+    min-width: 0;
+    width: 100%;
   }
 
   .do-grid {
@@ -694,17 +706,44 @@
   }
 }
 
-@media (max-width: 640px) {
+/* Mobile: below 767px - content first, CTA second, diagram third */
+@media (max-width: 767px) {
   .do-hero {
-    padding: 110px 18px 70px;
+    padding: 110px 18px 56px;
+  }
+
+  .do-hero-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .do-hero-copy {
+    order: 1;
+    max-width: 100%;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .do-hero-actions {
+    width: 100%;
+  }
+
+  .do-hero-visual {
+    order: 2;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .do-section {
-    padding: 70px 18px;
+    padding: 56px 18px;
   }
 
   .do-title {
-    font-size: 38px;
+    font-size: clamp(32px, 8vw, 38px);
+    text-wrap: balance;
   }
 
   .do-grid,

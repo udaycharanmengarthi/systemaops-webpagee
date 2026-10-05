@@ -12,46 +12,63 @@ import logo from "../../assets/systemaops-icon-color.svg";
 import "./Navbar.css";
 
 const Navbar = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  /* State model:
+     - mobileMenuOpen: the mobile drawer (hamburger) */
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  /* Services submenu open/closed within the mobile drawer */
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [desktopServicesOpen, setDesktopServicesOpen] =
+    useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const { t } = useLanguage();
 
   const location = useLocation();
   const navigate = useNavigate();
- 
+
   // Keep navigation state in sync after route changes.
+  // Deferred to a timeout so we sync with the router (external system)
+  // in a callback instead of cascading renders synchronously in the effect body.
   useEffect(() => {
-    setMobileOpen(false);
-    setServicesOpen(false);
+    const id = window.setTimeout(() => {
+      setMobileMenuOpen(false);
+      setServicesOpen(false);
+      setDesktopServicesOpen(false);
+    }, 0);
+    return () => window.clearTimeout(id);
   }, [location.pathname]);
+
+  // Close mobile menu and services submenu.
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+    setServicesOpen(false);
+  };
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
 
     return () => {
       document.body.style.overflow = "";
     };
-  }, [mobileOpen]);
+  }, [mobileMenuOpen]);
 
-  // Close on Escape + reset mobile state when leaving mobile widths
+  // Close on Escape + reset mobile state when leaving mobile widths.
+  // The desktop mega-menu owns its own Escape handling, so this
+  // listener only touches mobile state.
   useEffect(() => {
-    if (!mobileOpen) return undefined;
+    if (!mobileMenuOpen) return undefined;
 
     const onKeyDown = (e) => {
       if (e.key === "Escape") {
-        setMobileOpen(false);
-        setServicesOpen(false);
+        closeMobileMenu();
       }
     };
 
     const mq = window.matchMedia("(min-width: 769px)");
     const onViewportChange = (e) => {
       if (e.matches) {
-        setMobileOpen(false);
-        setServicesOpen(false);
+        closeMobileMenu();
       }
     };
 
@@ -66,43 +83,7 @@ const Navbar = () => {
         mq.removeEventListener("change", onViewportChange);
       }
     };
-  }, [mobileOpen]);
-
-  /* Escape closes the drawer; crossing into desktop viewport
-     resets mobile navigation state entirely. */
-  useEffect(() => {
-    if (!mobileOpen) return undefined;
-
-    const closeMobileNav = () => {
-      setMobileOpen(false);
-      setServicesOpen(false);
-    };
-
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") closeMobileNav();
-    };
-
-    const viewport = window.matchMedia("(min-width: 769px)");
-    const onViewportChange = (e) => {
-      if (e.matches) closeMobileNav();
-    };
-
-    document.addEventListener("keydown", onKeyDown);
-    if (typeof viewport.addEventListener === "function") {
-      viewport.addEventListener("change", onViewportChange);
-    } else if (typeof viewport.addListener === "function") {
-      viewport.addListener(onViewportChange);
-    }
-
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      if (typeof viewport.removeEventListener === "function") {
-        viewport.removeEventListener("change", onViewportChange);
-      } else if (typeof viewport.removeListener === "function") {
-        viewport.removeListener(onViewportChange);
-      }
-    };
-  }, [mobileOpen]);
+  }, [mobileMenuOpen]);
 
   // Navbar scroll animation
   useEffect(() => {
@@ -129,15 +110,9 @@ const Navbar = () => {
 
   const p = scrollProgress;
 
-  /* Navigate to a service entry. Hash links ("/#services") are
-     handled by ScrollToTop, which scrolls to the target section
-     after landing on the home page. */
-  const handleServiceNav = (href) => {
-    setMobileOpen(false);
-    setServicesOpen(false);
-
-    navigate(href);
-  };
+  /* Service entries use native <Link> navigation below.
+     Hash links ("/#services") are handled by ScrollToTop, which
+     scrolls to the target section after landing on the home page. */
 
   return (
     <>
@@ -194,11 +169,11 @@ const Navbar = () => {
               {t("nav.about")}
             </Link>
 
-            {/* SERVICES MEGA MENU */}
+            {/* SERVICES MEGA MENU (desktop only; own state) */}
             <ServicesMegaMenu
               label={t("nav.services")}
-              open={servicesOpen}
-              onOpenChange={setServicesOpen}
+              open={desktopServicesOpen}
+              onOpenChange={setDesktopServicesOpen}
             />
 
             {/* CAREERS */}
@@ -250,9 +225,9 @@ const Navbar = () => {
 
           <button
             className="nb-hamburger"
-            onClick={() => setMobileOpen(true)}
+            onClick={() => setMobileMenuOpen(true)}
             aria-label={t("nav.openMenu")}
-            aria-expanded={mobileOpen}
+            aria-expanded={mobileMenuOpen}
             aria-controls="nb-mobile-drawer"
           >
             <Menu size={24} />
@@ -265,17 +240,14 @@ const Navbar = () => {
       {/* ===================================================== */}
 
       <AnimatePresence>
-        {mobileOpen && (
+        {mobileMenuOpen && (
           <motion.div
             className="nb-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            onClick={() => {
-              setMobileOpen(false);
-              setServicesOpen(false);
-            }}
+            onClick={closeMobileMenu}
           />
         )}
       </AnimatePresence>
@@ -285,7 +257,7 @@ const Navbar = () => {
       {/* ===================================================== */}
 
       <AnimatePresence>
-        {mobileOpen && (
+        {mobileMenuOpen && (
           <motion.div
             className="nb-mobile"
             id="nb-mobile-drawer"
@@ -306,10 +278,7 @@ const Navbar = () => {
               <Link
                 className="nb-mobile-logo"
                 to="/"
-                onClick={() => {
-                  setMobileOpen(false);
-                  setServicesOpen(false);
-                }}
+                onClick={closeMobileMenu}
               >
                 <img
                   src={logo}
@@ -322,10 +291,7 @@ const Navbar = () => {
 
               <button
                 className="nb-mobile-close"
-                onClick={() => {
-                  setMobileOpen(false);
-                  setServicesOpen(false);
-                }}
+                onClick={closeMobileMenu}
                 aria-label={t("nav.closeMenu")}
               >
                 <X size={20} />
@@ -343,10 +309,7 @@ const Navbar = () => {
               <Link
                 className="nb-mobile-link"
                 to="/"
-                onClick={() => {
-                  setMobileOpen(false);
-                  setServicesOpen(false);
-                }}
+                onClick={closeMobileMenu}
               >
                 {t("nav.home")}
               </Link>
@@ -356,15 +319,12 @@ const Navbar = () => {
               <Link
                 className="nb-mobile-link"
                 to="/about"
-                onClick={() => {
-                  setMobileOpen(false);
-                  setServicesOpen(false);
-                }}
+                onClick={closeMobileMenu}
               >
                 {t("nav.about")}
               </Link>
 
-              {/* SERVICES */}
+              {/* SERVICES (accordion toggle only — never navigates) */}
 
               <div className="nb-acc">
                 <button
@@ -427,10 +387,7 @@ const Navbar = () => {
                           style={{
                             boxShadow: `inset 3px 0 0 ${service.accent}`,
                           }}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleServiceNav(service.href);
-                          }}
+                          onClick={closeMobileMenu}
                         >
                           {t(`megaMenu.services.${service.id}.title`) || service.title}
                         </Link>
@@ -445,10 +402,7 @@ const Navbar = () => {
               <Link
                 className="nb-mobile-link"
                 to="/careers"
-                onClick={() => {
-                  setMobileOpen(false);
-                  setServicesOpen(false);
-                }}
+                onClick={closeMobileMenu}
               >
                 {t("nav.careers")}
               </Link>
@@ -458,10 +412,7 @@ const Navbar = () => {
               <Link
                 className="nb-mobile-link"
                 to="/blogs"
-                onClick={() => {
-                  setMobileOpen(false);
-                  setServicesOpen(false);
-                }}
+                onClick={closeMobileMenu}
               >
                 {t("nav.blogs")}
               </Link>
@@ -485,8 +436,7 @@ const Navbar = () => {
             <button
               className="nb-mobile-cta"
               onClick={() => {
-                setMobileOpen(false);
-                setServicesOpen(false);
+                closeMobileMenu();
                 navigate("/contact");
               }}
             >
@@ -501,3 +451,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

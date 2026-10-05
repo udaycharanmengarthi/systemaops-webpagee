@@ -1780,9 +1780,8 @@
   width: auto;
   height: auto;
 }
-/* Remove featured/compact differences — all cards uniform */
-.about-work-card--featured,
-.about-work-card--compact { display: none; }
+/* Featured/compact variants share the base card treatment;
+   size differences are defined with the variant rules below. */
 
 /* ── Mobile story order ── */
 @media (max-width: 768px) {
