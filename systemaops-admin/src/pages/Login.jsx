@@ -31,7 +31,13 @@ export default function Login() {
       toast.success("Welcome back.");
       navigate(location.state?.from || "/", { replace: true });
     } catch (err) {
-      setError(err.message || "Login failed.");
+      // Rate-limit responses get their own clear message — never
+      // disguised as a credentials error.
+      if (err && err.status === 429) {
+        setError("Too many login attempts. Please wait before trying again.");
+      } else {
+        setError(err.message || "Login failed.");
+      }
     } finally {
       setBusy(false);
     }

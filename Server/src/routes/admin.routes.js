@@ -69,6 +69,9 @@ const loginLimiter = rateLimit({
   limit: 10,
   standardHeaders: "draft-7",
   legacyHeaders: false,
+  // Only FAILED login attempts consume the brute-force budget:
+  // successful sign-ins must not eat the failed-attempt allowance.
+  skipSuccessfulRequests: true,
   message: {
     success: false,
     error: { code: "RATE_LIMITED", message: "Too many login attempts, try again later" },
@@ -80,9 +83,10 @@ router.post("/auth/login", loginLimiter, adminLogin);
 router.post("/auth/logout", requireAuth, adminLogout);
 router.get("/auth/me", requireAuth, adminMe);
 
-/* Password recovery (public). Tight rate limit blocks token guessing
-   and email flooding; same-origin check blocks CSRF-style abuse. */
-const recoveryLimiter = rateLimit({
+/* Password recovery (public). TWO DEDICATED buckets so one flow can
+   never lock out the other; both stay tight against token guessing,
+   email flooding and enumeration. Same-origin check blocks CSRF. */
+const forgotLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 5,
   standardHeaders: "draft-7",
@@ -92,8 +96,18 @@ const recoveryLimiter = rateLimit({
     error: { code: "RATE_LIMITED", message: "Too many attempts, please try again later" },
   },
 });
-router.post("/auth/forgot-password", recoveryLimiter, enforceSameOrigin, forgotPassword);
-router.post("/auth/reset-password", recoveryLimiter, enforceSameOrigin, resetPassword);
+const resetLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 8,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: { code: "RATE_LIMITED", message: "Too many attempts, please try again later" },
+  },
+});
+router.post("/auth/forgot-password", forgotLimiter, enforceSameOrigin, forgotPassword);
+router.post("/auth/reset-password", resetLimiter, enforceSameOrigin, resetPassword);
 
 // Everything below requires a session; mutations additionally pass
 // through the same-origin check.

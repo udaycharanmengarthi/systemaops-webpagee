@@ -8,7 +8,8 @@
     "migrate:retention": "node src/scripts/backfill-retention.js",
     "migrate:ops": "node src/scripts/backfill-ops.js",
     "admin:create": "node src/scripts/create-admin.js",
-    "admin:reset": "node src/scripts/create-admin.js --reset"
+    "admin:reset": "node src/scripts/create-admin.js --reset",
+    "production:cleanup": "node src/scripts/prepare-production.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

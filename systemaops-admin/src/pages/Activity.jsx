@@ -44,10 +44,17 @@ export default function Activity() {
   const actor = useDebouncedValue(actorSearch);
 
   /* ?hours=N (e.g. from the dashboard's "Team actions (24h)" card)
-     maps to the backend's real `from` range filter — never faked. */
+     maps to the backend's real `from` range filter — never faked.
+     Memoized on `hours` ONLY: computing Date.now() inline during render
+     produced a different string every render, which invalidated the
+     fetch key and caused an infinite refetch loop. */
   const hoursParam = searchParams.get("hours");
   const hours = Number.isFinite(Number(hoursParam)) ? Math.max(1, Number(hoursParam)) : null;
-  const fromIso = hours ? new Date(Date.now() - hours * 3600 * 1000).toISOString() : null;
+  const fromIso = useMemo(
+    () => (hours ? new Date(Date.now() - hours * 3600 * 1000).toISOString() : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [hours]
+  );
 
   const params = useMemo(
     () => ({
@@ -60,7 +67,7 @@ export default function Activity() {
     [page, action, entityType, fromIso]
   );
 
-  const { data, meta, loading, error, refresh } = useFetch(
+  const { data, meta, loading, refreshing, error, refresh } = useFetch(
     () => activityApi.list(params),
     JSON.stringify(params)
   );
@@ -109,14 +116,27 @@ export default function Activity() {
         </select>
       </div>
 
-      {loading ? (
+      {loading && !data ? (
         <SkeletonRows count={8} />
-      ) : error ? (
+      ) : error && !data ? (
         <ErrorState message={error.message} onRetry={refresh} />
       ) : items.length === 0 ? (
         <EmptyState title="No activity found." hint="Try changing your filters." icon={SlidersHorizontal} />
       ) : (
         <div className="card p-5">
+          <div className="flex items-center justify-between" aria-live="polite">
+            <span className="section-label">Audit feed</span>
+            {refreshing ? (
+              <span className="inline-flex items-center gap-1.5 text-xs text-ink-500">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-brand-600" aria-hidden="true" />
+                Updating…
+              </span>
+            ) : error ? (
+              <button type="button" onClick={refresh} className="text-xs font-semibold text-brand-700 hover:underline">
+                Refresh failed — retry
+              </button>
+            ) : null}
+          </div>
           <ol className="flex flex-col">
             {items.map((item) => (
               <li key={item._id} className="flex items-start justify-between gap-4 border-b border-ink-100 py-3 last:border-0">
