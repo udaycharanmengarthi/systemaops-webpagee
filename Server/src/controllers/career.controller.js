@@ -3,6 +3,10 @@ import validator from "validator";
 import CareerApplication from "../models/CareerApplication.js";
 import { expiresAtFor } from "../utils/retention.js";
 import { sendFounderEmail } from "../services/mail.service.js";
+import {
+  notifyAdmins,
+  recordActivity,
+} from "../services/activity.service.js";
 
 const PRIVACY_VERSION = "2026-01-01";
 const MAX_RESUME_URL_BYTES = 2000;
@@ -119,6 +123,26 @@ export const submitCareerApplication = async (req, res) => {
       createdAt: submittedAt,
       expiresAt: expiresAtFor(submittedAt),
     });
+
+    // Audit + admin notification (best-effort; never blocks success).
+    try {
+      await recordActivity({
+        req,
+        action: "CAREER_CREATED",
+        entityType: "career",
+        entityId: application._id,
+        entityLabel: `${firstName} ${lastName} — ${role}`,
+      });
+      await notifyAdmins({
+        type: "NEW_APPLICATION",
+        title: `New application: ${firstName} ${lastName}`,
+        body: `${role}`,
+        entityType: "career",
+        entityId: application._id,
+      });
+    } catch {
+      // Audit failure must never fail a public submission.
+    }
 
     // Notify founder via email (escaped, never blocks success)
     try {

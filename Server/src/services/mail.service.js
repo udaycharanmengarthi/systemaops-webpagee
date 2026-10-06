@@ -17,6 +17,39 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
+/* Transactional email to an admin's own address (password resets,
+   security notifications). Reuses the same Resend infrastructure.
+   Never logs tokens or secrets. */
+export const sendAdminEmail = async ({ to, subject, html, text }) => {
+  try {
+    const resend = getResend();
+    if (!resend || !process.env.SENDER_EMAIL || !to) {
+      console.error("Email not configured, skipping send");
+      return { skipped: true };
+    }
+    const response = await resend.emails.send({
+      from: process.env.SENDER_EMAIL,
+      to,
+      subject,
+      html,
+      ...(text ? { text } : {}),
+    });
+    if (response.error) {
+      // Safe diagnostics only: provider status/message, never the
+      // request body (which could contain tokens or PII).
+      console.error(
+        `Email send failed: ${response.error.name || "provider_error"} ` +
+          `${response.error.statusCode || ""} ${(response.error.message || "").slice(0, 160)}`
+      );
+      return { sent: false };
+    }
+    return { sent: true, id: response.data && response.data.id ? response.data.id : null };
+  } catch {
+    console.error("Email send failed");
+    return { sent: false };
+  }
+};
+
 export const sendFounderEmail = async ({
   name,
   email,

@@ -25,8 +25,25 @@ services:
     image: mongo:7
     restart: unless-stopped
 
+    # Optional auth, configured entirely through environment.
+    # When MONGO_ROOT_USERNAME + MONGO_ROOT_PASSWORD are set, the
+    # image creates that root user on FIRST volume init and then
+    # enforces authentication. When unset (default), MongoDB runs
+    # without auth and relies on network isolation (no published
+    # ports — reachable only from other compose services).
+    # NOTE: these only take effect on first init of an EMPTY volume.
+    # Enabling auth on an existing data volume requires creating the
+    # user manually — see Server/docs/DATABASE.md.
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE:-systemaops}
+
     volumes:
       - mongodb_data:/data/db
+      # DB bootstrap (TTL indexes + validators). Runs once, on first
+      # init of an empty volume. Idempotent for later starts.
+      - ./Server/mongo-init:/docker-entrypoint-initdb.d:ro
 
     expose:
       - "27017"
@@ -57,13 +74,30 @@ services:
     build:
       context: ./Server
 
+    # Published so host-side consumers (Vite dev proxy /api -> :5000,
+    # health checks, debugging) reach the Docker backend. MongoDB stays
+    # unpublished: backend talks to it internally via mongodb:27017.
+    ports:
+      - "5000:5000"
+
     expose:
       - "5000"
 
     environment:
+      # Pinned on purpose (NOT ${MONGO_URI:-...}): compose interpolates
+      # from the invoking shell, so any MONGO_URI exported on the host
+      # (e.g. host-side dev in Server/) would silently repoint the
+      # container database. The backend MUST always use Docker DNS here.
+      # NEVER point this at Atlas / Supabase / Neon / any external DB.
+      # Auth-enabled deployments: use a dedicated override file.
       MONGO_URI: mongodb://mongodb:27017/systemaops
       PORT: "5000"
       TRUST_PROXY: "1"
+      # Persistent location for uploaded admin avatars (validated images).
+      DATA_DIR: /app/data
+
+    volumes:
+      - admin_uploads:/app/data
 
     env_file:
       - .env
@@ -107,6 +141,30 @@ services:
       start_period: 60s
 
 
+  # Internal admin operations console (React SPA, static via `serve`).
+  # Internal only: reachable solely through the reverse proxy at /admin/.
+  # Never published to the host. No link to it exists on the public site.
+  admin:
+    build:
+      context: ./systemaops-admin
+
+    expose:
+      - "3001"
+
+    restart: unless-stopped
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://localhost:3001/admin/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))\""
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+
   proxy:
     build:
       context: ./proxy
@@ -118,6 +176,8 @@ services:
       backend:
         condition: service_healthy
       frontend:
+        condition: service_healthy
+      admin:
         condition: service_healthy
 
     restart: unless-stopped
@@ -140,3 +200,4 @@ services:
 
 volumes:
   mongodb_data:
+  admin_uploads:

@@ -60,36 +60,58 @@ refuses to overwrite it and prints manual resolution steps.
 
 ## 5. Environment variables (names only)
 
-See `Server/.env.example`. Required in production: `MONGO_URI`.
+See `Server/.env.example` (backend) and the root `.env.example`
+(compose). Required in production: `MONGO_URI` — default
+`mongodb://mongodb:27017/systemaops` (internal Docker DNS; never an
+external host).
 Optional: `PORT` (default 5000), `CORS_ORIGINS`, `TRUST_PROXY`,
-`RESEND_API_KEY`, `SENDER_EMAIL`, `FOUNDER_EMAIL` (without the mail
-vars, submissions still succeed; founder emails are skipped).
+`MONGO_DATABASE`, `MONGO_ROOT_USERNAME`/`MONGO_ROOT_PASSWORD`
+(auth, first-init only), `RESEND_API_KEY`, `SENDER_EMAIL`,
+`FOUNDER_EMAIL` (without the mail vars, submissions still succeed;
+founder emails are skipped).
 
 Set `TRUST_PROXY=1` only when running behind the production reverse
 proxy (docker-compose sets it); leave unset for direct deployments.
 
-## 6. Docker architecture
+## 6. Docker architecture (internal database)
 
 Single public entrypoint (`docker-compose.yml` at the repo root):
 
 ```text
 Browser -> proxy:80 -+-> /api/* -> backend:5000
                      +-> /*      -> frontend:3000 (SPA)
+
+backend:5000 -> mongodb:27017 (internal Docker network only)
+mongodb_data volume -> persistent storage
 ```
 
 - `proxy/` (nginx) routes API traffic to the backend and everything
   else to the frontend. The frontend needs no backend URL config.
-- MongoDB is **external (MongoDB Atlas)** and intentionally not
-  managed by compose — provide `MONGO_URI` via the `.env` file next
-  to `docker-compose.yml`.
-- All services have `restart: unless-stopped`; backend and proxy
-  have healthchecks (`GET /health` must return 200).
+- MongoDB is **internal only**: the compose `mongodb` service
+  (`mongo:7`) on the default Docker network with NO published ports —
+  unreachable from the host/internet. The backend reaches it as
+  `mongodb://mongodb:27017/systemaops`. NEVER point `MONGO_URI` at
+  Atlas or any external managed database.
+- Data persists in the named volume `mongodb_data` (survives
+  `docker compose down` / `restart`). NEVER run
+  `docker compose down -v` casually — it deletes the volume.
+- `mongo-init/01-schema.js` bootstraps TTL indexes + validators on
+  first init of an empty volume (mounted read-only in compose).
+- Startup order: `backend` waits for `mongodb` `service_healthy`
+  (mongosh ping); `proxy` waits for backend + frontend healthy.
+- All services have `restart: unless-stopped`; mongodb, backend,
+  frontend, and proxy all have healthchecks.
 - Local development is unchanged: the Vite dev server still proxies
   `/api` to `http://localhost:5000`.
+- Full operations guide (env vars, backup/restore, auth, retention):
+  `Server/docs/DATABASE.md`.
 
 ## 7. API
 
-- `GET /health` → `{ ok: true }`
+- `GET /health` → `{ ok: true, status: "ok", database: "connected" }`
+  (`database` is `"disconnected"` when Mongoose has no live
+  connection; the endpoint itself always returns 200 while the
+  process is alive)
 - `POST /api/contact/` → contact enquiry (privacy consent required)
 - `POST /api/careers/apply` → job application (privacy consent required)
 

@@ -1,6 +1,10 @@
 // src/models/CareerApplication.js
 import mongoose from "mongoose";
 import {
+  CAREER_STATUSES,
+  PRIORITIES,
+} from "../config/workflow.js";
+import {
   expiresAtFor,
   isValidDate,
   oneYearFromNow,
@@ -66,9 +70,45 @@ const careerApplicationSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Pending", "Reviewed", "Shortlisted", "Rejected"],
-      default: "Pending",
+      enum: CAREER_STATUSES,
+      default: "NEW",
     },
+    priority: {
+      type: String,
+      enum: PRIORITIES,
+      default: "MEDIUM",
+    },
+    assigneeId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "AdminUser",
+      default: null,
+    },
+    // Denormalized to avoid N+1 lookups in lists/kanban.
+    assigneeName: { type: String, default: "", trim: true, maxlength: 120 },
+    assignedAt: { type: Date, default: null },
+    tags: {
+      type: [String],
+      default: [],
+      validate: {
+        validator: (v) => Array.isArray(v) && v.length <= 20,
+        message: "Too many tags",
+      },
+    },
+    notes: {
+      type: [
+        {
+          authorId: { type: mongoose.Schema.Types.ObjectId, ref: "AdminUser" },
+          authorName: { type: String, trim: true, maxlength: 120 },
+          body: { type: String, required: true, trim: true, maxlength: 2000 },
+          createdAt: { type: Date, default: Date.now },
+        },
+      ],
+      default: [],
+    },
+    followUpAt: { type: Date, default: null },
+    followUpNote: { type: String, default: "", trim: true, maxlength: 500 },
+    followUpDone: { type: Boolean, default: false },
+    lastActivityAt: { type: Date, default: null },
     privacyAccepted: {
       type: Boolean,
       required: true,
@@ -109,6 +149,17 @@ careerApplicationSchema.pre("validate", function () {
     }
   }
 });
+
+/* Operational query patterns (lists, kanban, dashboard, search). */
+careerApplicationSchema.index({ status: 1, createdAt: -1 });
+careerApplicationSchema.index({ assigneeId: 1, status: 1 });
+careerApplicationSchema.index({ priority: 1, status: 1 });
+careerApplicationSchema.index({ followUpAt: 1 });
+careerApplicationSchema.index({ role: 1, status: 1 });
+careerApplicationSchema.index(
+  { firstName: "text", lastName: "text", email: "text", role: "text" },
+  { name: "career_text" }
+);
 
 const CareerApplication = mongoose.model(
   "CareerApplication",

@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-ink-50 text-ink-900 antialiased;
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-ink-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)];
+  }
+  .input {
+    @apply rounded-lg border border-ink-300 bg-white px-3 py-2 text-sm text-ink-900 placeholder:text-ink-500 focus:border-brand-600 focus:outline-none;
+  }
+  .select {
+    @apply rounded-lg border border-ink-300 bg-white px-2 py-2 text-sm text-ink-900 focus:border-brand-600 focus:outline-none;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-ink-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-ink-700 disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-brand {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-ink-300 bg-white px-3 py-2 text-sm font-medium text-ink-700 transition hover:border-brand-600 hover:text-ink-900 disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .section-label {
+    @apply text-xs font-semibold uppercase tracking-wider text-ink-500;
+  }
+}
+
+/* Visible keyboard focus everywhere. */
+:focus-visible {
+  outline: 2px solid #159a9c;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Slim scrollbars for kanban lanes and drawers. */
+.slim-scroll::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+.slim-scroll::-webkit-scrollbar-thumb {
+  background: #d7e0e8;
+  border-radius: 8px;
+}
+.slim-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Login brand panel: deep atmosphere, extremely faint grid. */
+.login-grid {
+  background-image:
+    linear-gradient(rgba(59, 163, 161, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 163, 161, 0.045) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 85% 80% at 50% 42%, black 25%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 42%, black 25%, transparent 72%);
+}
+
+/* Capability labels: one slow ambient cycle. Each label brightens
+   briefly in turn as the travelling signal passes its zone, then
+   settles back. Subtle by design — never flashing. */
+.login-svc {
+  opacity: 0.78;
+  animation: login-svc 26s ease-in-out infinite;
+}
+.login-svc .login-svc-dot {
+  transition: opacity 1.2s ease;
+}
+@keyframes login-svc {
+  0%, 100% { opacity: 0.78; }
+  6%, 16% { opacity: 1; }
+  28%, 100% { opacity: 0.78; }
+}
+.login-svc .login-svc-dot {
+  animation: login-svc-dot 26s ease-in-out infinite;
+}
+@keyframes login-svc-dot {
+  0%, 100% { opacity: 0; }
+  6%, 16% { opacity: 0.9; }
+  28%, 100% { opacity: 0; }
+}
+
+/* Toggles: reuse brand input look inside the login form. */
+.input {
+  border-radius: 10px;
+}
+
+/* Reduced motion: disable travelling signals and module cycles,
+   keep the static composition complete. SMIL dots are hidden;
+   CSS cycles are killed by the global rule below. */
+@media (prefers-reduced-motion: reduce) {
+  .login-signal {
+    display: none;
+  }
+}
+
+/* Reduced motion: honor the OS setting across the console. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

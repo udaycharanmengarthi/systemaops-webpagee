@@ -2,6 +2,10 @@ import validator from "validator";
 import Contact from "../models/Contact.js";
 import { expiresAtFor } from "../utils/retention.js";
 import { sendFounderEmail } from "../services/mail.service.js";
+import {
+  notifyAdmins,
+  recordActivity,
+} from "../services/activity.service.js";
 
 const PRIVACY_VERSION = "2026-01-01";
 
@@ -90,6 +94,26 @@ export const submitContact = async (req, res) => {
       createdAt: submittedAt,
       expiresAt: expiresAtFor(submittedAt),
     });
+
+    // Audit + admin notification (best-effort; never blocks success).
+    try {
+      await recordActivity({
+        req,
+        action: "CONTACT_CREATED",
+        entityType: "contact",
+        entityId: contact._id,
+        entityLabel: `${name} — ${company || email}`,
+      });
+      await notifyAdmins({
+        type: "NEW_CONTACT",
+        title: `New contact: ${name}`,
+        body: `${company || email}`,
+        entityType: "contact",
+        entityId: contact._id,
+      });
+    } catch {
+      // Audit failure must never fail a public submission.
+    }
 
     // Send founder email (never blocks success, never leaks details)
     try {
