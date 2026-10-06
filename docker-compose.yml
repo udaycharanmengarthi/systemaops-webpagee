@@ -74,12 +74,10 @@ services:
     build:
       context: ./Server
 
-    # Published so host-side consumers (Vite dev proxy /api -> :5000,
-    # health checks, debugging) reach the Docker backend. MongoDB stays
-    # unpublished: backend talks to it internally via mongodb:27017.
-    ports:
-      - "5000:5000"
-
+    # Internal only: reachable via the reverse proxy (/api/*). NEVER
+    # published to the host in production — the public entrypoint is
+    # the proxy on :80 (HTTPS terminates upstream). Host-side dev can
+    # opt in via docker-compose.override.yml.
     expose:
       - "5000"
 

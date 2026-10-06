@@ -1,0 +1,14 @@
+# LOCAL DEVELOPMENT override — auto-loaded by `docker compose`.
+# Production deployments must NOT include this file:
+#   docker compose -f docker-compose.yml up -d
+#
+# It publishes the backend API on the developer's OWN loopback
+# interface so host-side tooling (Vite dev proxy /api -> :5000) works.
+# 127.0.0.1-bound ports are reachable only from this machine.
+# MongoDB stays internal: host-side dev uses the local mongod already
+# pointed to by Server/.env (mongodb://127.0.0.1:27017/systemaops).
+
+services:
+  backend:
+    ports:
+      - "127.0.0.1:5000:5000"
