@@ -28,15 +28,25 @@ const allowedOrigins = (process.env.CORS_ORIGINS || "http://localhost:3000,http:
   .map((o) => o.trim())
   .filter(Boolean);
 
+/* Host normalization: hosts are case-insensitive and an apex domain
+   (systemaops.com) and its www. alias are the SAME production site —
+   browsers send an Origin that must not 403 merely because the edge
+   serves one hostname while the form was opened on the other. */
+function normalizeHost(host) {
+  return String(host || "")
+    .toLowerCase()
+    .replace(/^www\./, "");
+}
+
 /* CORS policy:
    1. No Origin header (curl, same-origin GETs, health checks) → allow.
    2. Explicit allowlist (cross-origin dev servers, e.g. Vite :5173/:5174) → allow.
-   3. Same-origin through the reverse proxy → allow. The public site
-      (/), the admin console (/admin/) and the API share the same Host
-      (:80), so the browser sends `Origin: http://<host>` on JSON POSTs
-      even for same-origin requests — that must never be rejected, and
-      comparing hosts keeps this working on any production domain
-      without env configuration.
+   3. Same-origin through the reverse proxy → allow, including
+      apex/www. aliases. The public site (/), the admin console
+      (/admin/) and the API share one origin, so the browser sends
+      `Origin: <host>` on JSON POSTs even for same-origin requests —
+      that must never be rejected, and comparing normalized hosts keeps
+      this working on any production domain without env configuration.
    4. Anything else → 403 (never a wildcard; credentials stay explicit). */
 app.use((req, res, next) => {
   cors({
@@ -45,7 +55,9 @@ app.use((req, res, next) => {
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin)) return callback(null, true);
       try {
-        if (new URL(origin).host === req.headers.host) {
+        const originHost = normalizeHost(new URL(origin).host);
+        const requestHost = normalizeHost(req.headers.host);
+        if (originHost && originHost === requestHost) {
           return callback(null, true);
         }
       } catch {
