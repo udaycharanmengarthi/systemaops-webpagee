@@ -1,0 +1,301 @@
+/* ================================================================
+   LoginNetwork — living orchestration visual for the login brand
+   panel. Self-contained: hardcoded dark palette (the panel is
+   always dark), no dependency on console tokens or global styles.
+   ================================================================ */
+
+.ln-root {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+}
+
+.ln-stage {
+  position: relative;
+  width: 100%;
+  max-height: 100%;
+  margin: auto;
+  aspect-ratio: 16 / 10;
+}
+
+.ln-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── Spokes: thin, quiet; focus lifts one, dims the rest ── */
+
+.ln-spoke {
+  stroke: rgba(148, 190, 192, 0.32);
+  stroke-width: 1;
+  transition: stroke 0.3s ease, opacity 0.3s ease;
+}
+
+.ln-spoke--focus {
+  stroke: rgba(94, 220, 214, 0.75);
+}
+
+.ln-spoke--dim {
+  opacity: 0.45;
+}
+
+/* ── Connection points ── */
+
+.ln-point {
+  fill: rgba(148, 190, 192, 0.5);
+  transition: fill 0.3s ease;
+}
+
+.ln-point--focus {
+  fill: #5ee0d8;
+}
+
+/* ── Travelling streaks: short illuminated segments of the spoke.
+   pathLength=1 makes 0.11 a fixed fraction of every spoke; the
+   dashoffset animation slides that single continuous segment —
+   never dots. ── */
+
+.ln-streak {
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 0.11 0.89;
+  opacity: 0;
+}
+
+.ln-streak--halo {
+  stroke-width: 3.4;
+}
+
+.ln-streak--in {
+  stroke: #7df3e8;
+  animation-name: lnStreakIn;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+}
+
+.ln-streak--return {
+  stroke: #93bcff;
+  animation-name: lnStreakOut;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+}
+
+@keyframes lnStreakIn {
+  0% { stroke-dashoffset: 0; opacity: 0; }
+  10% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { stroke-dashoffset: -0.89; opacity: 0; }
+}
+
+@keyframes lnStreakOut {
+  0% { stroke-dashoffset: -0.89; opacity: 0; }
+  12% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+/* ── Hub rings ── */
+
+.ln-ring {
+  stroke: rgba(94, 200, 198, 0.22);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.ln-ring--inner {
+  stroke: rgba(94, 200, 198, 0.34);
+  stroke-dasharray: 1.5 2.5;
+}
+
+/* ── Central hub: real logo, calm between events ── */
+
+.ln-hub {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  z-index: 3;
+}
+
+.ln-hub-core {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #0d2b30 0%, #06181c 68%);
+  border: 1px solid rgba(94, 200, 198, 0.4);
+  box-shadow:
+    0 0 0 6px rgba(32, 167, 160, 0.07),
+    0 8px 28px rgba(0, 0, 0, 0.5);
+}
+
+.ln-hub-logo {
+  width: 30px;
+  height: 30px;
+}
+
+.ln-hub-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #eaf6f5;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+
+.ln-hub-pulse {
+  position: absolute;
+  top: 29px;
+  left: 50%;
+  width: 58px;
+  height: 58px;
+  margin: -29px 0 0 -29px;
+  border-radius: 50%;
+  border: 1px solid rgba(111, 242, 230, 0.8);
+  pointer-events: none;
+  animation: lnHubPulse 3.6s ease-out 1;
+}
+
+@keyframes lnHubPulse {
+  0%, 38% { transform: scale(0.55); opacity: 0; }
+  47% { transform: scale(1); opacity: 0.75; }
+  62% { transform: scale(1.55); opacity: 0; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+
+/* ── Capability nodes ── */
+
+.ln-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 150px;
+  padding: 6px 4px;
+  border-radius: 14px;
+  cursor: pointer;
+  z-index: 2;
+  transition: opacity 0.3s ease;
+}
+
+.ln-node--dim {
+  opacity: 0.42;
+}
+
+.ln-node:focus-visible {
+  outline: 2px solid rgba(111, 242, 230, 0.7);
+  outline-offset: 4px;
+}
+
+.ln-node-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #9fd8d5;
+  background: rgba(10, 32, 36, 0.85);
+  border: 1px solid rgba(94, 200, 198, 0.28);
+  transition: color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.ln-node--focus .ln-node-icon,
+.ln-node--active .ln-node-icon {
+  color: #6ff2e6;
+  border-color: rgba(111, 242, 230, 0.65);
+  box-shadow: 0 0 14px rgba(111, 242, 230, 0.25);
+}
+
+.ln-node--active .ln-node-icon {
+  animation: lnNodeFlash 3.6s ease-out 1;
+}
+
+@keyframes lnNodeFlash {
+  0%, 88% { box-shadow: 0 0 14px rgba(111, 242, 230, 0.25); }
+  94% { box-shadow: 0 0 22px rgba(111, 242, 230, 0.55); }
+  100% { box-shadow: 0 0 14px rgba(111, 242, 230, 0.25); }
+}
+
+.ln-node-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  text-align: center;
+}
+
+.ln-node-name {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  color: #dceeee;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
+  transition: color 0.25s ease;
+}
+
+.ln-node--focus .ln-node-name,
+.ln-node--active .ln-node-name {
+  color: #ffffff;
+}
+
+.ln-node-sub {
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: #7e9fa1;
+}
+
+/* ── Compact (narrow panel): tighter type ── */
+
+.ln-compact .ln-node {
+  width: 128px;
+}
+
+.ln-compact .ln-node-name {
+  font-size: 9.5px;
+}
+
+.ln-compact .ln-node-sub {
+  font-size: 8px;
+}
+
+.ln-compact .ln-hub-core {
+  width: 50px;
+  height: 50px;
+}
+
+.ln-compact .ln-hub-logo {
+  width: 26px;
+  height: 26px;
+}
+
+.ln-compact .ln-hub-pulse {
+  top: 25px;
+  width: 50px;
+  height: 50px;
+  margin: -25px 0 0 -25px;
+}
+
+/* ── Reduced motion: static, fully legible diagram ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .ln-hub-pulse,
+  .ln-node--active .ln-node-icon,
+  .ln-streak {
+    animation: none;
+  }
+}

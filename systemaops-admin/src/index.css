@@ -64,42 +64,9 @@ body {
   -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 42%, black 25%, transparent 72%);
 }
 
-/* Capability labels: one slow ambient cycle. Each label brightens
-   briefly in turn as the travelling signal passes its zone, then
-   settles back. Subtle by design — never flashing. */
-.login-svc {
-  opacity: 0.78;
-  animation: login-svc 26s ease-in-out infinite;
-}
-.login-svc .login-svc-dot {
-  transition: opacity 1.2s ease;
-}
-@keyframes login-svc {
-  0%, 100% { opacity: 0.78; }
-  6%, 16% { opacity: 1; }
-  28%, 100% { opacity: 0.78; }
-}
-.login-svc .login-svc-dot {
-  animation: login-svc-dot 26s ease-in-out infinite;
-}
-@keyframes login-svc-dot {
-  0%, 100% { opacity: 0; }
-  6%, 16% { opacity: 0.9; }
-  28%, 100% { opacity: 0; }
-}
-
 /* Toggles: reuse brand input look inside the login form. */
 .input {
   border-radius: 10px;
-}
-
-/* Reduced motion: disable travelling signals and module cycles,
-   keep the static composition complete. SMIL dots are hidden;
-   CSS cycles are killed by the global rule below. */
-@media (prefers-reduced-motion: reduce) {
-  .login-signal {
-    display: none;
-  }
 }
 
 /* Reduced motion: honor the OS setting across the console. */
