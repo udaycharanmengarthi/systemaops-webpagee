@@ -190,7 +190,7 @@ export default function Dashboard() {
 
       {/* ── KPI grid (every card navigates to its filtered view) ── */}
       <section aria-label="Key metrics">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
           <Metric icon={UserPlus} label="New contacts" value={data.contacts.new} context={`${data.contacts.newToday} arrived today`} to="/contacts?status=NEW" tone="blue" />
           <Metric icon={UserX} label="Unassigned contacts" value={data.contacts.unassigned} context="Needs an owner" to="/contacts?assignee=unassigned" tone="amber" />
           <Metric icon={CalendarClock} label="Overdue follow-ups" value={data.contacts.overdue} context="Past due date" to="/contacts?followup=overdue" tone="red" />

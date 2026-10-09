@@ -104,14 +104,14 @@ export function Metric({ icon, label, value, context, to, onClick, tone }) {
   const inner = (
     <>
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2.5">
+        <div className="flex min-w-0 items-center gap-2.5">
           <IconBox icon={icon} tone={tone} />
-          <span className="section-label">{label}</span>
+          <span className="section-label min-w-0">{label}</span>
         </div>
         {to || onClick ? (
           <ArrowUpRight
             size={14}
-            className="text-ink-300 transition group-hover:text-brand-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            className="shrink-0 text-ink-300 transition group-hover:text-brand-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
             aria-hidden="true"
           />
         ) : null}
@@ -124,7 +124,7 @@ export function Metric({ icon, label, value, context, to, onClick, tone }) {
     return (
       <Link
         to={to}
-        className="group card block p-4 text-left transition hover:border-brand-200 hover:shadow-[0_8px_30px_rgba(11,23,32,0.06)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-600"
+        className="group card block p-3 text-left transition hover:border-brand-200 hover:shadow-[0_8px_30px_rgba(11,23,32,0.06)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-600 sm:p-4"
         aria-label={`${label}: ${value}`}
       >
         {inner}
@@ -136,14 +136,14 @@ export function Metric({ icon, label, value, context, to, onClick, tone }) {
       <button
         type="button"
         onClick={onClick}
-        className="group card block w-full p-4 text-left transition hover:border-brand-200 hover:shadow-[0_8px_30px_rgba(11,23,32,0.06)]"
+        className="group card block w-full p-3 text-left transition hover:border-brand-200 hover:shadow-[0_8px_30px_rgba(11,23,32,0.06)] sm:p-4"
         aria-label={`${label}: ${value}`}
       >
         {inner}
       </button>
     );
   }
-  return <div className="card p-4">{inner}</div>;
+  return <div className="card p-3 sm:p-4">{inner}</div>;
 }
 
 /* ---------- Avatar ---------- */
@@ -240,7 +240,7 @@ export function SkeletonRows({ count = 5 }) {
 
 export function SkeletonCards({ count = 4 }) {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" role="status" aria-label="Loading">
+    <div className="grid grid-cols-2 gap-4 xl:grid-cols-4" role="status" aria-label="Loading">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="h-28 animate-pulse rounded-2xl bg-ink-100" />
       ))}

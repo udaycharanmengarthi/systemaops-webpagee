@@ -17,6 +17,9 @@ export default function SettingsProfile() {
   const [busy, setBusy] = useState(false);
   const [confirmRemove, setConfirmRemove] = useState(false);
   const [pending, setPending] = useState(null); // { file, previewUrl }
+  // Persistent inline notice under the photo buttons (toasts vanish;
+  // the limit hint stays so nobody has to guess the constraint).
+  const [photoError, setPhotoError] = useState(null);
 
   useEffect(
     () => () => {
@@ -33,11 +36,14 @@ export default function SettingsProfile() {
     const file = e.target.files && e.target.files[0];
     e.target.value = "";
     if (!file) return;
+    setPhotoError(null);
     if (!ACCEPTED.includes(file.type)) {
+      setPhotoError("Please upload a JPG, PNG, or WebP image.");
       toast.error("Please upload a JPG, PNG, or WebP image.");
       return;
     }
     if (file.size > MAX_BYTES) {
+      setPhotoError("This photo is larger than 5 MB. Please choose a smaller image.");
       toast.error("Image must be smaller than 5 MB.");
       return;
     }
@@ -47,6 +53,7 @@ export default function SettingsProfile() {
   const cancelPreview = () => {
     if (pending && pending.previewUrl) URL.revokeObjectURL(pending.previewUrl);
     setPending(null);
+    setPhotoError(null);
   };
 
   const uploadPending = async () => {
@@ -60,6 +67,12 @@ export default function SettingsProfile() {
       await refresh();
       cancelPreview();
     } catch (err) {
+      // 413 comes from a reverse proxy in front of the backend (its body
+      // limit), not from our API envelope — translate it into the same
+      // red inline notice so the size rule is unmistakable.
+      if (err && err.status === 413) {
+        setPhotoError("The server rejected this photo as too large. Please use a JPG, PNG, or WebP image smaller than 5 MB.");
+      }
       toast.error(err.message || "Upload failed. Please try again.");
     } finally {
       setBusy(false);
@@ -113,6 +126,14 @@ export default function SettingsProfile() {
                 aria-label="Upload profile photo"
               />
             </div>
+            <p className="mt-2 text-xs text-ink-500">
+              JPG, PNG, or WebP · max 5 MB. Photos are resized to a small square.
+            </p>
+            {photoError ? (
+              <p role="alert" className="mt-1 text-xs font-medium text-red-600">
+                {photoError}
+              </p>
+            ) : null}
           </div>
         </div>
       </section>
