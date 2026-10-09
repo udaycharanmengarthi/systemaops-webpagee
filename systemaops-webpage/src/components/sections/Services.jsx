@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "../../i18n/LanguageContext";
 import { getServiceAccent } from "../../data/serviceAccents";
 import { servicesMenu } from "../../data/services";
+import ServiceNetwork from "./ServiceNetwork";
 
 /* Home cards consume the single service configuration.
    Order and destinations always match the Mega Navigation. */
@@ -63,6 +64,11 @@ export default function Services() {
           </p>
 
         </div>
+
+        {/* ORCHESTRATION NETWORK — living overview of the six
+            capabilities below; same data, same destinations. */}
+
+        <ServiceNetwork />
 
         {/* SERVICES GRID */}
 

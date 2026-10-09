@@ -419,7 +419,7 @@ export const pagesTranslations = {
     },
 
     contact: {
-      metaTitle: "Contact Us — SystemaOps",
+      metaTitle: "Contact Us | SystemaOps",
       metaDesc: "Get in touch with SystemaOps. Book a free discovery call and let's discuss how automation can help your business.",
       eyebrow: "Get In Touch",
       heading: ["Let's Build", "Something Great", "Together"],
@@ -673,7 +673,7 @@ export const pagesTranslations = {
     },
 
     contact: {
-      metaTitle: "Neem Contact Op — SystemaOps",
+      metaTitle: "Neem Contact Op | SystemaOps",
       metaDesc: "Neem contact op met SystemaOps. Boek een gratis discovery call en bespreek hoe automatisering uw bedrijf kan helpen.",
       eyebrow: "Neem Contact Op",
       heading: ["Laten We Samen", "Iets Geweldigs", "Bouwen"],
@@ -927,7 +927,7 @@ export const pagesTranslations = {
     },
 
     contact: {
-      metaTitle: "Kontakt — SystemaOps",
+      metaTitle: "Kontakt | SystemaOps",
       metaDesc: "Nehmen Sie Kontakt mit SystemaOps auf. Buchen Sie einen kostenlosen Discovery-Call und lassen Sie uns besprechen, wie Automatisierung Ihrem Unternehmen helfen kann.",
       eyebrow: "Kontakt Aufnehmen",
       heading: ["Lassen Sie uns zusammen", "Etwas Großartiges", "Aufbauen"],

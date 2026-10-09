@@ -135,6 +135,52 @@
     30px;
 }
 
+/* ═══════════════════════════════════════════
+   DESKTOP NAV SEPARATORS (shared, all pages)
+   Single source for the vertical dividers between
+   top-level nav items (Home | About | Services |
+   Careers | Blogs). CSS-only 1px lines centered in
+   the existing 30px gap — no layout shift, no DOM
+   text (screen readers/SEO unaffected: pseudo-
+   elements are never announced, labels/URLs/
+   metadata untouched). Contact page inherits the
+   same component, so it can never diverge.
+   ═══════════════════════════════════════════ */
+
+.nb-links > * {
+  position:
+    relative;
+}
+
+.nb-links > * + *::before {
+  content:
+    '';
+
+  position:
+    absolute;
+
+  left:
+    -15px;
+
+  top:
+    50%;
+
+  transform:
+    translateY(-50%);
+
+  width:
+    1px;
+
+  height:
+    16px;
+
+  background:
+    var(--border);
+
+  pointer-events:
+    none;
+}
+
 .nb-link {
   position:
     relative;
@@ -714,6 +760,15 @@
   .nb-links {
     gap:
       16px;
+  }
+
+  /* Keep separators centered in the compressed 16px tablet gap. */
+  .nb-links > * + *::before {
+    left:
+      -8px;
+
+    height:
+      14px;
   }
 
   .nb-link {

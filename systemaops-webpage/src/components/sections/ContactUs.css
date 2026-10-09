@@ -1,9 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
-* {
+/* Scoped reset: identical rendering inside .contact-section, but never leaks
+   onto the shared navbar (or any other page), so the Contact navbar cannot
+   diverge from Home/About/Services/Careers/Blogs. Previously `*` applied
+   globally once bundled, risking cross-page inconsistencies. */
+.contact-section,
+.contact-section *,
+.contact-section *::before,
+.contact-section *::after {
+  box-sizing: border-box;
+}
+
+.contact-section,
+.contact-section * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 

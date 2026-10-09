@@ -1,14 +1,24 @@
-# SystemaOps production stack
+# SystemaOps production stack — host-NGINX deployment.
 #
-# Public:
-#   Browser
+# Production (host NGINX owns :80/:443 — NEVER bind :80 from Compose):
+#   Internet
 #      |
 #      v
-#   proxy:80
+#   host NGINX :80/:443
 #      |
-#      +---- /api/* ----> backend:5000
+#      +---- /         ----> existing public website (127.0.0.1:4000, untouched)
 #      |
-#      +---- /* --------> frontend:3000
+#      +---- /api/*    ----> existing backend       (127.0.0.1:4000, untouched)
+#      |
+#      +---- /admin/*  ----> admin:3001 via 127.0.0.1:3001 (this stack)
+#
+# This stack (all internal except admin loopback):
+#   backend:5000  ----> mongodb:27017 (both internal, NO host ports)
+#   frontend:3000 (internal; local/staging preview only, NOT bound in prod)
+#   admin:3001    (loopback-only 127.0.0.1:3001 for host NGINX; NEVER 0.0.0.0)
+#   proxy:80      (internal only; NO host port binding — host NGINX owns :80.
+#                  For environments WITHOUT host NGINX, enable explicitly:
+#                  docker compose -f docker-compose.yml -f docker-compose.proxy.yml up -d)
 #
 # Internal:
 #   backend:5000
@@ -140,11 +150,16 @@ services:
 
 
   # Internal admin operations console (React SPA, static via `serve`).
-  # Internal only: reachable solely through the reverse proxy at /admin/.
-  # Never published to the host. No link to it exists on the public site.
+  # Served at /admin/ through the HOST NGINX (systemaops.com/admin/ -> 127.0.0.1:3001).
+  # Loopback-only publish so host NGINX can reach it; NEVER 0.0.0.0:3001
+  # (no SERVER_IP:3001 public exposure). No link to it exists on the public site.
   admin:
     build:
       context: ./systemaops-admin
+
+    # Host NGINX needs direct access: publish ONLY on loopback.
+    ports:
+      - "127.0.0.1:3001:3001"
 
     expose:
       - "3001"
@@ -163,12 +178,17 @@ services:
       start_period: 60s
 
 
+  # Bundled reverse proxy for environments WITHOUT host NGINX
+  # (local full-stack preview / staging without edge proxy).
+  # Production with host NGINX: runs internal-only (no host :80 binding,
+  # so it can never conflict with host NGINX owning port 80).
+  # To bind host :80 explicitly: add -f docker-compose.proxy.yml.
   proxy:
     build:
       context: ./proxy
 
-    ports:
-      - "80:80"
+    expose:
+      - "80"
 
     depends_on:
       backend:

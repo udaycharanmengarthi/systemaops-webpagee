@@ -1,4 +1,4 @@
-// src/controllers/adminAuth.controller.js — login / logout / me.
+l// src/controllers/adminAuth.controller.js — login / logout / me.
 import bcrypt from "bcryptjs";
 import validator from "validator";
 import AdminUser from "../models/AdminUser.js";

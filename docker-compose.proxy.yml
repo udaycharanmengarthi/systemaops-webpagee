@@ -1,0 +1,15 @@
+# Full-stack preview WITHOUT host NGINX — binds the bundled proxy to host :80.
+#
+# Usage (local / staging WITHOUT an edge proxy):
+#   docker compose -f docker-compose.yml -f docker-compose.proxy.yml up -d --build
+#
+# NEVER use this file on the production host where host NGINX owns port 80 —
+# it will fail with "address already in use" or steal public traffic.
+# Production (host NGINX) uses only:
+#   docker compose -f docker-compose.yml up -d --build
+# and reaches Admin via 127.0.0.1:3001 (see proxy/host-nginx-admin.snippet.conf).
+
+services:
+  proxy:
+    ports:
+      - "80:80"

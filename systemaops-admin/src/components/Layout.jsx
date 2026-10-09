@@ -223,7 +223,7 @@ export default function Layout() {
             } ${isActive ? "bg-brand-50 text-brand-800" : "text-ink-700 hover:bg-ink-100"}`
           }
         >
-          <UserRound size={18} strokeWidth={1.9} className="shrink-0" aria-hidden="true" />
+          <Avatar name={user?.name} src={avatarSrcFor(user)} size={22} />
           {wide ? (
             <span className="flex min-w-0 flex-1 items-center justify-between">
               <span className="truncate">Profile</span>

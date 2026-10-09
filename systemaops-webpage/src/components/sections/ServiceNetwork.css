@@ -1,0 +1,406 @@
+/* ================================================================
+   ServiceNetwork — living orchestration visual.
+   Always-dark cinematic panel (both themes): near-black navy,
+   barely-visible grid, restrained teal. Light text by design.
+   ================================================================ */
+
+.sn-root {
+  position: relative;
+  margin: 0 0 72px;
+  border-radius: 28px;
+  border: 1px solid rgba(94, 200, 198, 0.14);
+  background:
+    radial-gradient(
+      ellipse 60% 45% at 50% 46%,
+      rgba(32, 167, 160, 0.10),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 90% 70% at 50% 110%,
+      rgba(18, 90, 92, 0.16),
+      transparent 70%
+    ),
+    linear-gradient(180deg, #06181c 0%, #040f12 100%);
+  box-shadow:
+    0 24px 70px rgba(2, 10, 12, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.sn-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.sn-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── Spokes: thin, quiet; focus lifts one, dims the rest ── */
+
+.sn-spoke {
+  stroke: rgba(148, 190, 192, 0.32);
+  stroke-width: 1;
+  transition: stroke 0.3s ease, opacity 0.3s ease;
+}
+
+.sn-spoke--focus {
+  stroke: rgba(94, 220, 214, 0.75);
+}
+
+.sn-spoke--dim {
+  opacity: 0.45;
+}
+
+/* ── Connection points ── */
+
+.sn-point {
+  fill: rgba(148, 190, 192, 0.5);
+  transition: fill 0.3s ease;
+}
+
+.sn-point--focus {
+  fill: #5ee0d8;
+}
+
+/* ── Travelling streaks: short illuminated segments of the spoke.
+   pathLength=1 on the path makes 0.11 a fixed fraction of every
+   spoke; the dashoffset animation slides that single continuous
+   segment along the line — never dots. Rounded caps + a wider
+   faint underlay keep it narrow and precise. ── */
+
+.sn-streak {
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 0.11 0.89;
+  opacity: 0;
+}
+
+.sn-streak--halo {
+  stroke-width: 3.4;
+}
+
+.sn-streak--in {
+  stroke: #7df3e8;
+  animation-name: snStreakIn;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+}
+
+.sn-streak--return {
+  stroke: #93bcff;
+  animation-name: snStreakOut;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+}
+
+/* Inbound: segment slides node -> hub (offset 0 -> -0.89). */
+@keyframes snStreakIn {
+  0% { stroke-dashoffset: 0; opacity: 0; }
+  10% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { stroke-dashoffset: -0.89; opacity: 0; }
+}
+
+/* Return: same line, segment slides hub -> node (-0.89 -> 0). */
+@keyframes snStreakOut {
+  0% { stroke-dashoffset: -0.89; opacity: 0; }
+  12% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+/* ── Hub rings + halo ── */
+
+.sn-halo {
+  pointer-events: none;
+}
+
+.sn-ring {
+  stroke: rgba(94, 200, 198, 0.22);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.sn-ring--inner {
+  stroke: rgba(94, 200, 198, 0.34);
+  stroke-dasharray: 1.5 2.5;
+}
+
+/* ── Central hub: real logo, calm between events ── */
+
+.sn-hub {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 3;
+}
+
+.sn-hub-core {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #0d2b30 0%, #06181c 68%);
+  border: 1px solid rgba(94, 200, 198, 0.4);
+  box-shadow:
+    0 0 0 6px rgba(32, 167, 160, 0.07),
+    0 8px 28px rgba(0, 0, 0, 0.5);
+}
+
+.sn-hub-logo {
+  width: 34px;
+  height: 34px;
+}
+
+.sn-hub-label {
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #eaf6f5;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+
+.sn-hub-pulse {
+  position: absolute;
+  top: 33px;
+  left: 50%;
+  width: 66px;
+  height: 66px;
+  margin: -33px 0 0 -33px;
+  border-radius: 50%;
+  border: 1px solid rgba(111, 242, 230, 0.8);
+  pointer-events: none;
+  animation: snHubPulse 3.6s ease-out 1;
+}
+
+@keyframes snHubPulse {
+  0%, 38% { transform: scale(0.55); opacity: 0; }
+  47% { transform: scale(1); opacity: 0.75; }
+  62% { transform: scale(1.55); opacity: 0; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+
+/* ── Service nodes: icon + name + subtitle, no boxes ── */
+
+.sn-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 168px;
+  padding: 6px 4px;
+  text-decoration: none;
+  border-radius: 14px;
+  z-index: 2;
+  transition: opacity 0.3s ease;
+}
+
+.sn-node--dim {
+  opacity: 0.42;
+}
+
+.sn-node-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #9fd8d5;
+  background: rgba(10, 32, 36, 0.85);
+  border: 1px solid rgba(94, 200, 198, 0.28);
+  transition: color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.sn-node--focus .sn-node-icon,
+.sn-node--active .sn-node-icon {
+  color: #6ff2e6;
+  border-color: rgba(111, 242, 230, 0.65);
+  box-shadow: 0 0 14px rgba(111, 242, 230, 0.25);
+}
+
+.sn-node--active .sn-node-icon {
+  animation: snNodeFlash 3.6s ease-out 1;
+}
+
+@keyframes snNodeFlash {
+  0%, 88% { box-shadow: 0 0 14px rgba(111, 242, 230, 0.25); }
+  94% { box-shadow: 0 0 22px rgba(111, 242, 230, 0.55); }
+  100% { box-shadow: 0 0 14px rgba(111, 242, 230, 0.25); }
+}
+
+.sn-node-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  text-align: center;
+}
+
+.sn-node-name {
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: #dceeee;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
+  transition: color 0.25s ease;
+}
+
+.sn-node--focus .sn-node-name,
+.sn-node--active .sn-node-name {
+  color: #ffffff;
+}
+
+.sn-node-sub {
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #7e9fa1;
+}
+
+.sn-node:focus-visible {
+  outline: 2px solid rgba(111, 242, 230, 0.7);
+  outline-offset: 4px;
+}
+
+/* ── Caption ── */
+
+.sn-caption {
+  margin: 0;
+  padding: 0 24px 22px;
+  text-align: center;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+  color: #6d9294;
+}
+
+/* ── Tablet ── */
+
+@media (max-width: 1023px) {
+  .sn-stage {
+    aspect-ratio: 4 / 3.4;
+  }
+
+  .sn-node {
+    width: 150px;
+  }
+
+  .sn-node-name {
+    font-size: 12.5px;
+  }
+
+  .sn-hub-core {
+    width: 58px;
+    height: 58px;
+  }
+
+  .sn-hub-logo {
+    width: 30px;
+    height: 30px;
+  }
+
+  .sn-hub-pulse {
+    top: 29px;
+    width: 58px;
+    height: 58px;
+    margin: -29px 0 0 -29px;
+  }
+}
+
+/* ── Mobile: compact grid composition, same concept ── */
+
+@media (max-width: 639px) {
+  .sn-root {
+    border-radius: 22px;
+    margin-bottom: 56px;
+  }
+
+  .sn-stage {
+    aspect-ratio: 3 / 4.1;
+  }
+
+  .sn-node {
+    width: 132px;
+    gap: 5px;
+  }
+
+  .sn-node-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .sn-node-name {
+    font-size: 12px;
+  }
+
+  .sn-node-sub {
+    font-size: 9.5px;
+  }
+
+  .sn-hub-core {
+    width: 52px;
+    height: 52px;
+  }
+
+  .sn-hub-logo {
+    width: 27px;
+    height: 27px;
+  }
+
+  .sn-hub-label {
+    font-size: 11px;
+  }
+
+  .sn-hub-pulse {
+    top: 26px;
+    width: 52px;
+    height: 52px;
+    margin: -26px 0 0 -26px;
+  }
+
+  .sn-caption {
+    font-size: 11.5px;
+    padding: 0 18px 18px;
+  }
+}
+
+/* ── Reduced motion: static, fully legible diagram ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .sn-hub-pulse,
+  .sn-node--active .sn-node-icon,
+  .sn-streak {
+    animation: none;
+  }
+
+  .sn-spoke,
+  .sn-node,
+  .sn-node-icon,
+  .sn-node-name,
+  .sn-point {
+    transition: none;
+  }
+}
