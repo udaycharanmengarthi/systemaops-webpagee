@@ -158,15 +158,25 @@ export default function Layout() {
 
   const sidebarInner = (wide) => (
     <div className="flex h-full flex-col">
-      <div className={`flex items-center px-3 py-5 ${wide ? "gap-2.5" : "justify-center"}`}>
-        <img src={logo} alt="SystemaOps" className="h-8 w-8 shrink-0" />
+      {/* Brand links out to the PUBLIC site. Plain <a href="/"> on
+          purpose — a react-router <Link to="/"> would resolve against
+          basename "/admin" and land on the Dashboard instead. */}
+      <a
+        href="/"
+        title="Go to the SystemaOps website"
+        aria-label="SystemaOps — go to the public website"
+        className={`flex items-center rounded-lg px-3 py-5 transition hover:bg-ink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 ${
+          wide ? "gap-2.5" : "justify-center"
+        }`}
+      >
+        <img src={logo} alt="" aria-hidden="true" className="h-8 w-8 shrink-0" />
         {wide ? (
           <div className="min-w-0 leading-tight">
             <div className="truncate text-sm font-bold tracking-tight text-ink-900">SystemaOps</div>
             <div className="text-[11px] font-medium text-ink-500">Operations Console</div>
           </div>
         ) : null}
-      </div>
+      </a>
 
       <nav className="flex flex-1 flex-col gap-4 overflow-y-auto px-2.5" aria-label="Primary">
         {visibleSections.map((section) => (

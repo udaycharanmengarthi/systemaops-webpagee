@@ -2,25 +2,57 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { authApi } from "../api/auth.js";
+import {
+  FORGOT_PASSWORD_MESSAGES as MSG,
+  isValidEmailFormat,
+  messageForForgotPasswordError,
+  normalizeEmail,
+} from "../utils/forgotPassword.js";
 import BrandExperience from "../components/BrandExperience.jsx";
 import logo from "../assets/systemaops-icon-color.svg";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
-  const [done, setDone] = useState(false);
+  const [sentTo, setSentTo] = useState(null);
+  const [sentMessage, setSentMessage] = useState("");
   const [error, setError] = useState("");
+
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value);
+    /* Clear the previous outcome as soon as the user starts editing,
+       so success and error are never visible together. */
+    setError("");
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     if (busy) return;
+
+    const value = normalizeEmail(email);
+    setEmail(value);
+
+    if (!isValidEmailFormat(value)) {
+      setError(MSG.invalidEmail);
+      return;
+    }
+
     setError("");
     setBusy(true);
     try {
-      await authApi.forgotPassword(email.trim());
-      setDone(true);
+      const { data } = await authApi.forgotPassword(value);
+      /* Only reached on genuine success (2xx). The API client throws
+         ApiError for every failure, so `sentTo` can never be set for
+         an unknown email or a delivery failure. The TTL in the copy
+         comes from the backend (env-configurable), not from here. */
+      setSentTo(value);
+      setSentMessage(
+        typeof data?.message === "string" && data.message
+          ? data.message
+          : "Reset instructions have been sent. The link expires shortly and can only be used once."
+      );
     } catch (err) {
-      setError(err.message || "Unable to send reset instructions. Please try again.");
+      setError(messageForForgotPasswordError(err));
     } finally {
       setBusy(false);
     }
@@ -45,11 +77,11 @@ export default function ForgotPassword() {
               </span>
             </div>
 
-            {done ? (
+            {sentTo ? (
               <>
                 <h1 className="mt-6 text-[26px] font-bold tracking-tight text-ink-900">Check your inbox.</h1>
                 <p className="mt-1 text-[15px] text-ink-500">
-                  If an account exists for that email, reset instructions have been sent. The link expires shortly and can only be used once.
+                  {sentMessage}
                 </p>
                 <Link to="/login" className="btn-primary mt-7 gap-2">
                   <ArrowLeft size={15} aria-hidden="true" />
@@ -60,10 +92,10 @@ export default function ForgotPassword() {
               <>
                 <h1 className="mt-6 text-[26px] font-bold tracking-tight text-ink-900">Forgot your password?</h1>
                 <p className="mt-1 text-[15px] text-ink-500">
-                  Enter your admin email and we'll send reset instructions.
+                  Enter your admin email and we&rsquo;ll send reset instructions.
                 </p>
 
-                <form onSubmit={onSubmit} className="mt-7 flex flex-col gap-4">
+                <form onSubmit={onSubmit} className="mt-7 flex flex-col gap-4" noValidate>
                   <label className="flex flex-col gap-1.5 text-sm font-medium text-ink-900">
                     Email
                     <input
@@ -71,14 +103,22 @@ export default function ForgotPassword() {
                       required
                       autoComplete="username"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={onChangeEmail}
                       placeholder="you@company.com"
-                      className="input h-[50px] rounded-[10px] placeholder:text-ink-500/60"
+                      aria-invalid={error ? "true" : undefined}
+                      aria-describedby={error ? "forgot-error" : undefined}
+                      className={`input h-[50px] rounded-[10px] placeholder:text-ink-500/60 ${
+                        error ? "border-red-300 focus:border-red-400" : ""
+                      }`}
                     />
                   </label>
                   <div className="min-h-[46px]" aria-live="polite">
                     {error ? (
-                      <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
+                      <div
+                        id="forgot-error"
+                        role="alert"
+                        className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+                      >
                         {error}
                       </div>
                     ) : null}
@@ -86,6 +126,7 @@ export default function ForgotPassword() {
                   <button
                     type="submit"
                     disabled={busy}
+                    aria-busy={busy}
                     className="inline-flex h-[50px] items-center justify-center gap-2 rounded-[10px] bg-brand-600 text-[15px] font-semibold text-white transition hover:bg-brand-700 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {busy ? (

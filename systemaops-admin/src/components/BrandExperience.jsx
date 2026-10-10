@@ -19,13 +19,20 @@ export default function BrandExperience() {
 
       {/* top branding */}
       <div className="relative z-10 flex items-start justify-between px-8 pt-7 lg:px-11">
-        <div className="flex items-center gap-2.5">
-          <img src={logo} alt="SystemaOps" className="h-7 w-7" />
+        {/* Plain <a href="/">: a react-router Link would resolve against
+            basename "/admin" and stay inside the console. */}
+        <a
+          href="/"
+          title="Go to the SystemaOps website"
+          aria-label="SystemaOps — go to the public website"
+          className="-ml-2 flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70"
+        >
+          <img src={logo} alt="" aria-hidden="true" className="h-7 w-7" />
           <div className="leading-tight">
             <div className="text-[13px] font-bold tracking-[0.18em] text-white">SYSTEMAOPS</div>
             <div className="text-[10px] font-medium tracking-[0.24em] text-slate-400">OPERATIONS CONSOLE</div>
           </div>
-        </div>
+        </a>
         <div className="hidden pt-1 text-[10px] font-medium tracking-[0.22em] text-slate-500 lg:block" aria-hidden="true">
           AUTOMATE • INTEGRATE • SCALE
         </div>

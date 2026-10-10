@@ -1,9 +1,26 @@
 // src/controllers/adminPasswordReset.controller.js
 // Secure password recovery: single-use, short-lived, hashed tokens.
 //
-// Anti-enumeration: forgot-password returns the IDENTICAL response for
-// existing and unknown emails. Reset rejects invalid/expired/reused
-// tokens uniformly. Raw tokens are never logged or stored.
+// ACCOUNT MODEL (verified against the codebase):
+//   One shared model — AdminUser (mongoose, collection "adminusers").
+//   There is no separate admin vs employee model; both are the same
+//   document, distinguished by `role` (VIEWER | MANAGER | ADMIN |
+//   SUPER_ADMIN, see config/workflow.js ROLES). Every role signs in
+//   through the same /auth/login, so every role may reset a password.
+//   `status` ("active" | "suspended") is the eligibility field.
+//
+// ELIGIBILITY: account exists AND status === "active".
+//
+// REQUESTED TRADE-OFF (documented, not accidental):
+//   An unknown or ineligible email returns an explicit
+//   EMAIL_NOT_FOUND response. That reveals whether an address belongs
+//   to an active console account. Mitigations that stay in place:
+//   dedicated rate limiting (5 requests / 15 min / IP on this route
+//   only, see routes/admin.routes.js), server-side activity logging,
+//   and monitoring of EMAIL_NOT_FOUND volume. Do not "helpfully"
+//   revert this to a generic success response — it is a product
+//   decision; if it must change, change it deliberately and re-read
+//   this note.
 import crypto from "node:crypto";
 import bcrypt from "bcryptjs";
 import validator from "validator";
@@ -15,19 +32,33 @@ import { sendAdminEmail } from "../services/mail.service.js";
 const DEFAULT_TTL_MINUTES = 30;
 const MAX_TTL_MINUTES = 60;
 
-function ttlMinutes() {
+/* Response copy. Kept in one place so the frontend never hard-codes it
+   and both surfaces stay in sync. */
+export const RESET_MESSAGES = Object.freeze({
+  invalidEmail: "Please enter a valid email address.",
+  emailNotFound:
+    "Email not found. Please enter your registered admin or employee email address.",
+  emailSendFailed:
+    "We couldn't send the reset email right now. Please try again in a moment.",
+  serverError: "Server error",
+  invalidReset: "Reset link is invalid or expired. Request a new one.",
+  invalidPassword: "Password must be 12-128 characters",
+  passwordUpdated: "Password updated successfully. You can now sign in.",
+});
+
+export function ttlMinutes() {
   const raw = parseInt(process.env.RESET_TOKEN_TTL_MINUTES, 10);
   if (Number.isFinite(raw) && raw > 0 && raw <= MAX_TTL_MINUTES) return raw;
   return DEFAULT_TTL_MINUTES;
 }
 
-function ttlMs() {
+export function ttlMs() {
   return ttlMinutes() * 60 * 1000;
 }
 
 /* Trusted application origin for reset links. NEVER derived from the
    request Host header. */
-function appOrigin() {
+export function appOrigin() {
   const configured = process.env.ADMIN_APP_ORIGIN || "";
   if (configured) return configured.replace(/\/+$/, "");
   return process.env.NODE_ENV === "production"
@@ -35,16 +66,39 @@ function appOrigin() {
     : "http://localhost";
 }
 
-function sha256(value) {
+export function sha256(value) {
   return crypto.createHash("sha256").update(value).digest("hex");
 }
 
-function safeCompare(a, b) {
+export function normalizeEmail(value) {
+  return typeof value === "string" ? value.trim().toLowerCase() : "";
+}
+
+export function isValidEmail(value) {
+  const email = normalizeEmail(value);
+  // validator.isEmail alone accepts absurd inputs like "a@b"; the schema
+  // already applies a stricter shape, so mirror it here.
+  return Boolean(email) && validator.isEmail(email) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+/* Eligible = an existing, active console account. Roles are NOT a
+   differentiator: every role authenticates through the same login and
+   may therefore recover its own password. Suspended accounts cannot. */
+export function isEligibleForReset(user) {
+  return Boolean(user && user.status === "active");
+}
+
+export function safeCompare(a, b) {
   if (typeof a !== "string" || typeof b !== "string") return false;
   const ab = Buffer.from(a);
   const bb = Buffer.from(b);
   if (ab.length !== bb.length) return false;
   return crypto.timingSafeEqual(ab, bb);
+}
+
+/* Raw token -> stored hash. Only the hash ever reaches the database. */
+export function hashResetToken(rawToken) {
+  return sha256(String(rawToken));
 }
 
 function resetEmailBody(resetUrl, minutes) {
@@ -87,71 +141,127 @@ function securityNoticeBody() {
 </body></html>`;
 }
 
+/* Diagnostics only: operation name + error message. Never the request
+   body (which can carry a reset token or PII). */
+function logServerError(operation, error) {
+  console.error(
+    `[password-reset] ${operation} failed: ${(error && error.message) || "unknown error"}`
+  );
+}
+
+/* Sends the reset email and reports whether it was actually delivered.
+   sendAdminEmail resolves {sent:true} on success and {sent:false} /
+   {skipped:true} when the provider is unconfigured or rejects the
+   message — it never throws, so the RESULT must be inspected. */
+async function deliverResetEmail({ email, rawToken, minutes }) {
+  const resetUrl = `${appOrigin()}/admin/reset-password?token=${encodeURIComponent(rawToken)}&email=${encodeURIComponent(email)}`;
+  const body = resetEmailBody(resetUrl, minutes);
+  try {
+    const result = await sendAdminEmail({
+      to: email,
+      subject: "Reset your SystemaOps Admin password",
+      html: body.html,
+      text: body.text,
+    });
+    return Boolean(result && result.sent === true);
+  } catch (error) {
+    logServerError("reset email delivery", error);
+    return false;
+  }
+}
+
 export const forgotPassword = async (req, res) => {
   try {
-    const email =
-      typeof req.body.email === "string" ? req.body.email.trim().toLowerCase() : "";
+    const email = normalizeEmail(req.body && req.body.email);
 
-    if (!email || !validator.isEmail(email)) {
-      // Same shape as the success response of a valid-but-unknown flow
-      // is not needed here (invalid format), but never reveal specifics.
-      return ok(res, {
-        message: "If an account exists for that email, reset instructions have been sent.",
-      });
+    if (!isValidEmail(email)) {
+      return fail(res, 400, "INVALID_EMAIL", RESET_MESSAGES.invalidEmail);
     }
 
-    const user = await AdminUser.findOne({ email }).select(
-      "_id email name status resetTokenHash resetTokenExpiresAt"
-    );
+    let user;
+    try {
+      user = await AdminUser.findOne({ email }).select(
+        "_id email name status resetTokenHash resetTokenExpiresAt"
+      );
+    } catch (error) {
+      logServerError("account lookup", error);
+      return fail(res, 500, "SERVER_ERROR", RESET_MESSAGES.serverError);
+    }
 
-    if (user) {
-      const rawToken = crypto.randomBytes(32).toString("hex");
-      const ttl = ttlMs();
-      await AdminUser.updateOne(
+    /* Unknown OR ineligible (e.g. suspended): same answer, no token,
+       no email, no activity record. */
+    if (!isEligibleForReset(user)) {
+      return fail(res, 404, "EMAIL_NOT_FOUND", RESET_MESSAGES.emailNotFound);
+    }
+
+    const rawToken = crypto.randomBytes(32).toString("hex");
+    const ttl = ttlMs();
+    const tokenHash = hashResetToken(rawToken);
+
+    let write;
+    try {
+      write = await AdminUser.updateOne(
         { _id: user._id },
         {
           $set: {
-            resetTokenHash: sha256(rawToken),
+            resetTokenHash: tokenHash,
             resetTokenExpiresAt: new Date(Date.now() + ttl),
           },
         }
       );
-      await recordActivity({
-        req,
-        actor: { name: user.email },
-        action: "ADMIN_PASSWORD_RESET_REQUESTED",
-        entityType: "adminuser",
-        entityId: user._id,
-        entityLabel: user.email,
-      });
-      // Best-effort delivery; the response is identical either way.
-      try {
-        const resetUrl = `${appOrigin()}/admin/reset-password?token=${encodeURIComponent(rawToken)}&email=${encodeURIComponent(email)}`;
-        const body = resetEmailBody(resetUrl, ttlMinutes());
-        await sendAdminEmail({
-          to: email,
-          subject: "Reset your SystemaOps Admin password",
-          html: body.html,
-          text: body.text,
-        });
-      } catch {
-        /* email failure must not reveal anything */
-      }
+    } catch (error) {
+      logServerError("reset token persistence", error);
+      return fail(res, 500, "SERVER_ERROR", RESET_MESSAGES.serverError);
     }
 
-    // IDENTICAL response for existing and unknown emails.
-    return ok(res, {
-      message: "If an account exists for that email, reset instructions have been sent.",
+    /* The account disappeared between read and write — answer exactly
+       like an unknown email rather than leaking the race. */
+    if (!write || write.modifiedCount !== 1) {
+      return fail(res, 404, "EMAIL_NOT_FOUND", RESET_MESSAGES.emailNotFound);
+    }
+
+    await recordActivity({
+      req,
+      actor: { name: user.email },
+      action: "ADMIN_PASSWORD_RESET_REQUESTED",
+      entityType: "adminuser",
+      entityId: user._id,
+      entityLabel: user.email,
     });
-  } catch {
-    return fail(res, 500, "SERVER_ERROR", "Server error");
+
+    const delivered = await deliverResetEmail({
+      email,
+      rawToken,
+      minutes: ttlMinutes(),
+    });
+
+    if (!delivered) {
+      /* Do not claim an email was sent, and do not leave an orphan
+         token behind that can never be reached. */
+      try {
+        await AdminUser.updateOne(
+          { _id: user._id, resetTokenHash: tokenHash },
+          { $set: { resetTokenHash: "", resetTokenExpiresAt: null } }
+        );
+      } catch (error) {
+        logServerError("reset token rollback", error);
+      }
+      logServerError("reset email not delivered", null);
+      return fail(res, 503, "EMAIL_SEND_FAILED", RESET_MESSAGES.emailSendFailed);
+    }
+
+    return ok(res, {
+      message: `Reset instructions sent to ${email}. The link expires in ${ttlMinutes()} minutes and can only be used once.`,
+    });
+  } catch (error) {
+    logServerError("forgot-password", error);
+    return fail(res, 500, "SERVER_ERROR", RESET_MESSAGES.serverError);
   }
 };
 
 export const resetPassword = async (req, res) => {
   try {
-    const email =
-      typeof req.body.email === "string" ? req.body.email.trim().toLowerCase() : "";
+    const email = normalizeEmail(req.body && req.body.email);
     const rawToken =
       typeof req.body.token === "string" ? req.body.token.trim() : "";
     const password =
@@ -159,43 +269,71 @@ export const resetPassword = async (req, res) => {
 
     // Uniform rejection: never reveal whether the token ever existed.
     const reject = () =>
-      fail(res, 400, "INVALID_RESET", "Reset link is invalid or expired. Request a new one.");
+      fail(res, 400, "INVALID_RESET", RESET_MESSAGES.invalidReset);
 
-    if (!email || !validator.isEmail(email) || !rawToken) return reject();
+    if (!isValidEmail(email) || !rawToken) return reject();
     if (password.length < 12 || password.length > 128) {
-      return fail(res, 400, "INVALID_PASSWORD", "Password must be 12-128 characters");
+      return fail(res, 400, "INVALID_PASSWORD", RESET_MESSAGES.invalidPassword);
     }
 
-    const user = await AdminUser.findOne({ email }).select(
-      "_id name email status tokenVersion failedAttempts lockedUntil resetTokenHash resetTokenExpiresAt"
-    );
+    let user;
+    try {
+      user = await AdminUser.findOne({ email }).select(
+        "_id name email status tokenVersion failedAttempts lockedUntil resetTokenHash resetTokenExpiresAt"
+      );
+    } catch (error) {
+      logServerError("reset account lookup", error);
+      return fail(res, 500, "SERVER_ERROR", RESET_MESSAGES.serverError);
+    }
+
     if (!user) return reject();
 
     const storedHash = user.resetTokenHash || "";
     const expiresAt = user.resetTokenExpiresAt;
     const valid =
       storedHash.length === 64 &&
-      safeCompare(sha256(rawToken), storedHash) &&
+      safeCompare(hashResetToken(rawToken), storedHash) &&
       expiresAt instanceof Date &&
       expiresAt.getTime() > Date.now();
 
     if (!valid) return reject();
 
-    // Single-use: consume the token BEFORE applying the password.
-    const passwordHash = await bcrypt.hash(password, 12);
-    await AdminUser.updateOne(
-      { _id: user._id },
-      {
-        $set: {
-          passwordHash,
-          resetTokenHash: "",
-          resetTokenExpiresAt: null,
-          failedAttempts: 0,
-          lockedUntil: null,
+    // Single-use, and single-use even under concurrent submissions:
+    // the token is consumed by a FILTERED update, so only one request
+    // can match. Everyone else rejects as invalid/expired.
+    let passwordHash;
+    try {
+      passwordHash = await bcrypt.hash(password, 12);
+    } catch (error) {
+      logServerError("password hashing", error);
+      return fail(res, 500, "SERVER_ERROR", RESET_MESSAGES.serverError);
+    }
+
+    let consumed;
+    try {
+      consumed = await AdminUser.updateOne(
+        {
+          _id: user._id,
+          resetTokenHash: storedHash,
+          resetTokenExpiresAt: { $gt: new Date() },
         },
-        $inc: { tokenVersion: 1 }, // invalidates every existing session
-      }
-    );
+        {
+          $set: {
+            passwordHash,
+            resetTokenHash: "",
+            resetTokenExpiresAt: null,
+            failedAttempts: 0,
+            lockedUntil: null,
+          },
+          $inc: { tokenVersion: 1 }, // invalidates every existing session
+        }
+      );
+    } catch (error) {
+      logServerError("reset token consumption", error);
+      return fail(res, 500, "SERVER_ERROR", RESET_MESSAGES.serverError);
+    }
+
+    if (!consumed || consumed.modifiedCount !== 1) return reject();
 
     await recordActivity({
       req,
@@ -217,8 +355,9 @@ export const resetPassword = async (req, res) => {
       /* best-effort */
     }
 
-    return ok(res, { message: "Password updated successfully. You can now sign in." });
-  } catch {
-    return fail(res, 500, "SERVER_ERROR", "Server error");
+    return ok(res, { message: RESET_MESSAGES.passwordUpdated });
+  } catch (error) {
+    logServerError("reset-password", error);
+    return fail(res, 500, "SERVER_ERROR", RESET_MESSAGES.serverError);
   }
 };

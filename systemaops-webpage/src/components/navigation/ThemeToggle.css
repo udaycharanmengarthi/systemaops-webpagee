@@ -22,12 +22,6 @@
     border-color 0.15s;
 }
 
-.theme-toggle:hover {
-  background: var(--accent-soft);
-  color: var(--accent-primary);
-  border-color: var(--accent-border, var(--border));
-}
-
 .theme-toggle:focus-visible {
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
@@ -38,5 +32,237 @@
 @media (max-width: 900px) {
   .theme-toggle:not(.theme-toggle--mobile) {
     display: none;
+  }
+}
+
+/* ================================================================
+   LIQUID MORPH SCENE
+   One traveling body melts between moonlit (dark) and sunlit (light)
+   resting states. React only flips data-state / data-animating; every
+   frame of the 640ms morph is declarative CSS, so there are no
+   per-frame re-renders and mid-flight re-clicks simply reverse the
+   transitions and restart the direction-specific keyframes.
+   =============================================================== */
+
+.liquid-toggle .lt-scene {
+  display: block;
+  width: 30px;
+  height: 30px;
+  overflow: visible;
+}
+
+.theme-toggle--mobile .lt-scene {
+  width: 32px;
+  height: 32px;
+}
+
+/* ---- Backdrop: navy <-> warm ivory crossfade ---- */
+
+.liquid-toggle .lt-bg-dark {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.liquid-toggle .lt-bg-light {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.liquid-toggle[data-state="light"] .lt-bg-dark {
+  opacity: 0;
+}
+
+.liquid-toggle[data-state="light"] .lt-bg-light {
+  opacity: 1;
+}
+
+/* ---- Traveler: glides across the disc (reversal-safe transition) ---- */
+
+.liquid-toggle .lt-travel {
+  transform: translate(18.5px, 24px);
+}
+
+.liquid-toggle[data-state="light"] .lt-travel {
+  transform: translate(29.5px, 24px);
+}
+
+.liquid-toggle .lt-travel {
+  transition: transform 0.64s cubic-bezier(0.55, 0.06, 0.35, 1);
+}
+
+/* ---- Comet: liquid stretch profile (peaks ~40%, settles crisp) ---- */
+
+.liquid-toggle .lt-comet {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.liquid-toggle[data-animating="true"][data-state="light"] .lt-comet {
+  animation: lt-stretch 0.64s cubic-bezier(0.5, 0, 0.3, 1) both;
+}
+
+.liquid-toggle[data-animating="true"][data-state="dark"] .lt-comet {
+  animation: lt-stretch-rev 0.64s cubic-bezier(0.5, 0, 0.3, 1) both;
+}
+
+@keyframes lt-stretch {
+  0% { transform: scale(1, 1); }
+  15% { transform: scale(1.14, 0.93); }
+  40% { transform: scale(1.52, 0.76); }
+  65% { transform: scale(1.08, 0.95); }
+  82% { transform: scale(0.95, 1.04); }
+  100% { transform: scale(1, 1); }
+}
+
+/* Same profile; separate name so re-clicks restart the animation. */
+@keyframes lt-stretch-rev {
+  0% { transform: scale(1, 1); }
+  15% { transform: scale(1.14, 0.93); }
+  40% { transform: scale(1.52, 0.76); }
+  65% { transform: scale(1.08, 0.95); }
+  82% { transform: scale(0.95, 1.04); }
+  100% { transform: scale(1, 1); }
+}
+
+/* ---- Moon/sun identity handoff, timed for mid-stretch ---- */
+
+.liquid-toggle .lt-moon {
+  opacity: 1;
+  transition: opacity 0.18s ease 0.23s;
+}
+
+.liquid-toggle[data-state="light"] .lt-moon {
+  opacity: 0;
+}
+
+.liquid-toggle .lt-sun {
+  opacity: 0;
+  transition: opacity 0.18s ease 0.23s;
+}
+
+.liquid-toggle[data-state="light"] .lt-sun {
+  opacity: 1;
+}
+
+/* ---- Trailing droplet: invisible at rest, merges mid-flight ---- */
+
+.liquid-toggle .lt-drop {
+  fill: #f2ecda;
+  opacity: 0;
+  /* fill-box: the keyframed scale must pivot on the droplet's own
+     center, not the SVG viewport origin (the CSS initial). */
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: fill 0.2s ease 0.23s;
+}
+
+.liquid-toggle[data-state="light"] .lt-drop {
+  fill: #e8b831;
+}
+
+.liquid-toggle[data-animating="true"][data-state="light"] .lt-drop {
+  animation: lt-drop-to-light 0.64s ease-out both;
+}
+
+.liquid-toggle[data-animating="true"][data-state="dark"] .lt-drop {
+  animation: lt-drop-to-dark 0.64s ease-out both;
+}
+
+@keyframes lt-drop-to-light {
+  0% { opacity: 0; transform: translate(-15px, 5px) scale(0.55); }
+  28% { opacity: 1; transform: translate(-11px, 3px) scale(1); }
+  52% { opacity: 1; transform: translate(-8px, 1.6px) scale(0.9); }
+  72%, 100% { opacity: 0; transform: translate(-7px, 1px) scale(0.7); }
+}
+
+@keyframes lt-drop-to-dark {
+  0% { opacity: 0; transform: translate(15px, 5px) scale(0.55); }
+  28% { opacity: 1; transform: translate(11px, 3px) scale(1); }
+  52% { opacity: 1; transform: translate(8px, 1.6px) scale(0.9); }
+  72%, 100% { opacity: 0; transform: translate(7px, 1px) scale(0.7); }
+}
+
+/* ---- Halo + rays ignite on arrival, snuff out fast on departure ---- */
+
+.liquid-toggle .lt-halo {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.liquid-toggle[data-state="light"] .lt-halo {
+  opacity: 1;
+  transition: opacity 0.26s ease 0.32s;
+}
+
+.liquid-toggle .lt-rays {
+  opacity: 0;
+  transform: scale(0.72);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.liquid-toggle[data-state="light"] .lt-rays {
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 0.26s ease 0.32s,
+    transform 0.3s cubic-bezier(0.34, 1.35, 0.64, 1) 0.32s;
+}
+
+/* ---- Stars: present in dark, gone early in the morph ---- */
+
+.liquid-toggle .lt-stars {
+  opacity: 1;
+  transition: opacity 0.22s ease 0.06s;
+}
+
+.liquid-toggle[data-state="light"] .lt-stars {
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.liquid-toggle .lt-tw1 {
+  animation: lt-twinkle 2.8s ease-in-out 0.4s infinite;
+}
+
+.liquid-toggle .lt-tw2 {
+  animation: lt-twinkle 3.4s ease-in-out 1.3s infinite;
+}
+
+@keyframes lt-twinkle {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+/* ---- Glass top-light + edge glow follow the resting state ---- */
+
+.liquid-toggle .lt-glass {
+  opacity: 0.08;
+  transition: opacity 0.5s ease;
+}
+
+.liquid-toggle[data-state="light"] .lt-glass {
+  opacity: 0.5;
+}
+
+.liquid-toggle .lt-ring {
+  stroke: #4fbdbb;
+  stroke-opacity: 0.55;
+  transition: stroke 0.5s ease, stroke-opacity 0.5s ease;
+}
+
+.liquid-toggle[data-state="light"] .lt-ring {
+  stroke: #d9a441;
+  stroke-opacity: 0.65;
+}
+
+/* ---- Reduced motion: instant swap, theme still changes ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-toggle,
+  .liquid-toggle * {
+    animation: none !important;
+    transition: none !important;
   }
 }
