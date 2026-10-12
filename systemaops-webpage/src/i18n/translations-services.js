@@ -523,6 +523,7 @@ const sharedEn = {
     close: "Close",
     loading: "Loading",
     required: "required",
+    skipToContent: "Skip to main content",
     demo: {
       processDocument: "Process document",
       reset: "Reset",
@@ -585,6 +586,7 @@ const sharedNl = {
     close: "Sluiten",
     loading: "Laden",
     required: "verplicht",
+    skipToContent: "Direct naar inhoud",
     demo: {
       processDocument: "Verwerk document",
       reset: "Opnieuw",
@@ -647,6 +649,7 @@ const sharedDe = {
     close: "Schließen",
     loading: "Lädt",
     required: "Pflichtfeld",
+    skipToContent: "Zum Inhalt springen",
     demo: {
       processDocument: "Dokument verarbeiten",
       reset: "Zurücksetzen",

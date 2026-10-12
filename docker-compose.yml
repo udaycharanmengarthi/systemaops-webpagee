@@ -137,6 +137,21 @@ services:
 
     restart: unless-stopped
 
+    # Container hardening: the SPA is static and performs no filesystem
+    # writes, so the root filesystem is read-only, /tmp is a tmpfs, every
+    # capability is dropped and setuid escalation is blocked. Verified
+    # against the built image (serve still answers 200 on all routes).
+    read_only: true
+
+    tmpfs:
+      - /tmp
+
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
     healthcheck:
       test:
         [
@@ -165,6 +180,21 @@ services:
       - "3001"
 
     restart: unless-stopped
+
+    # Container hardening: the SPA is static and performs no filesystem
+    # writes, so the root filesystem is read-only, /tmp is a tmpfs, every
+    # capability is dropped and setuid escalation is blocked. Verified
+    # against the built image (serve still answers 200 on all routes).
+    read_only: true
+
+    tmpfs:
+      - /tmp
+
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
 
     healthcheck:
       test:

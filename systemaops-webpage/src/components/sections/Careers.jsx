@@ -2071,7 +2071,9 @@ export default function Careers() {
       </Helmet>
 
 
-      <main className="section">
+      {/* Single page landmark lives in App.jsx; this keeps its classes
+          on a plain wrapper to avoid nested <main> elements. */}
+      <div className="section">
 
         {/* Dynamic styles for modal + How We Care */}
         <style>{EXTRA}</style>
@@ -2300,7 +2302,7 @@ export default function Careers() {
 
         </div>
 
-      </main>
+      </div>
 
     </>
   );

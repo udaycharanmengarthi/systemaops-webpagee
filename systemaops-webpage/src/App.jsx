@@ -49,6 +49,7 @@ import FaqsPage from "./pages/Faqs";
 
 import ScrollToTop from "./components/ScrollToTop";
 import CookieConsent from "./components/CookieConsent";
+import { useLanguage } from "./i18n/LanguageContext";
 
 /* ---------- HOME PAGE ---------- */
 
@@ -143,8 +144,16 @@ function BlogArticlePage() {
 /* ---------- APP ---------- */
 
 function App() {
+  const { t } = useLanguage();
+
   return (
     <div className="app-root relative w-full min-h-screen overflow-x-hidden">
+
+      {/* SKIP LINK — keyboard users jump straight to the content */}
+
+      <a href="#main-content" className="skip-link">
+        {t("common.skipToContent")}
+      </a>
 
       {/* NAVBAR */}
 
@@ -155,6 +164,8 @@ function App() {
       <div className="relative z-10">
 
         <ScrollToTop />
+
+        <main id="main-content">
 
         <Routes>
 
@@ -293,6 +304,7 @@ function App() {
           />
 
         </Routes>
+        </main>
 
         {/* FOOTER */}
 

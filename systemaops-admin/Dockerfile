@@ -1,4 +1,7 @@
-FROM node:20-alpine
+# ================================================================
+# Build stage — keeps the original toolchain and build command.
+# ================================================================
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
@@ -25,16 +28,26 @@ RUN npm run build
 # No "/admin" -> "/admin/" rule: serve matches redirect sources
 # non-strict, so it would also match "/admin/" and loop forever.
 # serve already 301s "/admin" -> "/admin/" for the directory itself.
-RUN mkdir -p /tmp/site && cp -R /app/dist/. /tmp/site/ \
-    && mkdir -p /app/dist/admin \
-    && cp -R /tmp/site/. /app/dist/admin/ \
-    && rm -rf /tmp/site \
-    && cp /app/serve.json /app/dist/serve.json
+#
+# NOTE: single-line `&&` chain on purpose — backslash line-continuation
+# in this step was observed to break the mirror on some BuildKit fronts.
+RUN mkdir -p /tmp/site && cp -R /app/dist/. /tmp/site/ && mkdir -p /app/dist/admin && cp -R /tmp/site/. /app/dist/admin/ && rm -rf /tmp/site && cp /app/serve.json /app/dist/serve.json
 
-RUN npm install -g serve
+# ================================================================
+# Runtime stage — static SPA only. No devDependencies, no build
+# toolchain, no source, no tests. Runs as a dedicated unprivileged
+# user: `serve` binds unprivileged port 3001 and writes nothing.
+# ================================================================
+FROM node:20-alpine
 
-# Internal only: reachable via the reverse proxy (/admin/ -> admin:3001).
-# Never published to the host in production.
+WORKDIR /app
+
+RUN addgroup -S app && adduser -S app -G app && npm install -g serve
+
+COPY --from=build /app/dist ./dist
+
+USER app
+
 EXPOSE 3001
 
 CMD ["serve", "-s", "dist", "-l", "3001"]

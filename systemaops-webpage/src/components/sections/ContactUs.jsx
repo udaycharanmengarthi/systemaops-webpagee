@@ -445,7 +445,9 @@ return (
       />
     </Helmet>
 
-    <main className="contact-section">
+    {/* Single page landmark lives in App.jsx; this keeps its classes
+        on a plain wrapper to avoid nested <main> elements. */}
+    <div className="contact-section">
       <div className="contact-bg">
         <div className="grid-overlay" />
         <div className="orb orb-1" />
@@ -695,7 +697,7 @@ return (
           )}
         </section>
       </div>
-    </main>
+    </div>
   </>
   );
 }

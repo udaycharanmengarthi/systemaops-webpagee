@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -310,6 +310,34 @@ body {
 
 main {
   background-color: var(--bg-primary);
+}
+
+/* ================================================================
+   SKIP LINK — keyboard users jump straight to the main content.
+   Fixed positioning means it never shifts the layout; it is
+   off-screen until focused. Colors come from existing theme tokens
+   (inverted for maximum contrast in both themes).
+================================================================ */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 200;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
+  transform: translateY(-300%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
 }
 
 /* ================================================================

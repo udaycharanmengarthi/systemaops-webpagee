@@ -11,3 +11,14 @@ node_modules/
 .env
 .env.*
 !.env.example
+
+# ================================
+# Generated build output
+# ================================
+
+# Admin console build output. Produced by `npm run build` in
+# systemaops-admin (also inside its Docker image, which builds from
+# source (.dockerignore excludes dist/). Verified byte-identical to a
+# clean source build, so tracking it only risks stale assets.
+# Scoped to the admin SPA; other directories are unaffected.
+systemaops-admin/dist/
