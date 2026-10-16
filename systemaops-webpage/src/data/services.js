@@ -79,7 +79,7 @@ export const servicesMenu = [
     accentRgb: "21, 154, 156",
     accentSecondary: "#20A7A0",
     accentText: "#0E6F70",
-    visual: "ai",
+    visual: "consulting",
   },
   {
     id: "integration",
