@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 import LanguageSwitcher from "../LanguageSwitcher";
 import { useLanguage } from "../../i18n/LanguageContext";
 import ServicesMegaMenu from "../navigation/ServicesMegaMenu";
@@ -9,7 +9,13 @@ import ThemeToggle from "../navigation/ThemeToggle";
 import { servicesMenu } from "../../data/services";
 
 import logo from "../../assets/systemaops-icon-color.svg";
+import astroidOutline from "../../assets/astroid-outline.svg";
+import AstroidMark from "./AstroidMark";
 import "./Navbar.css";
+
+/* Marks the current top-level route with the active underline. */
+const navLinkClass = ({ isActive }) =>
+  `nb-link${isActive ? " nb-link--active" : ""}`;
 
 const Navbar = () => {
   /* State model:
@@ -46,10 +52,18 @@ const Navbar = () => {
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+    if (!mobileMenuOpen) return undefined;
+
+    const root = document.documentElement;
+    const previousRootOverflow = root.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+
+    root.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
 
     return () => {
-      document.body.style.overflow = "";
+      root.style.overflow = previousRootOverflow;
+      document.body.style.overflow = previousBodyOverflow;
     };
   }, [mobileMenuOpen]);
 
@@ -65,7 +79,9 @@ const Navbar = () => {
       }
     };
 
-    const mq = window.matchMedia("(min-width: 769px)");
+    /* The drawer is used on mobile AND on tablet (up to 1199px), so it
+       must close as soon as the viewport reaches the full-nav range. */
+    const mq = window.matchMedia("(min-width: 1200px)");
     const onViewportChange = (e) => {
       if (e.matches) {
         closeMobileMenu();
@@ -120,8 +136,14 @@ const Navbar = () => {
         <header
           className="nb-bar"
           style={{
-            width: `min(${92 - p * 14}%, ${
-              1360 - p * 280
+            /* The pill narrows slightly as the page scrolls. The floor is
+               deliberately high: the full nav row needs ~970px of
+               content, so the narrowest (scrolled) state must still clear
+               it, otherwise the logo and the CTAs collide. Below 1200px
+               the row does not fit at all and the drawer takes over
+               (see Navbar.css). */
+            width: `min(${92 - p * 2}%, ${
+              1360 - p * 80
             }px)`,
 
             height: `${78 - p * 10}px`,
@@ -154,20 +176,21 @@ const Navbar = () => {
           <nav className="nb-links">
 
             {/* HOME */}
-            <Link
+            <NavLink
               to="/"
-              className="nb-link"
+              end
+              className={navLinkClass}
             >
               {t("nav.home")}
-            </Link>
+            </NavLink>
 
             {/* ABOUT */}
-            <Link
-              className="nb-link"
+            <NavLink
+              className={navLinkClass}
               to="/about"
             >
               {t("nav.about")}
-            </Link>
+            </NavLink>
 
             {/* SERVICES MEGA MENU (desktop only; own state) */}
             <ServicesMegaMenu
@@ -177,20 +200,28 @@ const Navbar = () => {
             />
 
             {/* CAREERS */}
-            <Link
+            <NavLink
               to="/careers"
-              className="nb-link"
+              className={navLinkClass}
             >
               {t("nav.careers")}
-            </Link>
+            </NavLink>
 
             {/* BLOGS */}
-            <Link
-              className="nb-link"
+            <NavLink
+              className={navLinkClass}
               to="/blogs"
             >
               {t("nav.blogs")}
-            </Link>
+            </NavLink>
+
+            {/* CONTACT US (regular nav link, not a CTA) */}
+            <NavLink
+              className={navLinkClass}
+              to="/contact"
+            >
+              {t("nav.contact")}
+            </NavLink>
 
           </nav>
 
@@ -207,17 +238,27 @@ const Navbar = () => {
           <ThemeToggle />
 
           {/* ================================================= */}
-          {/* CONTACT US CTA */}
+          {/* BOOK A CALL CTA — consultation page */}
+          {/* Separate from Contact Us on purpose: the contact
+              form stays untouched, this opens /book-a-call. */}
           {/* ================================================= */}
 
-          <button
-            className="nb-cta"
-            onClick={() => navigate("/contact")}
-          >
-            <span className="nb-cta-label">
-              {t("nav.contact")}
-            </span>
-          </button>
+          <div className="nb-cta-group">
+            <button
+              className="nb-cta nb-cta--book"
+              type="button"
+              onClick={() => navigate("/book-a-call")}
+            >
+              <span className="nb-cta-mark-shell" aria-hidden="true">
+                <AstroidMark className="nb-cta-mark" speed={0.35} outerGlow={0.08} />
+                <img className="nb-cta-mark-outline" src={astroidOutline} alt="" draggable="false" />
+              </span>
+              <span className="nb-cta-label">
+                {t("nav.bookCall")}
+              </span>
+              <ArrowRight className="nb-cta-arrow" size={16} aria-hidden="true" />
+            </button>
+          </div>
 
           {/* ================================================= */}
           {/* MOBILE MENU BUTTON */}
@@ -302,7 +343,7 @@ const Navbar = () => {
             {/* MOBILE LINKS */}
             {/* ================================================= */}
 
-            <div className="nb-mobile-links">
+            <nav className="nb-mobile-links" aria-label={t("nav.openMenu")}>
 
               {/* HOME */}
 
@@ -417,31 +458,53 @@ const Navbar = () => {
                 {t("nav.blogs")}
               </Link>
 
-            </div>
+              {/* CONTACT US */}
+
+              <Link
+                className="nb-mobile-link"
+                to="/contact"
+                onClick={() => {
+                  closeMobileMenu();
+                  navigate("/contact");
+                }}
+              >
+                {t("nav.contact")}
+              </Link>
+
+            </nav>
 
             {/* ================================================= */}
             {/* MOBILE LANGUAGE + THEME */}
             {/* ================================================= */}
 
-            <LanguageSwitcher className="language-switcher--mobile" />
-
-            <div className="nb-mobile-theme-row">
+            <div className="nb-mobile-utilities">
+              <LanguageSwitcher className="language-switcher--mobile" />
               <ThemeToggle className="theme-toggle--mobile" />
             </div>
 
             {/* ================================================= */}
-            {/* MOBILE CONTACT US */}
+            {/* MOBILE BOOK A CALL */}
             {/* ================================================= */}
 
-            <button
-              className="nb-mobile-cta"
-              onClick={() => {
-                closeMobileMenu();
-                navigate("/contact");
-              }}
-            >
-              {t("nav.contact")}
-            </button>
+            <div className="nb-mobile-cta-group">
+              <button
+                className="nb-mobile-cta nb-mobile-cta--book"
+                type="button"
+                onClick={() => {
+                  closeMobileMenu();
+                  navigate("/book-a-call");
+                }}
+              >
+                <span className="nb-cta-mark-shell" aria-hidden="true">
+                  <AstroidMark className="nb-cta-mark" speed={0.35} outerGlow={0.08} />
+                  <img className="nb-cta-mark-outline" src={astroidOutline} alt="" draggable="false" />
+                </span>
+                <span className="nb-cta-label">
+                  {t("nav.bookCall")}
+                </span>
+                <ArrowRight className="nb-cta-arrow" size={16} aria-hidden="true" />
+              </button>
+            </div>
 
           </motion.div>
         )}

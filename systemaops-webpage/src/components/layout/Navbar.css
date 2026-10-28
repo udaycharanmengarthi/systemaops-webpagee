@@ -31,11 +31,15 @@
 .nb-bar {
   pointer-events: all;
 
+  --navbar-border: rgba(15, 23, 42, 0.10);
+
   display: flex;
 
   align-items: center;
 
   justify-content: space-between;
+
+  gap: 18px;
 
   padding: 0 32px;
 
@@ -54,14 +58,14 @@
 
   border:
     1px solid
-    rgba(var(--tint-rgb), 0.10);
+    var(--navbar-border);
 
   box-shadow:
     0 10px 40px
     rgba(var(--shadow-rgb), 0.08),
 
-    inset 0 1px 0
-    rgba(255, 255, 255, 0.95);
+    var(--navbar-inset-highlight, inset 0 1px 0
+    rgba(255, 255, 255, 0.95));
 
   will-change:
     width,
@@ -116,6 +120,14 @@
 .nb-logo-img {
   width:
     42px;
+
+  /* The brand mark must never be stretched: keep the source aspect
+     ratio whatever size the bar asks for. */
+  height:
+    auto;
+
+  object-fit:
+    contain;
 }
 
 
@@ -132,53 +144,18 @@
 
   gap:
     30px;
+
+  flex:
+    1 1 auto;
+
+  justify-content:
+    center;
+
+  min-width:
+    0;
 }
 
-/* ═══════════════════════════════════════════
-   DESKTOP NAV SEPARATORS (shared, all pages)
-   Single source for the vertical dividers between
-   top-level nav items (Home | About | Services |
-   Careers | Blogs). CSS-only 1px lines centered in
-   the existing 30px gap — no layout shift, no DOM
-   text (screen readers/SEO unaffected: pseudo-
-   elements are never announced, labels/URLs/
-   metadata untouched). Contact page inherits the
-   same component, so it can never diverge.
-   ═══════════════════════════════════════════ */
-
-.nb-links > * {
-  position:
-    relative;
-}
-
-.nb-links > * + *::before {
-  content:
-    '';
-
-  position:
-    absolute;
-
-  left:
-    -15px;
-
-  top:
-    50%;
-
-  transform:
-    translateY(-50%);
-
-  width:
-    1px;
-
-  height:
-    16px;
-
-  background:
-    var(--border);
-
-  pointer-events:
-    none;
-}
+/* Navigation links: no vertical separators between items. */
 
 .nb-link {
   position:
@@ -186,6 +163,9 @@
 
   text-decoration:
     none;
+
+  white-space:
+    nowrap;
 
   font-family:
     'Space Grotesk',
@@ -214,9 +194,10 @@
     color 0.2s;
 }
 
-.nb-link:hover {
+.nb-link:hover,
+.nb-wrapper .nb-bar .nb-link.nb-link--active {
   color:
-    var(--accent-primary) !important;
+    var(--text-primary) !important;
 }
 
 .nb-link::after {
@@ -259,7 +240,8 @@
     cubic-bezier(0.22,1,0.36,1);
 }
 
-.nb-link:hover::after {
+.nb-link:hover::after,
+.nb-link.nb-link--active::after {
   transform:
     scaleX(1);
 }
@@ -585,6 +567,368 @@
     none;
 }
 
+.nb-cta-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  flex: 0 0 auto;
+}
+
+
+/* ═══════════════════════════════════════════
+   BOOK A CALL — primary navbar CTA pill.
+   ═══════════════════════════════════════════ */
+
+.nb-cta--book {
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  gap:
+    9px;
+
+  height:
+    44px;
+
+  padding:
+    0 22px !important;
+
+  background:
+    #0D9F9A !important;
+
+  border:
+    none;
+
+  box-shadow:
+    0 4px 16px rgba(34, 211, 238, 0.35);
+
+  animation:
+    none;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+
+.nb-cta--book::before {
+
+  display:
+    none;
+
+  animation:
+    none;
+}
+
+
+.nb-cta-mark-shell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  line-height: 0;
+  pointer-events: none;
+}
+
+.nb-cta-mark-shell > .nb-cta-mark {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.35));
+}
+
+.nb-cta-mark-outline {
+  position: absolute;
+  z-index: 2;
+  display: none;
+  inset: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  object-fit: contain;
+  pointer-events: none;
+}
+
+[data-theme="dark"] .nb-cta-mark-outline {
+  display: block;
+}
+
+.nb-cta-mark {
+
+  display:
+    block;
+
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+
+  line-height:
+    0;
+
+  pointer-events:
+    none;
+}
+
+.nb-cta-arrow {
+  position: relative;
+  z-index: 1;
+  display: block;
+  flex: 0 0 auto;
+  color: var(--text-inverse);
+  transition: transform 0.18s ease;
+}
+
+.nb-cta-group .nb-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 22px;
+  white-space: nowrap;
+  animation: none;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.nb-cta-group .nb-cta::before {
+  display: none;
+  animation: none;
+}
+
+.nb-cta-group .nb-cta:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.nb-cta--book .nb-cta-label,
+.nb-cta--book .nb-cta-arrow {
+
+  color:
+    var(--text-inverse) !important;
+}
+
+.nb-cta--book .nb-cta-label {
+
+  font-size:
+    14.5px;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    -0.015em;
+}
+
+
+.nb-cta--book:hover {
+
+  background:
+    #0B8F8B !important;
+
+  box-shadow:
+    0 6px 20px rgba(34, 211, 238, 0.42);
+
+  transform:
+    translateY(-1px);
+}
+
+.nb-cta--book:hover .nb-cta-arrow {
+  transform: translateX(2px);
+}
+
+
+.nb-cta--book:hover .nb-cta-label {
+
+  color:
+    var(--text-inverse) !important;
+}
+
+
+.nb-cta--book:active {
+
+  transform:
+    translateY(0) scale(0.99);
+}
+
+
+.nb-cta.nb-cta--book:focus-visible {
+
+  outline:
+    2px solid var(--accent-primary);
+
+  outline-offset:
+    3px;
+}
+
+
+/* ===========================================
+   MOBILE BOOK A CALL
+   =========================================== */
+
+.nb-mobile-cta.nb-mobile-cta--book {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  gap:
+    8px;
+
+  min-height:
+    46px;
+
+  padding:
+    12px 14px;
+
+  background:
+    var(--bg-surface) !important;
+
+  border:
+    1px solid
+      var(--border-strong);
+
+  color: var(--text-primary) !important;
+
+  box-shadow:
+    none;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+
+.nb-mobile-cta--book .nb-cta-mark-shell {
+
+  width: 17px;
+  height: 17px;
+  flex-basis: 17px;
+}
+
+
+.nb-mobile-cta--book .nb-cta-label {
+
+  color:
+    var(--text-primary) !important;
+
+  font-size:
+    14px;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    -0.015em;
+}
+
+.nb-mobile-cta--book .nb-cta-arrow {
+  color: var(--text-primary);
+}
+
+
+.nb-mobile-cta.nb-mobile-cta--book:hover {
+
+  border-color:
+    var(--accent-primary);
+
+  background:
+    var(--bg-surface-hover) !important;
+
+  color:
+    var(--text-primary) !important;
+
+  opacity:
+    1;
+
+  box-shadow:
+    0 3px 10px rgba(var(--shadow-rgb), 0.08);
+}
+
+
+.nb-mobile-cta.nb-mobile-cta--book:active {
+
+  background:
+    var(--bg-surface-hover) !important;
+
+  transform:
+    none;
+}
+
+.nb-mobile-cta--book:hover .nb-cta-arrow,
+.nb-mobile-cta--contact:hover .nb-cta-arrow {
+  transform: translateX(2px);
+}
+
+.nb-mobile-cta.nb-mobile-cta--contact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  white-space: nowrap;
+  background: var(--accent-primary) !important;
+  border: 1px solid var(--accent-primary);
+  color: #fff !important;
+  box-shadow: 0 3px 12px rgba(var(--accent-rgb), 0.14);
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.nb-mobile-cta--contact .nb-cta-label,
+.nb-mobile-cta--contact .nb-cta-arrow {
+  color: #fff !important;
+}
+
+.nb-mobile-cta.nb-mobile-cta--contact:hover {
+  background: color-mix(in srgb, var(--accent-primary), #000 12%) !important;
+  border-color: color-mix(in srgb, var(--accent-primary), #000 12%);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.nb-mobile-cta.nb-mobile-cta--contact:active {
+  transform: none;
+}
+
+.nb-mobile-cta.nb-mobile-cta--contact:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+
+.nb-mobile-cta.nb-mobile-cta--book:focus-visible {
+
+  outline:
+    2px solid var(--accent-primary);
+
+  outline-offset:
+    3px;
+}
+
 
 /* ═══════════════════════════════════════════
    LANGUAGE SWITCHER
@@ -706,6 +1050,50 @@
     var(--text-primary);
 }
 
+/* Compact desktop language selector (EN⌄) */
+.nb-bar > .language-switcher {
+  height: 36px;
+  min-width: 0;
+  padding: 0 6px;
+  gap: 6px;
+  border: none;
+  border-radius: 999px;
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.nb-bar > .language-switcher:hover {
+  color: var(--text-primary) !important;
+}
+
+.nb-bar > .language-switcher::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 18px;
+  margin-left: 10px;
+  background: var(--border);
+  pointer-events: none;
+}
+
+.nb-bar > .language-switcher .language-switcher__current {
+  flex: 0 0 auto;
+}
+
+.nb-bar > .language-switcher .language-switcher__button {
+  gap: 6px;
+  color: inherit;
+}
+
+.nb-bar > .language-switcher .language-switcher__chevron {
+  width: 13px;
+  height: 13px;
+  color: var(--text-secondary);
+}
+
 
 /* ═══════════════════════════════════════════
    HAMBURGER
@@ -737,12 +1125,21 @@
 
 
 /* ═══════════════════════════════════════════
-   TABLET (769–1023px): compress, never overflow.
-   All items stay visible: tighter gaps, smaller logo,
-   icon-only language selector.
+   TABLET (769–1199px): collapse to the drawer.
+
+   The full row (logo + 5 links + language selector + theme toggle + two
+   CTAs) needs ~960px of content plus 64px of pill padding, and the pill
+   also SHRINKS as the page scrolls. Below 1200px the row therefore
+   collided and clipped (the logo overlapped "Home" and the Contact Us
+   button ran off the right edge at 1024px).
+
+   Rather than shrinking type until it barely fits, tablet now uses the
+   same hamburger drawer as mobile — which already contains the links,
+   language selector, theme toggle and both CTAs — and keeps the wide
+   rounded bar.
    ═══════════════════════════════════════════ */
 
-@media (max-width: 1023px) and (min-width: 769px) {
+@media (max-width: 1199px) and (min-width: 769px) {
 
   .nb-bar {
 
@@ -756,23 +1153,37 @@
       12px;
   }
 
-  .nb-links {
-    gap:
-      16px;
+  .nb-links,
+  .nb-cta,
+  .nb-bar > .language-switcher {
+    display:
+      none;
   }
 
-  /* Keep separators centered in the compressed 16px tablet gap. */
-  .nb-links > * + *::before {
-    left:
-      -8px;
-
-    height:
-      14px;
+  .nb-cta-group {
+    display: none !important;
   }
 
-  .nb-link {
-    font-size:
-      14px;
+  .nb-hamburger {
+
+    display:
+      flex;
+
+    align-items:
+      center;
+
+    justify-content:
+      center;
+
+    color:
+      var(--text-primary) !important;
+  }
+
+  /* Logo on the left, theme toggle and hamburger grouped on the right
+     (space-between would otherwise strand the toggle in the middle). */
+  .nb-bar > .theme-toggle {
+    margin-left:
+      auto;
   }
 
   .nb-logo span {
@@ -784,26 +1195,41 @@
     width:
       34px;
   }
+}
+
+
+/* ═══════════════════════════════════════════
+   COMPACT DESKTOP (1200–1279px)
+
+   The full row first fits at 1200px, but the pill also narrows as the
+   page scrolls. These small trims buy the ~60px of slack that keeps the
+   logo, the last nav link and the right-hand CTAs from touching at the
+   narrowest (scrolled) state.
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 1279px) and (min-width: 1200px) {
+
+  .nb-bar {
+
+    padding:
+      0 20px;
+
+    gap:
+      14px;
+  }
+
+  .nb-links {
+    gap:
+      20px;
+  }
 
   .nb-cta {
-    height:
-      40px;
 
     padding:
       0 20px;
 
     font-size:
       13.5px;
-  }
-
-  .nb-bar .language-switcher__current {
-    display:
-      none;
-  }
-
-  .nb-bar .language-switcher__button {
-    padding:
-      8px 10px;
   }
 }
 
@@ -816,6 +1242,7 @@
 
   .nb-links,
   .nb-cta,
+  .nb-cta-group,
   .nb-bar > .language-switcher {
     display:
       none;
@@ -847,7 +1274,7 @@
     background: var(--navbar-bg) !important;
 
     border-color:
-      rgba(var(--tint-rgb),0.10);
+      var(--navbar-border);
 
     box-shadow:
       0 10px 35px
@@ -902,10 +1329,25 @@
     0;
 
   width:
-    min(300px,88vw);
+    min(86vw, 360px);
+
+  max-width:
+    100vw;
+
+  height:
+    100vh;
 
   height:
     100dvh;
+
+  box-sizing:
+    border-box;
+
+  padding:
+    env(safe-area-inset-top, 0px)
+    env(safe-area-inset-right, 0px)
+    env(safe-area-inset-bottom, 0px)
+    env(safe-area-inset-left, 0px);
 
   background: var(--bg-surface) !important;
 
@@ -922,8 +1364,17 @@
   flex-direction:
     column;
 
-  overflow:
+  overflow-x:
     hidden;
+
+  overflow-y:
+    auto;
+
+  overscroll-behavior-y:
+    contain;
+
+  -webkit-overflow-scrolling:
+    touch;
 
   box-shadow:
     -15px 0 50px
@@ -946,8 +1397,14 @@
   justify-content:
     space-between;
 
+  min-height:
+    72px;
+
   padding:
-    18px 20px;
+    12px 18px;
+
+  box-sizing:
+    border-box;
 
   border-bottom:
     1px solid
@@ -1014,10 +1471,10 @@
     center;
 
   width:
-    34px;
+    44px;
 
   height:
-    34px;
+    44px;
 
   background:
     var(--bg-subtle);
@@ -1063,13 +1520,16 @@
 .nb-mobile-links {
 
   flex:
-    1;
+    0 0 auto;
 
-  overflow-y:
-    auto;
+  min-height:
+    0;
+
+  overflow:
+    visible;
 
   padding:
-    8px 0;
+    4px 0;
 
   display:
     flex;
@@ -1082,19 +1542,22 @@
 .language-switcher--mobile {
 
   width:
-    calc(100% - 32px);
+    auto;
 
   margin:
-    14px 16px 4px;
+    0;
+
+  min-width:
+    0;
+
+  flex:
+    1 1 0;
 
   justify-content:
     space-between;
 
-  flex-shrink:
-    0;
-
   height:
-    46px;
+    44px;
 
   border-radius:
     12px;
@@ -1104,6 +1567,21 @@
 
   color:
     var(--text-secondary) !important;
+}
+
+.nb-mobile-utilities {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+  margin: 16px 16px 8px;
+}
+
+.nb-mobile-utilities .language-switcher__menu {
+  top: auto;
+  bottom: calc(100% + 8px);
+  left: 0;
+  right: auto;
 }
 
 
@@ -1128,7 +1606,7 @@
     sans-serif;
 
   font-size:
-    17px;
+    16px;
 
   font-weight:
     500;
@@ -1142,8 +1620,14 @@
   color:
     var(--text-secondary) !important;
 
+  min-height:
+    48px;
+
   padding:
-    16px 24px;
+    12px 20px;
+
+  box-sizing:
+    border-box;
 
   border-bottom:
     1px solid
@@ -1198,8 +1682,14 @@
   border:
     none;
 
+  min-height:
+    48px;
+
   padding:
-    16px 24px;
+    12px 20px;
+
+  box-sizing:
+    border-box;
 
   font-family:
     'Space Grotesk',
@@ -1207,7 +1697,7 @@
     sans-serif;
 
   font-size:
-    17px;
+    16px;
 
   font-weight:
     500;
@@ -1301,7 +1791,13 @@
     var(--text-muted) !important;
 
   padding:
-    11px 24px 11px 32px;
+    12px 20px 12px 28px;
+
+  min-height:
+    44px;
+
+  box-sizing:
+    border-box;
 
   border-radius:
     0;
@@ -1330,11 +1826,20 @@
 
 .nb-mobile-cta {
 
+  width:
+    100%;
+
+  min-height:
+    46px;
+
   margin:
-    16px;
+    0;
 
   padding:
-    14px;
+    12px 14px;
+
+  box-sizing:
+    border-box;
 
   background:
     linear-gradient(
@@ -1357,7 +1862,7 @@
     sans-serif;
 
   font-size:
-    15px;
+    14px;
 
   font-weight:
     700;
@@ -1384,6 +1889,15 @@
   box-shadow:
     0 8px 22px
     rgba(var(--accent-rgb),0.18);
+}
+
+.nb-mobile-cta-group {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 10px;
+  width: calc(100% - 32px);
+  margin: 8px 16px 16px;
 }
 
 .nb-mobile-cta:hover {
@@ -1425,14 +1939,14 @@
   background: var(--navbar-bg) !important;
 
   border-color:
-    rgba(var(--tint-rgb),0.10) !important;
+    var(--navbar-border) !important;
 
   box-shadow:
     0 10px 40px
     rgba(var(--shadow-rgb),0.10),
 
-    inset 0 1px 0
-    rgba(255,255,255,0.95) !important;
+    var(--navbar-inset-highlight, inset 0 1px 0
+    rgba(255,255,255,0.95)) !important;
 }
 
 
@@ -1489,6 +2003,18 @@
     var(--text-secondary) !important;
 }
 
+.nb-wrapper .nb-bar .nb-link.nb-link--active {
+
+  color:
+    var(--text-primary) !important;
+}
+
+.nb-wrapper .nb-bar .nb-link:hover {
+
+  color:
+    var(--accent-primary) !important;
+}
+
 .nb-wrapper .nb-bar .nb-drop-btn {
 
   color:
@@ -1535,6 +2061,9 @@
   .nb-drop-btn,
   .nb-drop-icon,
   .nb-cta,
+  .nb-cta-arrow,
+  .nb-mobile-cta.nb-mobile-cta--book,
+  .nb-mobile-cta.nb-mobile-cta--contact,
   .nb-mobile-close,
   .nb-mobile-link,
   .nb-acc-btn,
@@ -1641,22 +2170,13 @@
    MOBILE THEME ROW
 =============================================================== */
 
-.nb-mobile-theme-row {
-
-  display: flex;
-
-  justify-content: flex-end;
-
-  padding: 4px 16px;
-
-  flex-shrink: 0;
-}
-
 .theme-toggle--mobile {
 
-  width: 40px;
+  width: 44px;
 
-  height: 40px;
+  height: 44px;
+
+  flex: 0 0 44px;
 
   border-radius: 10px;
 }
@@ -1668,6 +2188,11 @@
 
 [data-theme="dark"] .nb-bar {
 
+  --navbar-border: rgba(255, 255, 255, 0.20);
+
+  border-color:
+    var(--navbar-border);
+
   box-shadow:
     0 10px 40px
     rgba(0, 0, 0, 0.45),
@@ -1675,4 +2200,3 @@
     inset 0 1px 0
     rgba(255, 255, 255, 0.08);
 }
-

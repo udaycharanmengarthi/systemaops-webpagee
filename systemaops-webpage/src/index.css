@@ -49,6 +49,11 @@
   --text-inverse: #FFFFFF;
   --text-on-accent: #FFFFFF;
 
+  /* -- Navbar (glass pill) -- */
+  --navbar-inset-highlight:
+    inset 0 1px 0
+    rgba(255, 255, 255, 0.95);
+
   /* ── Borders (clearly visible, neutral slate) ── */
   --border: #D7E0E8;
   --border-soft: #E3EAF0;
@@ -209,6 +214,13 @@
   --accent-tint: rgba(59, 163, 161, 0.10);
   --accent-tint-strong: rgba(59, 163, 161, 0.30);
 
+  /* -- Navbar (glass pill) --
+     On black the 95%-white inset hairline read as a glow across the top
+     of the bar, so it is reduced to a faint graphite highlight. */
+  --navbar-inset-highlight:
+    inset 0 1px 0
+    rgba(255, 255, 255, 0.06);
+
   /* ── Status ── */
   --success: #3BA3A1;
   --warning: #D9A54E;
@@ -226,7 +238,7 @@
   --menu-active: rgba(59, 163, 161, 0.16);
 
   /* ── Component surfaces (glass) ── */
-  --navbar-bg: rgba(7, 19, 21, 0.78);
+  --navbar-bg: rgba(10, 10, 10, 0.82);
   --glass-bg: rgba(11, 30, 33, 0.88);
   --footer-bg: #050F10;
   --footer-bg-soft: #071315;

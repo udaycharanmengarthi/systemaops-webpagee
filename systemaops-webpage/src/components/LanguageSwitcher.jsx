@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, ChevronDown, Languages } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { useLanguage } from "../i18n/useLanguage";
 import "./LanguageSwitcher.css";
 
@@ -83,12 +83,11 @@ export default function LanguageSwitcher({ className = "" }) {
         className="language-switcher__button"
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label={t("nav.language")}
+        aria-label={`${t("nav.language")}: ${active.shortLabel || active.label}`}
         onClick={() => setOpen((v) => !v)}
         onKeyDown={onButtonKeyDown}
       >
-        <Languages size={15} aria-hidden="true" />
-        <span className="language-switcher__current">{active.label}</span>
+        <span className="language-switcher__current">{active.shortLabel || active.label}</span>
         <ChevronDown
           size={14}
           aria-hidden="true"

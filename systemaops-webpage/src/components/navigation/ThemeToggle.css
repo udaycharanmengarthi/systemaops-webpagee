@@ -27,13 +27,15 @@
   outline-offset: 2px;
 }
 
-/* Below 900px the pill bar is tight; the toggle lives in the
-   mobile panel instead (theme-toggle--mobile). */
-@media (max-width: 900px) {
-  .theme-toggle:not(.theme-toggle--mobile) {
-    display: none;
+  /* Below 768px the pill bar only has room for the logo and the
+     hamburger, so the toggle lives in the mobile panel instead
+     (theme-toggle--mobile). On tablet the bar keeps the toggle, grouped
+     with the hamburger on the right. */
+  @media (max-width: 768px) {
+    .theme-toggle:not(.theme-toggle--mobile) {
+      display: none;
+    }
   }
-}
 
 /* ================================================================
    LIQUID MORPH SCENE
