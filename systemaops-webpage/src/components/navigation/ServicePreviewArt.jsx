@@ -1,118 +1,120 @@
-/* ================================================================
-   SERVICE PREVIEW ART — technical product diagrams
-   One shared visual language: neutral nodes + connector lines,
-   with only the important semantic nodes carrying the service
-   accent. Colors: accent props + theme tokens.
-=============================================================== */
+import {
+  Activity,
+  BellRing,
+  BookOpen,
+  Bot,
+  Boxes,
+  CircleCheck,
+  Cog,
+  Database,
+  FileText,
+  Inbox,
+  Landmark,
+  MessageSquareText,
+  Network,
+  Package,
+  Radar,
+  RefreshCw,
+  Search,
+  Settings,
+  ShieldCheck,
+  ShoppingCart,
+  Workflow as WorkflowIcon,
+} from "lucide-react";
+import "./ServicePreviewArt.css";
 
-const N = {
-  surface: "var(--bg-surface)",
-  border: "var(--border-strong)",
-  borderSoft: "var(--border)",
-  text: "var(--text-primary)",
-  sub: "var(--text-muted)",
+function rgbChannels(hex) {
+  const match = /^#?([0-9a-f]{6})$/i.exec(hex || "");
+  if (!match) return "21, 154, 156";
+  const value = match[1];
+  return [0, 2, 4]
+    .map((start) =>
+      parseInt(value.slice(start, start + 2), 16)
+    )
+    .join(", ");
+}
+
+const DEFAULT_LABELS = {
+  odoo: {
+    label:
+      "Odoo customization: sales, inventory and finance connected through customized Odoo into one unified workflow",
+    sales: "Sales",
+    salesSub: "Orders & revenue",
+    inventory: "Inventory",
+    inventorySub: "Stock & fulfilment",
+    finance: "Finance",
+    financeSub: "Invoices & books",
+    core: "Customized Odoo",
+    coreSub: "aligned to your workflow",
+    outcome: "Unified workflow",
+    outcomeSub: "one connected operation",
+  },
+  workflow: {
+    label:
+      "Workflow automation: a new enquiry triggers an automated workflow and completes the task",
+    trigger: "Trigger",
+    triggerSub: "New enquiry",
+    automate: "Automate",
+    automateSub: "Process workflow",
+    complete: "Complete",
+    completeSub: "Task completed",
+  },
+  ai: {
+    label:
+      "AI automation: context and a request enter an AI agent that produces a human-reviewed business action",
+    context: "Context",
+    contextSub: "Knowledge & data",
+    request: "Request",
+    requestSub: "User prompt",
+    core: "AI Agent",
+    coreSub: "rules, tools & context",
+    outcome: "Business Action",
+    outcomeSub: "human-reviewed result",
+  },
+  integration: {
+    label:
+      "System integration: CRM and ERP synchronize through an API and webhook layer with shared database records",
+    systems: "CRM / ERP",
+    systemsSub: "business systems",
+    layer: "API & Webhooks",
+    layerSub: "validate & sync",
+    data: "Database",
+    dataSub: "shared records",
+  },
+  devops: {
+    label:
+      "AIOps monitoring: monitor, detect, respond and recover, with continuous monitoring",
+    monitor: "Monitor",
+    monitorSub: "Metrics & logs",
+    detect: "Detect",
+    detectSub: "Find anomalies",
+    respond: "Respond",
+    respondSub: "Alert or fix",
+    recover: "Recover",
+    recoverSub: "Confirm recovery",
+    continuous: "Continuous monitoring",
+  },
+  consulting: {
+    label:
+      "AI consulting: understand, recommend, implement and improve",
+    understand: "Understand",
+    recommend: "Recommend",
+    implement: "Implement",
+    improve: "Improve",
+  },
 };
 
-/* Readable ink for any solid accent fill (teal depths + gold).
-   Center fills vary per service, so luminance decides the ink. */
-function inkFor(hex) {
-  const m = /^#([0-9a-f]{6})$/i.exec(hex || "");
-  if (!m) return "#0A1120";
-  const c = m[1];
-  const lum =
-    (0.2126 * parseInt(c.slice(0, 2), 16) +
-      0.7152 * parseInt(c.slice(2, 4), 16) +
-      0.0722 * parseInt(c.slice(4, 6), 16)) /
-    255;
-  return lum > 0.3 ? "#0A1120" : "#FFFFFF";
-}
-
-function Node({ x, y, w, h, title, sub, fill }) {
-  const cx = x + w / 2;
-  const isAccent = Boolean(fill);
-  const ink = isAccent ? inkFor(fill) : N.text;
-  return (
-    <g>
-      <rect
-        x={x}
-        y={y}
-        width={w}
-        height={h}
-        rx="12"
-        fill={isAccent ? fill : N.surface}
-        stroke={isAccent ? "none" : N.borderSoft}
-        strokeWidth={isAccent ? 0 : 1.5}
-      />
-      {title && (
-        <text
-          x={cx}
-          y={y + h / 2 + (sub ? -4 : 5)}
-          textAnchor="middle"
-          fill={ink}
-          fontSize="13.5"
-          fontWeight="700"
-          letterSpacing="-0.2"
-        >
-          {title}
-        </text>
-      )}
-      {sub && (
-        <text
-          x={cx}
-          y={y + h / 2 + 15}
-          textAnchor="middle"
-          fill={ink}
-          opacity={isAccent ? 0.85 : 1}
-          fontSize="10"
-          fontWeight="500"
-        >
-          {sub}
-        </text>
-      )}
-      {isAccent && (
-        <circle cx={x + 8} cy={y + 8} r="3" fill={ink} opacity="0.7" />
-      )}
-    </g>
-  );
-}
-
-function Arrow({ x1, y1, x2, y2, color }) {
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  const len = Math.sqrt(dx * dx + dy * dy) || 1;
-  const ux = dx / len;
-  const uy = dy / len;
-  return (
-    <g>
-      <line
-        x1={x1}
-        y1={y1}
-        x2={x2}
-        y2={y2}
-        stroke={color || N.border}
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <polygon
-        points={`${x2},${y2} ${x2 - ux * 10 - uy * 5},${y2 - uy * 10 + ux * 5} ${x2 - ux * 10 + uy * 5},${y2 - uy * 10 - ux * 5}`}
-        fill={color || N.border}
-      />
-    </g>
-  );
-}
-
-function Art({ label, children }) {
+function DiagramFrame({ label, accent, children }) {
   return (
     <svg
-      viewBox="0 0 640 340"
+      viewBox="0 0 640 300"
       role="img"
       aria-label={label}
+      className="spa-svg"
+      preserveAspectRatio="xMidYMid meet"
       style={{
-        display: "block",
-        width: "100%",
-        height: "100%",
-        fontFamily:
-          "'Space Grotesk', 'Plus Jakarta Sans', sans-serif",
+        "--c": accent || "#159A9C",
+        "--c-rgb": rgbChannels(accent),
       }}
     >
       {children}
@@ -120,239 +122,522 @@ function Art({ label, children }) {
   );
 }
 
-/* Previews take translated `labels` (megaMenu.preview.<id>); geometry fixed. */
+function Glyph({
+  icon: Icon,
+  x,
+  y,
+  size = 20,
+  accent = false,
+  muted = false,
+}) {
+  const className = accent
+    ? "spa-icon spa-icon--accent"
+    : muted
+      ? "spa-icon spa-icon--muted"
+      : "spa-icon";
 
-function OdooPreview({ accent, labels }) {
-  const sats = labels.sats || [];
-  const pos = [
-    { x: 52, y: 60 },
-    { x: 52, y: 150 },
-    { x: 52, y: 240 },
-    { x: 468, y: 60 },
-    { x: 468, y: 150 },
-    { x: 468, y: 240 },
+  return (
+    <Icon
+      x={x}
+      y={y}
+      width={size}
+      height={size}
+      strokeWidth={1.8}
+      className={className}
+      aria-hidden="true"
+    />
+  );
+}
+
+function Node({
+  x,
+  y,
+  w,
+  h,
+  title,
+  sub,
+  icon,
+  accent = false,
+  layout = "center",
+}) {
+  const isRow = layout === "row";
+
+  return (
+    <g>
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={14}
+        className={`spa-node${
+          accent ? " spa-node--accent" : ""
+        }`}
+      />
+      {isRow ? (
+        <>
+          <Glyph
+            icon={icon}
+            x={x + 20}
+            y={y + h / 2 - 10}
+            accent={accent}
+          />
+          <text
+            x={x + 44}
+            y={y + h / 2 - 2}
+            className="spa-title"
+          >
+            {title}
+          </text>
+          {sub && (
+            <text
+              x={x + 44}
+              y={y + h / 2 + 15}
+              className="spa-sub"
+            >
+              {sub}
+            </text>
+          )}
+        </>
+      ) : (
+        <>
+          <Glyph
+            icon={icon}
+            x={x + w / 2 - 10}
+            y={y + 24}
+            accent={accent}
+          />
+          <text
+            x={x + w / 2}
+            y={y + h / 2 + 13}
+            textAnchor="middle"
+            className="spa-title"
+          >
+            {title}
+          </text>
+          {sub && (
+            <text
+              x={x + w / 2}
+              y={y + h / 2 + 30}
+              textAnchor="middle"
+              className="spa-sub"
+            >
+              {sub}
+            </text>
+          )}
+        </>
+      )}
+    </g>
+  );
+}
+
+function Arrow({ x1, y1, x2, y2, both = false, stroke }) {
+  const head = 7.5;
+  const wing = 0.42;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+
+  const lineStartX = both ? x1 + head * cos : x1;
+  const lineStartY = both ? y1 + head * sin : y1;
+  const lineEndX = x2 - head * cos;
+  const lineEndY = y2 - head * sin;
+
+  const endWingA = {
+    x: x2 - head * Math.cos(angle - wing),
+    y: y2 - head * Math.sin(angle - wing),
+  };
+  const endWingB = {
+    x: x2 - head * Math.cos(angle + wing),
+    y: y2 - head * Math.sin(angle + wing),
+  };
+  const startWingA = {
+    x: x1 + head * Math.cos(angle - wing),
+    y: y1 + head * Math.sin(angle - wing),
+  };
+  const startWingB = {
+    x: x1 + head * Math.cos(angle + wing),
+    y: y1 + head * Math.sin(angle + wing),
+  };
+
+  return (
+    <g>
+      <line
+        x1={lineStartX}
+        y1={lineStartY}
+        x2={lineEndX}
+        y2={lineEndY}
+        className="spa-arrow-line"
+        stroke={stroke || "var(--c)"}
+      />
+      <polygon
+        points={`${x2},${y2} ${endWingA.x},${endWingA.y} ${endWingB.x},${endWingB.y}`}
+        className="spa-arrow-head"
+        fill={stroke || "var(--c)"}
+      />
+      {both && (
+        <polygon
+          points={`${x1},${y1} ${startWingA.x},${startWingA.y} ${startWingB.x},${startWingB.y}`}
+          className="spa-arrow-head"
+          fill={stroke || "var(--c)"}
+        />
+      )}
+    </g>
+  );
+}
+
+function Note({ x, y, w, text }) {
+  return (
+    <g>
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={36}
+        rx={18}
+        className="spa-note"
+      />
+      <Glyph
+        icon={RefreshCw}
+        x={x + 14}
+        y={y + 10}
+        size={16}
+        muted
+      />
+      <text
+        x={x + 38}
+        y={y + 23}
+        className="spa-note-text"
+      >
+        {text}
+      </text>
+    </g>
+  );
+}
+
+function OdooDiagram({ accent, D }) {
+  const inputs = [
+    { key: "sales", icon: ShoppingCart, y: 40 },
+    { key: "inventory", icon: Package, y: 118 },
+    { key: "finance", icon: Landmark, y: 196 },
   ];
+  const targets = [126, 150, 174];
+
   return (
-    <Art label={labels.label}>
-      {pos.map((p, i) => (
-        <Node key={sats[i]} x={p.x} y={p.y} w={120} h={52} title={sats[i]} />
+    <DiagramFrame label={D.label} accent={accent}>
+      {inputs.map(({ key, icon, y }) => (
+        <Node
+          key={key}
+          x={24}
+          y={y}
+          w={172}
+          h={64}
+          layout="row"
+          icon={icon}
+          title={D[key]}
+          sub={D[`${key}Sub`]}
+        />
       ))}
-      <Arrow x1={172} y1={86} x2={250} y2={136} />
-      <Arrow x1={172} y1={176} x2={250} y2={170} />
-      <Arrow x1={172} y1={266} x2={250} y2={204} />
-      <Arrow x1={468} y1={86} x2={390} y2={136} />
-      <Arrow x1={468} y1={176} x2={390} y2={170} />
-      <Arrow x1={468} y1={266} x2={390} y2={204} />
-      <Node
-        x={250}
-        y={120}
-        w={140}
-        h={100}
-        title={labels.center}
-        sub={labels.centerSub}
-        accent={accent}
-        fill={accent}
-      />
-    </Art>
-  );
-}
-
-function WorkflowPreview({ accent, labels }) {
-  return (
-    <Art label={labels.label}>
-      <Node x={48} y={108} w={118} h={60} title={labels.trigger.t} sub={labels.trigger.s} />
-      <Arrow x1={166} y1={138} x2={204} y2={138} />
-      <Node x={204} y={108} w={118} h={60} title={labels.process.t} sub={labels.process.s} />
-      <Arrow x1={322} y1={138} x2={360} y2={138} />
-      <Node
-        x={360}
-        y={108}
-        w={128}
-        h={60}
-        title={labels.condition.t}
-        sub={labels.condition.s}
-      />
-      <Arrow x1={488} y1={122} x2={488} y2={96} />
-      <Arrow x1={488} y1={96} x2={280} y2={96} />
-      <Arrow x1={488} y1={168} x2={488} y2={226} />
-      <Node
-        x={400}
-        y={226}
-        w={176}
-        h={62}
-        title={labels.action.t}
-        sub={labels.action.s}
-        accent={accent}
-        fill={accent}
-      />
-      <Node
-        x={196}
-        y={226}
-        w={152}
-        h={62}
-        title={labels.review.t}
-        sub={labels.review.s}
-      />
-      <Arrow x1={348} y1={257} x2={400} y2={257} />
-      <Arrow x1={488} y1={257} x2={576} y2={257} />
-    </Art>
-  );
-}
-
-function AIPreview({ accent, labels }) {
-  return (
-    <Art label={labels.label}>
-      <Node
-        x={52}
-        y={118}
-        w={116}
-        h={60}
-        title={labels.request.t}
-        sub={labels.request.s}
-      />
-      <Arrow x1={168} y1={148} x2={222} y2={148} />
-      <Node
-        x={222}
-        y={90}
-        w={170}
-        h={116}
-        title={labels.agent.t}
-        sub={labels.agent.s}
-        accent={accent}
-        fill={accent}
-      />
-      <Node x={300} y={36} w={130} h={38} title={labels.reasoning} />
-      <Arrow x1={365} y1={74} x2={307} y2={90} />
-      <Arrow x1={392} y1={148} x2={446} y2={148} />
-      <Node
-        x={446}
-        y={118}
-        w={116}
-        h={60}
-        title={labels.response.t}
-        sub={labels.response.s}
-      />
-      <Node x={252} y={238} w={140} h={52} title={labels.tools.t} sub={labels.tools.s} />
-      <Arrow x1={322} y1={238} x2={307} y2={206} />
-    </Art>
-  );
-}
-
-function IntegrationPreview({ accent, labels }) {
-  const sats = labels.sats || [];
-  const pos = [
-    { x: 52, y: 52 },
-    { x: 52, y: 240 },
-    { x: 468, y: 52 },
-    { x: 468, y: 240 },
-  ];
-  return (
-    <Art label={labels.label}>
-      {pos.map((p, i) => (
-        <Node key={sats[i]} x={p.x} y={p.y} w={120} h={56} title={sats[i]} />
+      {inputs.map(({ key, y }, index) => (
+        <Arrow
+          key={`arrow-${key}`}
+          x1={196}
+          y1={y + 32}
+          x2={246}
+          y2={targets[index]}
+        />
       ))}
-      <Arrow x1={172} y1={80} x2={252} y2={146} />
-      <Arrow x1={172} y1={268} x2={252} y2={194} />
-      <Arrow x1={468} y1={80} x2={388} y2={146} />
-      <Arrow x1={468} y1={268} x2={388} y2={194} />
-      <circle cx="320" cy="170" r="58" fill="none" stroke={N.borderSoft} strokeWidth="1.5" />
       <Node
-        x={262}
-        y={128}
-        w={116}
-        h={84}
-        title={labels.center}
-        sub={labels.centerSub}
-        accent={accent}
-        fill={accent}
-      />
-    </Art>
-  );
-}
-
-function DataPreview({ accent, labels }) {
-  return (
-    <Art label={labels.label}>
-      <Node x={40} y={118} w={104} h={64} title={labels.document.t} sub={labels.document.s} />
-      <Arrow x1={144} y1={150} x2={186} y2={150} />
-      <Node
-        x={186}
-        y={118}
-        w={112}
-        h={64}
-        title={labels.extraction.t}
-        sub={labels.extraction.s}
-        accent={accent}
-        fill={accent}
-      />
-      <Arrow x1={298} y1={150} x2={340} y2={150} />
-      <Node x={340} y={118} w={108} h={64} title={labels.validation.t} sub={labels.validation.s} />
-      <Arrow x1={448} y1={150} x2={490} y2={150} />
-      <Node x={490} y={118} w={112} h={64} title={labels.structured} />
-      <Node
-        x={300}
-        y={228}
-        w={140}
-        h={54}
-        title={labels.destination.t}
-        sub={labels.destination.s}
-        accent={accent}
-        fill={accent}
-      />
-      <Arrow x1={546} y1={182} x2={546} y2={214} />
-      <Arrow x1={546} y1={214} x2={440} y2={255} />
-    </Art>
-  );
-}
-
-function DevOpsPreview({ accent, labels }) {
-  return (
-    <Art label={labels.label}>
-      <Node x={48} y={96} w={110} h={56} title={labels.deploy.t} sub={labels.deploy.s} />
-      <Arrow x1={158} y1={124} x2={200} y2={124} />
-      <Node x={200} y={96} w={110} h={56} title={labels.runtime.t} sub={labels.runtime.s} />
-      <Arrow x1={310} y1={124} x2={352} y2={124} />
-      <Node
-        x={352}
+        x={246}
         y={96}
-        w={130}
-        h={56}
-        title={labels.monitor.t}
-        sub={labels.monitor.s}
-        accent={accent}
-        fill={accent}
+        w={154}
+        h={108}
+        icon={Boxes}
+        title={D.core}
+        sub={D.coreSub}
+        accent
       />
-      <Arrow x1={482} y1={124} x2={524} y2={124} />
-      <Node x={524} y={96} w={70} h={56} title={labels.alert} />
+      <Arrow x1={400} y1={150} x2={444} y2={150} />
       <Node
-        x={352}
-        y={216}
-        w={140}
-        h={58}
-        title={labels.resolve.t}
-        sub={labels.resolve.s}
-        accent={accent}
-        fill={accent}
+        x={444}
+        y={102}
+        w={172}
+        h={96}
+        icon={WorkflowIcon}
+        title={D.outcome}
+        sub={D.outcomeSub}
       />
-      <Arrow x1={559} y1={152} x2={559} y2={202} />
-      <Arrow x1={559} y1={202} x2={492} y2={245} />
-      <Arrow x1={352} y1={245} x2={158} y2={245} />
-      <Arrow x1={158} y1={245} x2={103} y2={152} />
-    </Art>
+    </DiagramFrame>
+  );
+}
+
+function WorkflowDiagram({ accent, D }) {
+  const nodes = [
+    {
+      x: 38,
+      icon: Inbox,
+      title: D.trigger,
+      sub: D.triggerSub,
+    },
+    {
+      x: 240,
+      icon: Cog,
+      title: D.automate,
+      sub: D.automateSub,
+      accent: true,
+    },
+    {
+      x: 442,
+      icon: CircleCheck,
+      title: D.complete,
+      sub: D.completeSub,
+    },
+  ];
+
+  return (
+    <DiagramFrame label={D.label} accent={accent}>
+      {nodes.map(({ x, icon, title, sub, accent: isAccent }) => (
+        <Node
+          key={title}
+          x={x}
+          y={98}
+          w={160}
+          h={104}
+          icon={icon}
+          title={title}
+          sub={sub}
+          accent={isAccent}
+        />
+      ))}
+      <Arrow x1={198} y1={150} x2={240} y2={150} />
+      <Arrow x1={400} y1={150} x2={442} y2={150} />
+    </DiagramFrame>
+  );
+}
+
+function AIDiagram({ accent, D }) {
+  const inputs = [
+    {
+      key: "context",
+      icon: BookOpen,
+      y: 64,
+    },
+    {
+      key: "request",
+      icon: MessageSquareText,
+      y: 160,
+    },
+  ];
+
+  return (
+    <DiagramFrame label={D.label} accent={accent}>
+      {inputs.map(({ key, icon, y }) => (
+        <Node
+          key={key}
+          x={30}
+          y={y}
+          w={172}
+          h={76}
+          layout="row"
+          icon={icon}
+          title={D[key]}
+          sub={D[`${key}Sub`]}
+        />
+      ))}
+      <Arrow x1={202} y1={102} x2={252} y2={124} />
+      <Arrow x1={202} y1={198} x2={252} y2={176} />
+      <Node
+        x={252}
+        y={92}
+        w={148}
+        h={116}
+        icon={Bot}
+        title={D.core}
+        sub={D.coreSub}
+        accent
+      />
+      <Arrow x1={400} y1={150} x2={452} y2={150} />
+      <Node
+        x={452}
+        y={102}
+        w={158}
+        h={96}
+        icon={CircleCheck}
+        title={D.outcome}
+        sub={D.outcomeSub}
+      />
+    </DiagramFrame>
+  );
+}
+
+function IntegrationDiagram({ accent, D }) {
+  return (
+    <DiagramFrame label={D.label} accent={accent}>
+      <Node
+        x={30}
+        y={98}
+        w={160}
+        h={104}
+        icon={Boxes}
+        title={D.systems}
+        sub={D.systemsSub}
+      />
+      <Arrow x1={190} y1={150} x2={240} y2={150} both />
+      <Node
+        x={240}
+        y={98}
+        w={160}
+        h={104}
+        icon={Network}
+        title={D.layer}
+        sub={D.layerSub}
+        accent
+      />
+      <Arrow x1={400} y1={150} x2={450} y2={150} both />
+      <Node
+        x={450}
+        y={98}
+        w={160}
+        h={104}
+        icon={Database}
+        title={D.data}
+        sub={D.dataSub}
+      />
+    </DiagramFrame>
+  );
+}
+
+function AIOpsDiagram({ accent, D }) {
+  const nodes = [
+    {
+      x: 30,
+      icon: Activity,
+      title: D.monitor,
+      sub: D.monitorSub,
+    },
+    {
+      x: 181,
+      icon: Radar,
+      title: D.detect,
+      sub: D.detectSub,
+      accent: true,
+    },
+    {
+      x: 332,
+      icon: BellRing,
+      title: D.respond,
+      sub: D.respondSub,
+    },
+    {
+      x: 483,
+      icon: ShieldCheck,
+      title: D.recover,
+      sub: D.recoverSub,
+    },
+  ];
+
+  return (
+    <DiagramFrame label={D.label} accent={accent}>
+      {nodes.map(({ x, icon, title, sub, accent: isAccent }) => (
+        <Node
+          key={title}
+          x={x}
+          y={98}
+          w={126}
+          h={104}
+          icon={icon}
+          title={title}
+          sub={sub}
+          accent={isAccent}
+        />
+      ))}
+      <Arrow x1={156} y1={150} x2={181} y2={150} />
+      <Arrow x1={307} y1={150} x2={332} y2={150} />
+      <Arrow x1={458} y1={150} x2={483} y2={150} />
+      <Note x={190} y={226} w={260} text={D.continuous} />
+    </DiagramFrame>
+  );
+}
+
+function ConsultingDiagram({ accent, D }) {
+  const steps = [
+    {
+      title: D.understand || "Understand",
+      icon: Search,
+    },
+    {
+      title: D.recommend || "Recommend",
+      icon: FileText,
+    },
+    {
+      title: D.implement || "Implement",
+      icon: Settings,
+    },
+    {
+      title: D.improve || "Improve",
+      icon: CircleCheck,
+    },
+  ];
+
+  const nodeW = 132;
+  const gap = 24;
+  const totalWidth = steps.length * nodeW + (steps.length - 1) * gap;
+  const startX = (640 - totalWidth) / 2;
+
+  return (
+    <DiagramFrame label={D.label} accent={accent}>
+      {steps.map(({ title, icon }, i) => {
+        const x = startX + i * (nodeW + gap);
+        return (
+          <g key={title}>
+            <Node
+              x={x}
+              y={98}
+              w={nodeW}
+              h={104}
+              title={title}
+              icon={icon}
+              accent={i === 2}
+            />
+            {i < steps.length - 1 && (
+              <Arrow
+                x1={x + nodeW}
+                y1={150}
+                x2={x + nodeW + gap}
+                y2={150}
+              />
+            )}
+          </g>
+        );
+      })}
+    </DiagramFrame>
   );
 }
 
 const ART = {
-  odoo: OdooPreview,
-  workflow: WorkflowPreview,
-  ai: AIPreview,
-  integration: IntegrationPreview,
-  data: DataPreview,
-  devops: DevOpsPreview,
+  odoo: OdooDiagram,
+  workflow: WorkflowDiagram,
+  ai: AIDiagram,
+  integration: IntegrationDiagram,
+  devops: AIOpsDiagram,
+  consulting: ConsultingDiagram,
 };
 
-export default function ServicePreviewArt({ id, accent, labels }) {
-  const Preview = ART[id] || OdooPreview;
-  if (!labels || typeof labels !== "object") return null;
-  return <Preview accent={accent} labels={labels} />;
+export default function ServicePreviewArt({
+  id,
+  accent,
+  labels,
+}) {
+  const Diagram = ART[id] || OdooDiagram;
+  const base = DEFAULT_LABELS[id] || DEFAULT_LABELS.odoo;
+  const translated =
+    labels &&
+    labels.diagram &&
+    typeof labels.diagram === "object" &&
+    !Array.isArray(labels.diagram)
+      ? labels.diagram
+      : {};
+  const D = { ...base, ...translated };
+
+  return <Diagram accent={accent} D={D} />;
 }
