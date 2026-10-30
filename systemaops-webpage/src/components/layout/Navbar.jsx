@@ -7,10 +7,11 @@ import { useLanguage } from "../../i18n/LanguageContext";
 import ServicesMegaMenu from "../navigation/ServicesMegaMenu";
 import ThemeToggle from "../navigation/ThemeToggle";
 import { servicesMenu } from "../../data/services";
+import { useTheme } from "../../theme/theme-context";
 
 import logo from "../../assets/systemaops-icon-color.svg";
-import astroidOutline from "../../assets/astroid-outline.svg";
 import AstroidMark from "./AstroidMark";
+import SpecularButton from "../ui/SpecularButton";
 import "./Navbar.css";
 
 /* Marks the current top-level route with the active underline. */
@@ -28,6 +29,8 @@ const Navbar = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const { t } = useLanguage();
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -125,6 +128,28 @@ const Navbar = () => {
   }, []);
 
   const p = scrollProgress;
+
+  /* The Book a Call pill uses the shared SpecularButton renderer. A dark
+     glass body keeps the edge and label legible in both themes. In light
+     mode the edge light becomes champagne gold to match the metallic gold
+     astroid mark; dark mode keeps the original white specular treatment. */
+  const bookCallSpecular = {
+    size: "md",
+    radius: 24,
+    tint: isLightTheme ? "#0b1720" : "#ffffff",
+    tintOpacity: isLightTheme ? 0.78 : 0.06,
+    textColor: "#ffffff",
+    lineColor: isLightTheme ? "#E8B95E" : "#ffffff",
+    baseColor: isLightTheme ? "#C99A42" : "#525252",
+    intensity: 1,
+    idleIntensity: isLightTheme ? 0.25 : 0.35,
+    shineSize: 10,
+    shineFade: 34,
+    thickness: 1.2,
+    glow: isLightTheme ? 0.7 : 1,
+    followMouse: true,
+    proximity: 250,
+  };
 
   /* Service entries use native <Link> navigation below.
      Hash links ("/#services") are handled by ScrollToTop, which
@@ -244,20 +269,22 @@ const Navbar = () => {
           {/* ================================================= */}
 
           <div className="nb-cta-group">
-            <button
-              className="nb-cta nb-cta--book"
+            <SpecularButton
+              {...bookCallSpecular}
+              className="nb-book-cta navbar-book-call"
               type="button"
               onClick={() => navigate("/book-a-call")}
             >
               <span className="nb-cta-mark-shell" aria-hidden="true">
-                <AstroidMark className="nb-cta-mark" speed={0.35} outerGlow={0.08} />
-                <img className="nb-cta-mark-outline" src={astroidOutline} alt="" draggable="false" />
+                <AstroidMark
+                  className="nb-cta-mark"
+                />
               </span>
               <span className="nb-cta-label">
                 {t("nav.bookCall")}
               </span>
               <ArrowRight className="nb-cta-arrow" size={16} aria-hidden="true" />
-            </button>
+            </SpecularButton>
           </div>
 
           {/* ================================================= */}
@@ -487,8 +514,9 @@ const Navbar = () => {
             {/* ================================================= */}
 
             <div className="nb-mobile-cta-group">
-              <button
-                className="nb-mobile-cta nb-mobile-cta--book"
+              <SpecularButton
+                {...bookCallSpecular}
+                className="nb-book-cta nb-book-cta--mobile"
                 type="button"
                 onClick={() => {
                   closeMobileMenu();
@@ -496,14 +524,15 @@ const Navbar = () => {
                 }}
               >
                 <span className="nb-cta-mark-shell" aria-hidden="true">
-                  <AstroidMark className="nb-cta-mark" speed={0.35} outerGlow={0.08} />
-                  <img className="nb-cta-mark-outline" src={astroidOutline} alt="" draggable="false" />
+                  <AstroidMark
+                    className="nb-cta-mark"
+                  />
                 </span>
                 <span className="nb-cta-label">
                   {t("nav.bookCall")}
                 </span>
                 <ArrowRight className="nb-cta-arrow" size={16} aria-hidden="true" />
-              </button>
+              </SpecularButton>
             </div>
 
           </motion.div>

@@ -5,6 +5,7 @@ import {
 
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../i18n/LanguageContext";
+import PayForConsultation from "./PayForConsultation";
 import './ButtonCta.css'
 
 export default function ButtonCta() {
@@ -50,6 +51,10 @@ export default function ButtonCta() {
   <p className="bottom-cta-mini">
     {t("bottomCta.mini")}
   </p>
+
+  {/* Paid alternative: enters the consultation flow, where the order is
+      created and the linked Stripe Checkout session is started. */}
+  <PayForConsultation />
 </div>
       </div>
     </section>

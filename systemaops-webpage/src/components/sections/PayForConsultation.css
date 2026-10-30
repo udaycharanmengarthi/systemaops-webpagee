@@ -1,0 +1,110 @@
+/* =========================================================
+   PAY FOR CONSULTATION — secondary CTA next to the
+   existing contact button. Reuses the design tokens only
+   (no new palette, no overrides of other sections).
+   ========================================================= */
+
+.pay-consult {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.pay-consult-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 16px 24px;
+
+  border-radius: 18px;
+
+  /* Neutral surface: the accent-filled contact button stays the
+     primary action, this is the paid alternative beside it. */
+  border: 1px solid var(--border-strong);
+
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: .95rem;
+  font-weight: 700;
+  letter-spacing: -.015em;
+
+  color: var(--text-primary);
+
+  background: var(--bg-surface);
+
+  cursor: pointer;
+
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    background .25s ease;
+}
+
+
+.pay-consult-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  border-color: var(--accent-primary);
+
+  background: var(--accent-soft);
+}
+
+
+.pay-consult-btn:disabled {
+  cursor: progress;
+
+  opacity: .72;
+}
+
+
+.pay-consult-btn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+
+.pay-consult-error {
+  margin-top: 12px;
+
+  max-width: 340px;
+
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .85rem;
+  line-height: 1.5;
+
+  color: var(--text-secondary);
+}
+
+
+/* Static, low-key loading cue. Decorative only — the button is
+   disabled and aria-busy while the session is being created. */
+.pay-consult-spin {
+  animation: pay-consult-spin .9s linear infinite;
+}
+
+@keyframes pay-consult-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pay-consult-spin {
+    animation: none;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .pay-consult {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .pay-consult-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

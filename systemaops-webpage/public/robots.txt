@@ -1,7 +1,33 @@
+# ================================================================
+# SystemaOps robots.txt
+#
+# Default policy: allow every crawler the public marketing pages and
+# the assets needed to render them. Private application areas are
+# excluded per group - robots.txt exclusions are advisory, so real
+# protection for /admin and /api/admin/* stays server-side
+# (cookie-session auth in the backend). robots.txt is NOT a security
+# boundary.
+#
+# OpenAI crawlers (verified against developers.openai.com/api/docs/bots):
+#   OAI-SearchBot  -> ChatGPT Search discovery  (explicitly allowed)
+#   GPTBot         -> AI model training         (owner decision, unchanged)
+#   ChatGPT-User   -> user-triggered visits     (not governed by robots.txt)
+#
+# NOTE: named user-agent groups do NOT inherit the wildcard rules
+# below, so the private-area exclusions are repeated inside the
+# OAI-SearchBot group.
+# ================================================================
+
 User-agent: *
-
 Allow: /
+Disallow: /web/
+Disallow: /web/login
+Disallow: /login
+Disallow: /admin
 
+# ChatGPT Search discovery crawler
+User-agent: OAI-SearchBot
+Allow: /
 Disallow: /web/
 Disallow: /web/login
 Disallow: /login

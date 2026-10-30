@@ -245,7 +245,7 @@
 }
 
 [data-theme="dark"] .od-node {
-  fill: #0B1E21;
+  fill: var(--bg-surface);
 }
 
 .od-node--ops {

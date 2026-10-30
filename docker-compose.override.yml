@@ -7,8 +7,32 @@
 # 127.0.0.1-bound ports are reachable only from this machine.
 # MongoDB stays internal: host-side dev uses the local mongod already
 # pointed to by Server/.env (mongodb://127.0.0.1:27017/systemaops).
+#
+# Port map for local development:
+#   :3000 -> bundled proxy (frontend + /api + /admin) — use this in a browser
+#   :3002 -> static frontend preview only (no API; assets/debugging)
+#   :80   -> bundled proxy (also the production-style entrypoint)
+#   :5000 -> backend API on loopback (Vite dev proxy target)
+#
+# The static `serve` process inside the frontend image cannot forward /api.
+# Serving the SPA directly on :3000 therefore turned every API POST into the
+# SPA index.html (HTTP 200 text/html) and the consultation form reported a
+# generic server error. :3000 must reach the proxy, not the static preview.
 
 services:
   backend:
+    environment:
+      # Local default for Stripe success/cancel redirects. An explicit
+      # FRONTEND_URL in the root .env still wins (Compose interpolation).
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
     ports:
       - "127.0.0.1:5000:5000"
+
+  frontend:
+    ports: !override
+      - "3002:3000"
+
+  proxy:
+    ports: !override
+      - "80:80"
+      - "3000:80"

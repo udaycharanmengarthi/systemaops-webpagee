@@ -6,6 +6,12 @@ FROM node:20 AS build
 
 WORKDIR /app
 
+# Public build-time switch only; never place Stripe secret values in the
+# frontend image. Development may use it to disable the paid flow; the
+# production build always uses the paid Stripe path.
+ARG VITE_ENABLE_STRIPE_CHECKOUT=true
+ENV VITE_ENABLE_STRIPE_CHECKOUT=$VITE_ENABLE_STRIPE_CHECKOUT
+
 COPY package*.json ./
 
 # Full install (vite + tailwind are devDependencies, needed for the build).

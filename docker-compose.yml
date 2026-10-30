@@ -131,9 +131,11 @@ services:
   frontend:
     build:
       context: ./systemaops-webpage
+      args:
+        VITE_ENABLE_STRIPE_CHECKOUT: ${VITE_ENABLE_STRIPE_CHECKOUT:-true}
 
-    expose:
-      - "3000"
+    ports:
+      - "3000:3000"
 
     restart: unless-stopped
 
@@ -217,8 +219,8 @@ services:
     build:
       context: ./proxy
 
-    expose:
-      - "80"
+    ports:
+      - "80:80"
 
     depends_on:
       backend:

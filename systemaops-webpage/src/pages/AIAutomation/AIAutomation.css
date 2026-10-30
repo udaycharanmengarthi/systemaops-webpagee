@@ -214,7 +214,7 @@
 }
 
 [data-theme="dark"] .ai2-node {
-  fill: #0B1E21;
+  fill: var(--bg-surface);
 }
 
 .ai2-node--review {
@@ -1331,7 +1331,7 @@
 }
 
 [data-theme="dark"] .ai2-flow-node--completed .ai2-flow-ico {
-  color: #062a2a;
+  color: var(--text-on-accent);
 }
 
 .ai2-flow-text {

@@ -107,11 +107,7 @@
 .n8n-heading span {
 
   background:
-    linear-gradient(
-      90deg,
-      var(--text-primary),
-      var(--accent-primary)
-    );
+    var(--accent-gradient);
 
   -webkit-background-clip: text;
 

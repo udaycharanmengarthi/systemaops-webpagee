@@ -1,0 +1,890 @@
+.cs-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.cs-page {
+  min-height: 100vh;
+  padding: calc(var(--nav-offset) + 44px) 0 104px;
+  background:
+    radial-gradient(
+      1100px 520px at 86% -8%,
+      rgba(var(--accent-rgb), .075),
+      transparent 64%
+    ),
+    var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.cs-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.cs-layout {
+  display: grid;
+  grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+  gap: clamp(44px, 6vw, 88px);
+  align-items: start;
+}
+
+.cs-intro {
+  min-width: 0;
+  max-width: 540px;
+  padding-top: 4px;
+}
+
+.cs-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: .73rem;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+.cs-eyebrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--accent-primary);
+}
+
+.cs-h1 {
+  max-width: 13ch;
+  margin: 20px 0 0;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(2.55rem, 4.7vw, 4rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -.05em;
+  color: var(--text-primary);
+}
+
+.cs-lede {
+  max-width: 48ch;
+  margin: 22px 0 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.04rem;
+  line-height: 1.72;
+  color: var(--text-secondary);
+}
+
+.cs-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px 24px;
+  margin-top: 32px;
+}
+
+.cs-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  color: var(--accent-primary);
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: .92rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-underline-offset: 4px;
+}
+
+.cs-text-link:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+.cs-text-link:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.cs-expect {
+  max-width: 430px;
+  margin-top: 44px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.cs-expect-title {
+  margin: 0;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cs-expect-list {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cs-expect-item {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 13px 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .94rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.cs-expect-item + .cs-expect-item {
+  border-top: 1px solid var(--border-soft);
+}
+
+.cs-expect-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 27px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-surface);
+  color: var(--accent-primary);
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.cs-intro-note {
+  margin: 16px 0 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .79rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.cs-form-column {
+  min-width: 0;
+  scroll-margin-top: calc(var(--nav-offset) + 20px);
+}
+
+.cs-form-card,
+.cs-mock,
+.cs-result {
+  width: 100%;
+  padding: 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.cs-form-header {
+  margin-bottom: 26px;
+}
+
+.cs-form-title {
+  margin: 0;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(1.45rem, 2.2vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -.035em;
+  color: var(--text-primary);
+}
+
+.cs-form-sub {
+  max-width: 52ch;
+  margin: 10px 0 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .93rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.cs-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 20px;
+}
+
+.cs-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.cs-field--full {
+  grid-column: 1 / -1;
+}
+
+.cs-label {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: .86rem;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: var(--text-primary);
+}
+
+.cs-optional {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .76rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.cs-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--input-border);
+  border-radius: 12px;
+  background: var(--input-bg);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .95rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+}
+
+.cs-input::placeholder {
+  color: var(--input-placeholder);
+  opacity: 1;
+}
+
+.cs-input:hover {
+  border-color: var(--border-strong);
+}
+
+.cs-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .14);
+}
+
+.cs-input[aria-invalid="true"] {
+  border-color: var(--error);
+}
+
+.cs-textarea {
+  min-height: 142px;
+  resize: vertical;
+}
+
+.cs-select {
+  appearance: none;
+  padding-right: 40px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+    linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) 22px,
+    calc(100% - 14px) 22px;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.cs-field-error {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .81rem;
+  line-height: 1.5;
+  color: var(--error);
+}
+
+.cs-counter {
+  align-self: flex-end;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .77rem;
+  color: var(--text-muted);
+}
+
+.cs-error-summary {
+  margin-bottom: 20px;
+  padding: 15px 17px;
+  border: 1px solid var(--error);
+  border-radius: 12px;
+  background: var(--error-soft);
+}
+
+.cs-error-summary:focus-visible {
+  outline: 2px solid var(--error);
+  outline-offset: 2px;
+}
+
+.cs-error-summary-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: .89rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cs-error-summary ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.cs-error-summary li {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .84rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.cs-error-summary a {
+  color: var(--text-primary);
+}
+
+.cs-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--error-soft);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .86rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.cs-privacy-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.cs-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .88rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.cs-check input {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  accent-color: var(--accent-primary);
+}
+
+.cs-privacy-link {
+  width: fit-content;
+  margin-left: 28px;
+  color: var(--accent-primary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .8rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cs-privacy-link:hover {
+  color: var(--accent-hover);
+}
+
+.cs-price-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 15px 17px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg-surface-soft);
+}
+
+.cs-price-label {
+  display: block;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cs-price-value {
+  display: block;
+  margin-top: 3px;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.28rem;
+  font-weight: 700;
+  letter-spacing: -.03em;
+  color: var(--text-primary);
+}
+
+.cs-price-caption {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .79rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.cs-price-alert {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin-top: 10px;
+  padding: 11px 13px;
+  border: 1px solid var(--error);
+  border-radius: 10px;
+  background: var(--error-soft);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .82rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.cs-inline-link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.cs-inline-link:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.cs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: .94rem;
+  font-weight: 700;
+  letter-spacing: -.015em;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background .2s ease,
+    border-color .2s ease,
+    color .2s ease,
+    box-shadow .2s ease,
+    transform .2s ease;
+}
+
+.cs-btn--primary {
+  border: 1px solid var(--accent-primary);
+  color: var(--text-inverse);
+  background: var(--accent-primary);
+  box-shadow: 0 2px 10px rgba(var(--accent-rgb), .12);
+}
+
+.cs-btn--primary:hover:not(:disabled) {
+  border-color: var(--accent-hover);
+  background: var(--accent-hover);
+  box-shadow: 0 6px 18px rgba(var(--accent-rgb), .18);
+}
+
+.cs-btn--primary:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 1px 4px rgba(var(--accent-rgb), .12);
+}
+
+.cs-btn--ghost {
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  background: transparent;
+}
+
+.cs-btn--ghost:hover:not(:disabled) {
+  border-color: var(--accent-primary);
+  background: var(--accent-soft);
+}
+
+.cs-btn:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+  box-shadow: none;
+}
+
+.cs-btn:focus-visible,
+.cs-inline-link:focus-visible,
+.cs-linkback:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+.cs-submit {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 22px;
+  font-size: .97rem;
+}
+
+.cs-form-note {
+  margin: 14px 0 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .79rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.cs-form-reassurance {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.cs-form-reassurance svg {
+  flex-shrink: 0;
+  color: var(--accent-primary);
+}
+
+.cs-step-heading {
+  margin: 0;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -.035em;
+  color: var(--text-primary);
+}
+
+.cs-step-heading:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.cs-step-text {
+  max-width: 58ch;
+  margin: 14px 0 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .96rem;
+  line-height: 1.68;
+  color: var(--text-secondary);
+}
+
+.cs-muted {
+  color: var(--text-muted);
+  font-size: .9rem;
+}
+
+.cs-mock-summary {
+  display: flex;
+  flex-direction: column;
+  margin: 24px 0 0;
+}
+
+.cs-panel-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.cs-panel-row:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.cs-panel-row dt {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .83rem;
+  color: var(--text-muted);
+}
+
+.cs-panel-row dd {
+  margin: 0;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: .88rem;
+  font-weight: 600;
+  text-align: right;
+  color: var(--text-primary);
+}
+
+.cs-mock-note {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--bg-surface-soft);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .81rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.cs-mock-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.cs-linkback {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 8px 0;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .84rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.cs-linkback:hover {
+  color: var(--accent-primary);
+}
+
+.cs-mock-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--warning);
+  color: var(--text-inverse);
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.cs-results {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.cs-result-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 18px;
+  border-radius: 999px;
+}
+
+.cs-result-icon--ok {
+  background: var(--accent-soft);
+  color: var(--accent-primary);
+}
+
+.cs-result-icon--warn {
+  background: var(--error-soft);
+  color: var(--error);
+}
+
+.cs-result-ref {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .84rem;
+  color: var(--text-muted);
+}
+
+.cs-result-ref code {
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: var(--bg-surface-soft);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .83rem;
+  color: var(--text-primary);
+}
+
+.cs-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.cs-devbar {
+  padding: 12px 24px;
+  background: var(--text-primary);
+  color: var(--bg-surface);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .82rem;
+  text-align: center;
+}
+
+.cs-spin {
+  animation: cs-spin .9s linear infinite;
+}
+
+@keyframes cs-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1024px) {
+  .cs-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+    align-items: start;
+  }
+
+  .cs-intro {
+    max-width: 760px;
+  }
+
+  .cs-form-column {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .cs-page {
+    padding: calc(var(--nav-offset) + 20px) 0 64px;
+  }
+
+  .cs-container {
+    padding: 0 18px;
+  }
+
+  .cs-layout {
+    gap: 36px;
+  }
+
+  .cs-h1 {
+    max-width: 14ch;
+    margin-top: 16px;
+    font-size: clamp(2.2rem, 10vw, 3rem);
+  }
+
+  .cs-lede {
+    margin-top: 18px;
+    font-size: .98rem;
+  }
+
+  .cs-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    margin-top: 26px;
+  }
+
+  .cs-hero-actions .cs-btn {
+    width: 100%;
+  }
+
+  .cs-text-link {
+    justify-content: center;
+  }
+
+  .cs-expect {
+    margin-top: 32px;
+    padding-top: 20px;
+  }
+
+  .cs-form-card,
+  .cs-mock,
+  .cs-result {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+
+  .cs-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .cs-privacy-link {
+    margin-left: 28px;
+  }
+
+  .cs-price-block {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cs-price-caption {
+    text-align: left;
+  }
+
+  .cs-mock-actions,
+  .cs-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cs-mock-actions .cs-btn,
+  .cs-actions .cs-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-btn,
+  .cs-input,
+  .cs-text-link {
+    transition: none;
+  }
+
+  .cs-btn--primary:hover:not(:disabled) {
+    transform: none;
+  }
+
+  .cs-spin {
+    animation: none;
+  }
+}

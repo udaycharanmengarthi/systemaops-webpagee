@@ -2,106 +2,119 @@ import { useEffect, useRef } from "react";
 import "./Hero.css";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../../i18n/LanguageContext";
+import useMediaQuery from "../../../hooks/useMediaQuery";
 
-// N8N-style nodes � real tool names with SVG icons
+/* The hero diagram is decorative AND expensive: it runs SMIL <animate>
+   elements plus a CSS float animation on every node. Below the tablet
+   breakpoint it is not rendered at all (see showAnimation in the
+   component), so on mobile the SVG is absent from the DOM, no animation
+   timeline is started, and no space is reserved for it. */
+const SHOW_ANIMATION_QUERY = "(min-width: 768px)";
+
+/* Desktop reference size of the square diagram. Node boxes and glyphs are
+   emitted as percentages of it so the whole scene scales in lockstep with
+   its container at any viewport, while staying pixel-identical at 500px. */
+const SCENE_SIZE = 500;
+
+// N8N-style nodes - real tool names with SVG icons
 
 
-// Logo-derived node shades: one brand family (deep → light teal),
-// plus the logo gold dot as a single highlight. Structure untouched.
+// Keep these service colors distinct so every tool in the network reads
+// clearly against its own dark tinted node background.
 const NODES = [
   {
-    id: 1, x: 48, y: 35, size: 68,
+    id: 1, x: 48, y: 35, size: 68, iconSize: 28,
     label: "AI Engine",
     color: "#00D4AA",
-    bg: "#0A1F1A",
+    bg: "#0B1515",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true" focusable="false">
-        <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#00D4AA" strokeWidth="1.5" strokeLinejoin="round"/>
-        <path d="M2 17l10 5 10-5" stroke="#00D4AA" strokeWidth="1.5" strokeLinejoin="round"/>
-        <path d="M2 12l10 5 10-5" stroke="#00D4AA" strokeWidth="1.5" strokeLinejoin="round"/>
+        <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+        <path d="M2 17l10 5 10-5" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+        <path d="M2 12l10 5 10-5" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
       </svg>
     ),
   },
   {
-    id: 2, x: 26, y: 55, size: 60,
+    id: 2, x: 26, y: 55, size: 60, iconSize: 24,
     label: "Data Flow",
     color: "#7B7FFF",
-    bg: "#0F0F20",
+    bg: "#091313",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" width="24" height="24" aria-hidden="true" focusable="false">
-        <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#7B7FFF" strokeWidth="1.5"/>
-        <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#7B7FFF" strokeWidth="1.5"/>
-        <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#7B7FFF" strokeWidth="1.5"/>
-        <path d="M17.5 14v7M14 17.5h7" stroke="#7B7FFF" strokeWidth="1.5" strokeLinecap="round"/>
+        <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+        <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+        <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+        <path d="M17.5 14v7M14 17.5h7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
       </svg>
     ),
   },
   {
-    id: 3, x: 72, y: 55, size: 60,
+    id: 3, x: 72, y: 55, size: 60, iconSize: 24,
     label: "Automation",
     color: "#F0A500",
-    bg: "#1A150A",
+    bg: "#14110A",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" width="24" height="24" aria-hidden="true" focusable="false">
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#F0A500" strokeWidth="1.5" strokeLinejoin="round"/>
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
       </svg>
     ),
   },
   {
-    id: 4, x: 16, y: 32, size: 50,
+    id: 4, x: 16, y: 32, size: 50, iconSize: 20,
     label: "Webhook",
     color: "#FF6B8A",
-    bg: "#1A0A10",
+    bg: "#0D1818",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" width="20" height="20" aria-hidden="true" focusable="false">
-        <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#FF6B8A" strokeWidth="1.5" strokeLinecap="round"/>
-        <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#FF6B8A" strokeWidth="1.5" strokeLinecap="round"/>
+        <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+        <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
       </svg>
     ),
   },
   {
-    id: 5, x: 84, y: 32, size: 50,
+    id: 5, x: 84, y: 32, size: 50, iconSize: 20,
     label: "Cloud Sync",
     color: "#38BDF8",
-    bg: "#061520",
+    bg: "#070E0E",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" width="20" height="20" aria-hidden="true" focusable="false">
-        <path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z" stroke="#38BDF8" strokeWidth="1.5" strokeLinejoin="round"/>
+        <path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
       </svg>
     ),
   },
   {
-    id: 6, x: 20, y: 76, size: 44,
+    id: 6, x: 20, y: 76, size: 44, iconSize: 18,
     label: "Notify",
     color: "#A78BFA",
-    bg: "#100A1A",
+    bg: "#0F1A1A",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" width="18" height="18" aria-hidden="true" focusable="false">
-        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#A78BFA" strokeWidth="1.5" strokeLinejoin="round"/>
-        <path d="M13.73 21a2 2 0 01-3.46 0" stroke="#A78BFA" strokeWidth="1.5" strokeLinecap="round"/>
+        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+        <path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
       </svg>
     ),
   },
   {
-    id: 7, x: 80, y: 76, size: 44,
+    id: 7, x: 80, y: 76, size: 44, iconSize: 18,
     label: "Security",
     color: "#34D399",
-    bg: "#061510",
+    bg: "#0A1313",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" width="18" height="18" aria-hidden="true" focusable="false">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#34D399" strokeWidth="1.5" strokeLinejoin="round"/>
-        <path d="M9 12l2 2 4-4" stroke="#34D399" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+        <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     ),
   },
   {
-    id: 8, x: 90, y: 56, size: 38,
+    id: 8, x: 90, y: 56, size: 38, iconSize: 16,
     label: "API",
     color: "#FB923C",
-    bg: "#1A0E06",
+    bg: "#0B1616",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" width="16" height="16" aria-hidden="true" focusable="false">
-        <path d="M8 6l-4 6 4 6M16 6l4 6-4 6M12 3l-2 18" stroke="#FB923C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M8 6l-4 6 4 6M16 6l4 6-4 6M12 3l-2 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     ),
   },
@@ -111,11 +124,34 @@ const CONNECTIONS = [
   [1,2],[1,3],[2,4],[2,6],[3,5],[3,7],[3,8]
 ];
 
+const LABEL_POSITIONS = {
+  1: "below",
+  2: "left",
+  3: "below",
+  4: "above",
+  5: "above",
+  6: "below",
+  7: "below",
+  8: "above",
+};
+
 export default function Hero() {
   const statRefs = useRef([]);
   const navigate = useNavigate();
   const { t } = useLanguage();
   const stats = t("hero.stats");
+
+  /* MOBILE RULE: the diagram is not rendered at all below the tablet
+     breakpoint. Unmounting (rather than display:none) is what guarantees
+     the SMIL timelines and the per-node CSS animations never start, and
+     that no empty container reserves space. Crossing the breakpoint in
+     either direction mounts/unmounts it and React tears down the subtree. */
+  const showAnimation = useMediaQuery(SHOW_ANIMATION_QUERY);
+
+  /* The travelling dots are SMIL <animate> elements, which CSS cannot
+     switch off. Omit them entirely when the user prefers reduced motion
+     so the diagram stays static instead of animating behind their back. */
+  const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   useEffect(() => {
     stats.forEach(({ target, suffix, decimals }, i) => {
@@ -133,7 +169,7 @@ export default function Hero() {
       className="hero"
       aria-label={t("hero.aria")}
     >
-      {/* Ambient � purely decorative */}
+      {/* Ambient - purely decorative */}
       <div className="hero-bg" aria-hidden="true">
         <div className="glow glow-teal" />
         <div className="glow glow-purple" />
@@ -216,9 +252,10 @@ export default function Hero() {
           </dl>
         </div>
 
-        {/* -- RIGHT � N8N style � decorative illustration -- */}
+        {/* -- RIGHT - N8N style - decorative illustration -- */}
+        {showAnimation && (
         <div
-          className="hero-right desktop-only"
+          className="hero-right"
           aria-hidden="true"
           role="presentation"
         >
@@ -235,6 +272,24 @@ export default function Hero() {
                   <feGaussianBlur stdDeviation="0.4" result="blur"/>
                   <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
                 </filter>
+                {CONNECTIONS.map(([a, b]) => {
+                  const source = NODES.find(n => n.id === a);
+                  const target = NODES.find(n => n.id === b);
+                  return (
+                    <linearGradient
+                      key={`gradient-${a}-${b}`}
+                      id={`connection-${a}-${b}`}
+                      gradientUnits="userSpaceOnUse"
+                      x1={source.x}
+                      y1={source.y}
+                      x2={target.x}
+                      y2={target.y}
+                    >
+                      <stop offset="0%" stopColor={source.color} stopOpacity="0.76" />
+                      <stop offset="100%" stopColor={target.color} stopOpacity="0.72" />
+                    </linearGradient>
+                  );
+                })}
               </defs>
               {CONNECTIONS.map(([a, b], i) => {
                 const na = NODES.find(n => n.id === a);
@@ -244,11 +299,15 @@ export default function Hero() {
                     x1={na.x} y1={na.y} x2={nb.x} y2={nb.y}
                     className="conn-line"
                     filter="url(#glow-line)"
-                    style={{ animationDelay: `${i * 0.12}s` }}
+                    style={{
+                      stroke: `url(#connection-${a}-${b})`,
+                      "--enter-delay": `${i * 0.12}s`,
+                      "--flow-delay": `${i * -0.8}s`,
+                    }}
                   />
                 );
               })}
-              {CONNECTIONS.map(([a, b], i) => {
+              {!reduceMotion && CONNECTIONS.map(([a, b], i) => {
                 const na = NODES.find(n => n.id === a);
                 const nb = NODES.find(n => n.id === b);
                 return (
@@ -256,7 +315,7 @@ export default function Hero() {
                     <circle
                       cx={na.x}
                       cy={na.y}
-                      r="0.85"
+                      r="0.9"
                       className="conn-dot"
                       style={{
                         fill: na.color,
@@ -290,10 +349,11 @@ export default function Hero() {
             {NODES.map((node, i) => (
               <div
                 key={node.id}
-                className="n8n-node"
+                className={`n8n-node${node.id === 1 ? " n8n-node--core" : ""}`}
                 style={{
                   left: `${node.x}%`, top: `${node.y}%`,
-                  width: node.size, height: node.size,
+                  "--w": `${(node.size / SCENE_SIZE) * 100}%`,
+                  "--s": `${(node.iconSize / node.size) * 100}%`,
                   "--c": node.color, "--bg": node.bg,
                   animationDelay: `${i * 0.18}s`,
                   animationDuration: `${5.5 + i * 0.4}s`,
@@ -301,14 +361,17 @@ export default function Hero() {
               >
                 <div className="n8n-node__glow" />
                 <div className="n8n-node__ring" />
-                <div className="n8n-node__body">
+                <div className={`n8n-node__body${node.id === 1 ? " n8n-node__body--core" : ""}`}>
                   {node.icon}
                 </div>
-                <div className="n8n-node__label">{node.label}</div>
+                <div className={`n8n-node__label n8n-node__label--${LABEL_POSITIONS[node.id]}`}>
+                  {node.label}
+                </div>
               </div>
             ))}
           </div>
         </div>
+        )}
       </div>
     </section>
   );

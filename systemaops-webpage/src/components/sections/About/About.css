@@ -299,11 +299,7 @@
   color: var(--text-primary);
 
   background:
-    linear-gradient(
-      135deg,
-      var(--text-primary) 0%,
-      var(--accent-primary) 100%
-    );
+    var(--accent-gradient);
 
   -webkit-background-clip:
     text;
@@ -574,11 +570,7 @@
   color: var(--text-primary);
 
   background:
-    linear-gradient(
-      135deg,
-      var(--text-primary) 0%,
-      var(--accent-primary) 100%
-    );
+    var(--accent-gradient);
 
   -webkit-background-clip:
     text;
@@ -1480,7 +1472,7 @@
   position: relative;
   overflow: hidden;
 }
-[data-theme="dark"] .about-story-visual-panel { background: #0B1E21; }
+[data-theme="dark"] .about-story-visual-panel { background: var(--bg-surface); }
 .about-origin-svg { width: 100%; height: auto; display: block; }
 
 /* ── Section header spacing ── */
@@ -1682,7 +1674,7 @@
 }
 
 [data-theme="dark"] .about-story-visual-panel {
-  background: #0B1E21;
+  background: var(--bg-surface);
 }
 
 .about-origin-svg {
@@ -1760,7 +1752,7 @@
   background: var(--bg-surface);
   transition: background 0.2s ease, transform 0.15s ease;
   &:hover { transform: translateY(-2px); }
-  [data-theme="dark"] & { background: #0B1E21; }
+  [data-theme="dark"] & { background: var(--bg-surface); }
 }
 .about-work-visual-wrap {
   aspect-ratio: 16/9;
@@ -1772,7 +1764,7 @@
   align-items: center;
   justify-content: center;
 }
-[data-theme="dark"] .about-work-visual-wrap { background: #0B1E21; }
+[data-theme="dark"] .about-work-visual-wrap { background: var(--bg-surface); }
 .about-work-visual-wrap svg {
   max-width: 90%;
   max-height: 90%;
@@ -4011,7 +4003,7 @@
 }
 
 [data-theme="dark"] .about-process-media {
-  background: #0B1E21;
+  background: var(--bg-surface);
   border-color: rgba(var(--c-rgb), 0.25);
 }
 
@@ -4114,19 +4106,8 @@
       cyan stage labels wash out on near-white. Deepen them to
       brand teal/deep so headlines stay clearly readable. ── */
 
-[data-theme="light"] .about-hero-title .gradient-text,
-[data-theme="light"] .about-section-title .gradient-text {
-  color: var(--text-primary);
-  background:
-    linear-gradient(
-      135deg,
-      var(--text-primary) 20%,
-      var(--brand-deep) 100%
-    );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+/* The accent-word gradient is now theme-aware via --accent-gradient,
+   so no light-specific override is required here. */
 
 [data-theme="light"] .about-story-journey-stage[data-accent="cyan"] .about-stage-label,
 [data-theme="light"] .about-story-journey-stage[data-accent="cyan"] .about-stage-phase {

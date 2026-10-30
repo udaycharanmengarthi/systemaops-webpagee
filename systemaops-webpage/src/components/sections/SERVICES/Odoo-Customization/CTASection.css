@@ -144,11 +144,7 @@
 .cta-heading span {
 
   background:
-    linear-gradient(
-      90deg,
-      var(--text-primary),
-      var(--accent-primary)
-    );
+    var(--accent-gradient);
 
   -webkit-background-clip: text;
 
@@ -424,11 +420,7 @@
 
 .cta-heading span {
   background:
-    linear-gradient(
-      90deg,
-      var(--text-primary),
-      var(--accent-primary)
-    ) !important;
+    var(--accent-gradient) !important;
 
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;

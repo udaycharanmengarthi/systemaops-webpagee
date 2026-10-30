@@ -212,7 +212,7 @@
 }
 
 [data-theme="dark"] .do-node {
-  fill: #0B1E21;
+  fill: var(--bg-surface);
 }
 
 .do-node-text {

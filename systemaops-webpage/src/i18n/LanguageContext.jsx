@@ -22,7 +22,16 @@ import {
   megaMenuContent,
   sharedContent,
   n8nPageContent,
+  consultationMockCopy,
 } from "./translations-services";
+
+/* Development-demo copy is merged ONLY in a development build.
+   `DEV_BUILD` is a module-scope const, and `import.meta.env.DEV` is
+   statically replaced with `false` in a production bundle, so each
+   `DEV_BUILD ? … : …` below constant-folds to the plain namespace.
+   `consultationMockCopy` then becomes unreferenced and the demo strings
+   are tree-shaken out of the production bundle entirely. */
+const DEV_BUILD = import.meta.env.DEV === true;
 
 // Combine the main translations with page-specific translations.
 // serviceDetail / megaMenu / cookie / privacy / common / legal are new
@@ -38,6 +47,10 @@ const translations = {
     privacy: sharedContent.en.privacy,
     common: sharedContent.en.common,
     legal: sharedContent.en.legal,
+    payments: sharedContent.en.payments,
+    consultation: DEV_BUILD
+      ? { ...sharedContent.en.consultation, mock: consultationMockCopy.en }
+      : sharedContent.en.consultation,
   },
   nl: {
     ...baseTranslations.nl,
@@ -49,6 +62,10 @@ const translations = {
     privacy: sharedContent.nl.privacy,
     common: sharedContent.nl.common,
     legal: sharedContent.nl.legal,
+    payments: sharedContent.nl.payments,
+    consultation: DEV_BUILD
+      ? { ...sharedContent.nl.consultation, mock: consultationMockCopy.nl }
+      : sharedContent.nl.consultation,
   },
   de: {
     ...baseTranslations.de,
@@ -60,6 +77,10 @@ const translations = {
     privacy: sharedContent.de.privacy,
     common: sharedContent.de.common,
     legal: sharedContent.de.legal,
+    payments: sharedContent.de.payments,
+    consultation: DEV_BUILD
+      ? { ...sharedContent.de.consultation, mock: consultationMockCopy.de }
+      : sharedContent.de.consultation,
   },
 };
 

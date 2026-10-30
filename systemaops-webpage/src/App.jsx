@@ -47,6 +47,15 @@ import BlogArticle from "./pages/Blogs/BlogArticle";
 /* FAQ PAGE */
 import FaqsPage from "./pages/Faqs";
 
+/* PAYMENT RESULT PAGES (informational only) */
+import {
+  PaymentSuccess,
+  PaymentCancel,
+} from "./pages/Payments/PaymentResult";
+
+/* BOOK A CALL — consultation page (separate from /contact) */
+import BookACall from "./pages/BookACall";
+
 import ScrollToTop from "./components/ScrollToTop";
 import CookieConsent from "./components/CookieConsent";
 import { useLanguage } from "./i18n/LanguageContext";
@@ -300,6 +309,36 @@ function App() {
             path="/faqs"
             element={
               <FaqsPage />
+            }
+          />
+
+          {/* ================= BOOK A CALL =================
+              Dedicated consultation page. /contact keeps the original
+              contact form untouched. */}
+
+          <Route
+            path="/book-a-call"
+            element={
+              <BookACall />
+            }
+          />
+
+          {/* ================= PAYMENTS =================
+              Informational only. Reaching these pages never means a
+              payment is confirmed — the verified Stripe webhook on the
+              backend is the single source of truth. */}
+
+          <Route
+            path="/payment/success"
+            element={
+              <PaymentSuccess />
+            }
+          />
+
+          <Route
+            path="/payment/cancel"
+            element={
+              <PaymentCancel />
             }
           />
 

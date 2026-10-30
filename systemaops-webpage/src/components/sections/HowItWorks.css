@@ -595,13 +595,7 @@
 
   letter-spacing: -0.055em !important;
 
-  background: linear-gradient(
-    100deg,
-    var(--text-primary) 0%,
-    var(--text-primary) 62%,
-    var(--accent-deep) 82%,
-    var(--accent-primary) 100%
-  ) !important;
+  background: var(--text-gradient) !important;
 
   -webkit-background-clip: text !important;
 

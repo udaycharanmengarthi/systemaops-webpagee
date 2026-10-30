@@ -1,0 +1,47 @@
+.metallic-paint {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.metallic-paint-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.astroid-mark__fallback {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  background: linear-gradient(
+    110deg,
+    #8e6425 0%,
+    #f2c46b 26%,
+    #fff1c1 43%,
+    #b78232 57%,
+    #f8d88e 76%,
+    #8e6425 100%
+  );
+  background-size: 240% 100%;
+  -webkit-mask: var(--astroid-image) center / contain no-repeat;
+  mask: var(--astroid-image) center / contain no-repeat;
+  animation: astroid-metallic-shimmer 2.8s linear infinite;
+}
+
+.astroid-mark:has(.metallic-paint[data-paint-ready="true"]) > .astroid-mark__fallback {
+  display: none;
+}
+
+@keyframes astroid-metallic-shimmer {
+  from { background-position: 100% 50%; }
+  to { background-position: -140% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .astroid-mark__fallback {
+    animation: none;
+    background-position: 50% 50%;
+  }
+}

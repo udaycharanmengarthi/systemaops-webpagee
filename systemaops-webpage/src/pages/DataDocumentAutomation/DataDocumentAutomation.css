@@ -153,7 +153,7 @@
 }
 
 [data-theme="dark"] .dd-node {
-  fill: #0B1E21;
+  fill: var(--bg-surface);
 }
 
 .dd-node--review {
@@ -540,7 +540,7 @@
 }
 
 [data-theme="dark"] .dd-check {
-  color: #062a2a;
+  color: var(--text-on-accent);
 }
 
 @keyframes dd-pop {
@@ -578,7 +578,7 @@
 }
 
 [data-theme="dark"] .dd-ready {
-  color: #062a2a;
+  color: var(--text-on-accent);
 }
 
 @media (max-width: 720px) {

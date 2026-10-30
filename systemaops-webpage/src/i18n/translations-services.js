@@ -942,6 +942,183 @@ const sharedEn = {
       "Necessary cookies run without consent. Statistics cookies require consent via the cookie banner. Change your choice anytime in the footer.",
     contactCta: "Questions? Contact us.",
   },
+  payments: {
+  button: "Pay for Consultation",
+  checkoutHeading: "Continue to secure payment",
+  checkoutText: "Your consultation request is saved. Review the configured price, then continue to Stripe Checkout.",
+  retryConfiguration: "Retry payment setup",
+  loading: "Opening secure checkout…",
+  notConfigured:
+    "Online payment is not available right now. Please contact us and we will arrange it.",
+  errorGeneric:
+    "We could not start the payment. Please try again in a moment.",
+  errorNetwork:
+    "We could not reach the payment service. Please check your connection and try again.",
+    success: {
+      title: "Thank you | SystemaOps",
+      heading: "Thank you.",
+      body: "Thank you. We are confirming your payment. A confirmation email will be sent once it is verified.",
+      verifiedHeading: "Payment verified",
+      verifiedBody: "Stripe has verified your payment.",
+      verifiedNote: "A confirmation email will be sent after the payment notification is processed.",
+      failedHeading: "Payment not completed",
+      failedBody: "Stripe reports that this payment did not complete.",
+      failedNote: "You can return to Book a Call to try again.",
+      expiredHeading: "Checkout expired",
+      expiredBody: "This checkout session expired before payment was completed.",
+      expiredNote: "Return to Book a Call to start again.",
+      unavailableHeading: "Status temporarily unavailable",
+      unavailableBody: "We could not retrieve the payment status right now.",
+      unavailableNote: "Try checking again in a moment. Your payment status is not changed by this page.",
+      retryVerification: "Check status again",
+      note: "This page does not confirm payment on its own — the confirmation email is sent only after Stripe verifies the payment.",
+      missingSession:
+        "We could not read the checkout reference from this link. If you completed checkout, your confirmation email will still arrive once the payment is verified.",
+        neutralHeading: "We could not find a payment to confirm",
+        neutralBody:
+          "There is no payment linked to this page, so nothing can be confirmed here.",
+        neutralNote:
+          "If you completed a checkout, the confirmation email is sent once the payment has been verified.",
+      contactCta: "Continue to contact",
+      homeCta: "Back to home",
+    },
+    cancel: {
+      title: "Payment cancelled | SystemaOps",
+      heading: "Payment cancelled.",
+      body: "You cancelled the payment and nothing was charged.",
+      retryCta: "Try again",
+      contactCta: "Contact us instead",
+    },
+  },
+  consultation: {
+    meta: {
+      title: "Book a Call | SystemaOps",
+      description:
+        "Tell us what you are trying to achieve. Our team can help you explore practical solutions for automation, ERP, AI and business operations.",
+    },
+    hero: {
+      eyebrow: "Consultation",
+      heading: "Let's discuss your business goals.",
+      sub: "Tell us what you're trying to achieve. We'll review your requirements and help identify a practical next step.",
+      primary: "Request a consultation",
+      secondary: "Contact us",
+      expectTitle: "What happens next",
+      expect: {
+        one: "Share your goals",
+        two: "We review your requirements",
+        three: "We follow up by email",
+      },
+    },
+    areas: {
+      heading: "Areas of expertise",
+      hint: "Choose the area closest to your question.",
+      other: "Something else",
+      otherDesc: "Tell us what does not fit the list.",
+    },
+    form: {
+      heading: "Tell us what you need",
+      subheading:
+        "A few details so we can prepare a useful conversation.",
+      name: "Full name",
+      email: "Business email",
+      company: "Company name",
+      optional: "Optional",
+      area: "Area of interest",
+      areaPlaceholder: "Select an area (optional)",
+      message: "Briefly describe the business challenge",
+      privacy:
+        "I agree that SystemaOps may store and process these details to respond to my enquiry.",
+      submit: "Request a consultation",
+      submitting: "Sending your request…",
+      note: "We only use these details to respond to your enquiry.",
+      counter: "{count} / {max} characters",
+        submitError: {
+          network: "We could not reach the server. Check your connection and try again.",
+          rateLimited: "Too many requests. Please wait a moment and try again.",
+          invalid: "Some details were not accepted. Please review the form and try again.",
+          server: "Something went wrong on our side. Please try again in a moment.",
+        },
+      errorSummaryTitle:
+        "Please fix {count} field(s) before continuing.",
+    },
+    steps: {
+      label: "Consultation progress",
+      details: "Details",
+      review: "Review",
+      payment: "Payment",
+      confirmation: "Confirmation",
+      detailsAnnounced: "Step 1 of the journey: your details.",
+      reviewAnnounced: "Step 2 of the journey: review your details.",
+      paymentAnnounced: "Step 3 of the journey: payment.",
+      confirmationAnnounced: "Final step: confirmation.",
+    },
+    review: {
+      heading: "Review your details",
+      text: "Please check everything below before you continue. You can go back and edit any field.",
+      edit: "Edit details",
+      submit: "Submit enquiry",
+      submitting: "Submitting…",
+      toPayment: "Continue to payment",
+    },
+    panel: {
+      label: "Consultation summary",
+      heading: "What this consultation is",
+      purpose:
+        "A conversation about your operational goals and the practical options for the work, with the people who would do it.",
+      mode: "Consultation type",
+      price: "Consultation fee",
+      oneTime: "One-time payment",
+      secureCheckout: "Secure checkout via Stripe.",
+      next: "What happens next",
+      stripeNote:
+        "When payment is enabled, card details are entered on Stripe's hosted page — never on this site.",
+      footnote:
+        "No appointment is booked automatically. Timing is arranged by email.",
+    },
+    offer: {
+      mode: {
+        undecided: "To be confirmed",
+        free: "Free introductory call",
+        paid: "Paid consultation",
+      },
+      pricePending: "To be confirmed",
+      next: {
+        undecided:
+          "We review your requirements and confirm the format and pricing by email.",
+        free: "We confirm a time by email.",
+        paid:
+            "Once the payment is verified, we arrange the timing by email.",
+      },
+      duration: "Duration",
+      deliverable: "What you get",
+    },
+    confirm: {
+      heading: "Enquiry received",
+      text: "Thank you. Your requirements have been sent to our team.",
+      next: {
+        undecided:
+          "We will review them and confirm the format and pricing by email.",
+        free: "We will confirm a time by email.",
+        paid: "We will follow up by email about the paid consultation.",
+      },
+      home: "Back to home",
+      startOver: "Send another enquiry",
+    },
+    validation: {
+      nameRequired: "Please enter your full name.",
+      nameTooLong: "That name is too long (120 characters maximum).",
+      emailRequired: "Please enter your business email address.",
+      emailInvalid:
+        "Please enter a valid business email, like name@company.com.",
+      emailTooLong: "That email address is too long.",
+      areaRequired: "Please choose an area of interest.",
+      areaInvalid: "Please choose one of the listed areas.",
+      messageRequired: "Please describe your requirements briefly.",
+      messageTooLong: "Please shorten your description (1200 characters maximum).",
+      privacyRequired:
+        "Please accept the privacy acknowledgement to continue.",
+    },
+  },
 };
 
 const sharedNl = {
@@ -1004,6 +1181,183 @@ const sharedNl = {
     cookieText:
       "Noodzakelijke cookies werken zonder toestemming. Statistiekcookies vereisen toestemming via de cookiebanner. Wijzig uw keuze altijd in de voettekst.",
     contactCta: "Vragen? Neem contact op.",
+  },
+  payments: {
+  button: "Betaling voor consultatie",
+  checkoutHeading: "Doorgaan naar veilige betaling",
+  checkoutText: "Je consultaanvraag is opgeslagen. Controleer de ingestelde prijs en ga verder naar Stripe Checkout.",
+  retryConfiguration: "Betaalconfiguratie opnieuw proberen",
+  loading: "Bezig met het openen van beveiligde betaling…",
+  notConfigured:
+    "Online betalen is momenteel niet beschikbaar. Neem contact met ons op, dan regelen we het.",
+  errorGeneric:
+    "We konden de betaling niet starten. Probeer het over een moment opnieuw.",
+  errorNetwork:
+    "We konden de betaaldienst niet bereiken. Controleer je verbinding en probeer opnieuw.",
+    success: {
+      title: "Bedankt | SystemaOps",
+      heading: "Bedankt.",
+      body: "Bedankt. We bevestigen je betaling. Er wordt een bevestigingsmail verstuurd zodra deze is geverifieerd.",
+      verifiedHeading: "Betaling geverifieerd",
+      verifiedBody: "Stripe heeft je betaling geverifieerd.",
+      verifiedNote: "Er wordt een bevestigingsmail verstuurd nadat de betalingsmelding is verwerkt.",
+      failedHeading: "Betaling niet afgerond",
+      failedBody: "Stripe meldt dat deze betaling niet is afgerond.",
+      failedNote: "Je kunt teruggaan naar Gesprek boeken om het opnieuw te proberen.",
+      expiredHeading: "Checkout verlopen",
+      expiredBody: "Deze checkout is verlopen voordat de betaling was afgerond.",
+      expiredNote: "Ga terug naar Gesprek boeken om opnieuw te beginnen.",
+      unavailableHeading: "Status tijdelijk niet beschikbaar",
+      unavailableBody: "We kunnen de betaalstatus momenteel niet ophalen.",
+      unavailableNote: "Probeer het straks opnieuw. Deze pagina wijzigt je betaalstatus niet.",
+      retryVerification: "Status opnieuw controleren",
+      note: "Deze pagina bevestigt de betaling niet zelf — de bevestigingsmail wordt alleen verstuurd nadat Stripe de betaling heeft geverifieerd.",
+      missingSession:
+        "We konden de checkoutreferentie uit deze link niet lezen. Als je de betaling hebt afgerond, ontvang je de bevestigingsmail zodra de betaling is geverifieerd.",
+        neutralHeading: "Wij konden geen betaling vinden om te bevestigen",
+        neutralBody:
+          "Er is geen betaling aan deze pagina gekoppeld, dus hier valt niets te bevestigen.",
+        neutralNote:
+          "Als je een betaling hebt afgerond, ontvang je de bevestigingsmail zodra de betaling is geverifieerd.",
+      contactCta: "Ga verder naar contact",
+      homeCta: "Terug naar home",
+    },
+    cancel: {
+      title: "Betaling geannuleerd | SystemaOps",
+      heading: "Betaling geannuleerd.",
+      body: "Je hebt de betaling geannuleerd en er is niets in rekening gebracht.",
+      retryCta: "Opnieuw proberen",
+      contactCta: "Neem contact op",
+    },
+  },
+  consultation: {
+    meta: {
+      title: "Plan een gesprek | SystemaOps",
+      description:
+        "Vertel wat u wilt bereiken. Ons team helpt u praktische oplossingen verkennen voor automatisering, ERP, AI en bedrijfsvoering.",
+    },
+    hero: {
+      eyebrow: "Consultatie",
+      heading: "Laten we het over uw zakelijke doelen hebben.",
+      sub: "Vertel ons wat u wilt bereiken. We bekijken uw wensen en helpen u een praktische volgende stap te bepalen.",
+      primary: "Consultatie aanvragen",
+      secondary: "Neem contact op",
+      expectTitle: "Wat gebeurt er daarna",
+      expect: {
+        one: "Deel uw doelen",
+        two: "Wij bekijken uw wensen",
+        three: "Wij nemen per e-mail contact op",
+      },
+    },
+    areas: {
+      heading: "Expertisegebieden",
+      hint: "Kies het gebied dat het dichtst bij uw vraag ligt.",
+      other: "Iets anders",
+      otherDesc: "Vertel ons wat niet in de lijst past.",
+    },
+    form: {
+      heading: "Vertel ons wat u nodig hebt",
+      subheading:
+        "Een paar gegevens zodat we een nuttig gesprek kunnen voorbereiden.",
+      name: "Volledige naam",
+      email: "Zakelijk e-mailadres",
+      company: "Bedrijfsnaam",
+      optional: "Optioneel",
+      area: "Interessegebied",
+      areaPlaceholder: "Kies een gebied (optioneel)",
+      message: "Omschrijf kort de zakelijke uitdaging",
+      privacy:
+        "Ik ga akkoord dat SystemaOps deze gegevens opslaat en verwerkt om mijn vraag te beantwoorden.",
+      submit: "Consultatie aanvragen",
+      submitting: "Versturen…",
+      note: "Wij gebruiken deze gegevens uitsluitend om uw vraag te beantwoorden.",
+      counter: "{count} / {max} tekens",
+        submitError: {
+          network: "We konden de server niet bereiken. Controleer je verbinding en probeer het opnieuw.",
+          rateLimited: "Te veel verzoeken. Wacht even en probeer het opnieuw.",
+          invalid: "Sommige gegevens zijn niet geaccepteerd. Controleer het formulier en probeer het opnieuw.",
+          server: "Er ging iets mis aan onze kant. Probeer het over een moment opnieuw.",
+        },
+      errorSummaryTitle:
+        "Corrigeer {count} veld(en) voordat u verdergaat.",
+    },
+    steps: {
+      label: "Voortgang consultatie",
+      details: "Gegevens",
+      review: "Controleren",
+      payment: "Betaling",
+      confirmation: "Bevestiging",
+      detailsAnnounced: "Stap 1 van het traject: uw gegevens.",
+      reviewAnnounced: "Stap 2 van het traject: controleer uw gegevens.",
+      paymentAnnounced: "Stap 3 van het traject: betaling.",
+      confirmationAnnounced: "Laatste stap: bevestiging.",
+    },
+    review: {
+      heading: "Controleer uw gegevens",
+      text: "Controleer hieronder alles voordat u verdergaat. U kunt elk veld aanpassen.",
+      edit: "Gegevens bewerken",
+      submit: "Aanvraag versturen",
+      submitting: "Versturen…",
+      toPayment: "Doorgaan naar betaling",
+    },
+    panel: {
+      label: "Samenvatting consultatie",
+      heading: "Waar deze consultatie over gaat",
+      purpose:
+        "Een gesprek over uw operationele doelen en de praktische opties voor het werk, met de mensen die het uitvoeren.",
+      mode: "Type consultatie",
+      price: "Consultatiekosten",
+      oneTime: "Eenmalige betaling",
+      secureCheckout: "Veilig afrekenen via Stripe.",
+      next: "Wat gebeurt er daarna",
+      stripeNote:
+        "Wanneer betaling is ingeschakeld, worden kaartgegevens ingevuld op de gehoste pagina van Stripe — nooit op deze site.",
+      footnote:
+        "Er wordt automatisch geen afspraak ingepland. De timing stemmen we per e-mail af.",
+    },
+    offer: {
+      mode: {
+        undecided: "Nog te bevestigen",
+        free: "Gratis kennismakingsgesprek",
+        paid: "Betaalde consultatie",
+      },
+      pricePending: "Nog te bevestigen",
+      next: {
+        undecided:
+          "Wij bekijken uw wensen en bevestigen vorm en prijs per e-mail.",
+        free: "Wij stemmen een tijd per e-mail af.",
+        paid:
+            "Zodra de betaling is geverifieerd, stemmen we de timing per e-mail af.",
+      },
+      duration: "Duur",
+      deliverable: "Wat u krijgt",
+    },
+    confirm: {
+      heading: "Aanvraag ontvangen",
+      text: "Bedankt. Uw wensen zijn naar ons team verstuurd.",
+      next: {
+        undecided:
+          "Wij bekijken ze en bevestigen vorm en prijs per e-mail.",
+        free: "Wij stemmen een tijd per e-mail af.",
+        paid: "Wij nemen per e-mail contact op over de betaalde consultatie.",
+      },
+      home: "Terug naar home",
+      startOver: "Nog een aanvraag versturen",
+    },
+    validation: {
+      nameRequired: "Vul uw volledige naam in.",
+      nameTooLong: "Die naam is te lang (maximaal 120 tekens).",
+      emailRequired: "Vul uw zakelijke e-mailadres in.",
+      emailInvalid:
+        "Vul een geldig zakelijk e-mailadres in, zoals naam@bedrijf.nl.",
+      emailTooLong: "Dat e-mailadres is te lang.",
+      areaRequired: "Kies een interessegebied.",
+      areaInvalid: "Kies een van de vermelde gebieden.",
+      messageRequired: "Omschrijf kort uw wensen.",
+      messageTooLong: "Kort uw beschrijving in (maximaal 1200 tekens).",
+      privacyRequired:
+        "Ga akkoord met de privacyverklaring om verder te gaan.",
+    },
   },
 };
 
@@ -1068,6 +1422,267 @@ const sharedDe = {
       "Notwendige Cookies laufen ohne Zustimmung. Statistik-Cookies brauchen Zustimmung per Banner. Wahl jederzeit in der Fußzeile änderbar.",
     contactCta: "Fragen? Kontakt aufnehmen.",
   },
+  payments: {
+  button: "Beratung bezahlen",
+  checkoutHeading: "Weiter zur sicheren Zahlung",
+  checkoutText: "Deine Beratungsanfrage wurde gespeichert. Prüfe den konfigurierten Preis und fahre mit Stripe Checkout fort.",
+  retryConfiguration: "Zahlungskonfiguration erneut laden",
+  loading: "Sichere Zahlung wird geöffnet…",
+  notConfigured:
+    "Online-Zahlung ist derzeit nicht verfügbar. Kontaktiere uns, wir bringen es in Ordnung.",
+  errorGeneric:
+    "Die Zahlung konnte nicht gestartet werden. Bitte versuche es gleich noch einmal.",
+  errorNetwork:
+    "Der Zahlungsdienst war nicht erreichbar. Bitte prüfe deine Verbindung und versuche es erneut.",
+    success: {
+      title: "Vielen Dank | SystemaOps",
+      heading: "Vielen Dank.",
+      body: "Vielen Dank. Wir bestätigen deine Zahlung. Sobald sie geprüft ist, senden wir eine Bestätigungs-E-Mail.",
+      verifiedHeading: "Zahlung bestätigt",
+      verifiedBody: "Stripe hat deine Zahlung bestätigt.",
+      verifiedNote: "Eine Bestätigungs-E-Mail wird nach Verarbeitung der Zahlungsbenachrichtigung gesendet.",
+      failedHeading: "Zahlung nicht abgeschlossen",
+      failedBody: "Stripe meldet, dass diese Zahlung nicht abgeschlossen wurde.",
+      failedNote: "Du kannst zur Gesprächsbuchung zurückkehren und es erneut versuchen.",
+      expiredHeading: "Checkout abgelaufen",
+      expiredBody: "Diese Checkout-Sitzung ist vor Abschluss der Zahlung abgelaufen.",
+      expiredNote: "Kehre zur Gesprächsbuchung zurück, um neu zu beginnen.",
+      unavailableHeading: "Status vorübergehend nicht verfügbar",
+      unavailableBody: "Der Zahlungsstatus kann gerade nicht abgerufen werden.",
+      unavailableNote: "Versuche es gleich erneut. Diese Seite ändert deinen Zahlungsstatus nicht.",
+      retryVerification: "Status erneut prüfen",
+      note: "Diese Seite bestätigt die Zahlung nicht selbst — die Bestätigungs-E-Mail wird erst versendet, nachdem Stripe die Zahlung geprüft hat.",
+      missingSession:
+        "Wir konnten die Checkout-Referenz nicht aus diesem Link lesen. Wenn du die Zahlung abgeschlossen hast, erhältst du die Bestätigungs-E-Mail, sobald die Zahlung geprüft ist.",
+        neutralHeading: "Wir konnten keine Zahlung zum Bestätigen finden",
+        neutralBody:
+          "Dieser Seite ist keine Zahlung zugeordnet, daher kann hier nichts bestätigt werden.",
+        neutralNote:
+          "Wenn du eine Zahlung abgeschlossen hast, erhältst du die Bestätigungs-E-Mail, sobald die Zahlung geprüft ist.",
+      contactCta: "Weiter zum Kontakt",
+      homeCta: "Zurück zur Startseite",
+    },
+    cancel: {
+      title: "Zahlung abgebrochen | SystemaOps",
+      heading: "Zahlung abgebrochen.",
+      body: "Du hast die Zahlung abgebrochen. Es wurde nichts berechnet.",
+      retryCta: "Erneut versuchen",
+      contactCta: "Kontaktiere uns",
+    },
+  },
+  consultation: {
+    meta: {
+      title: "Gespräch buchen | SystemaOps",
+      description:
+        "Sagen Sie uns, was Sie erreichen möchten. Unser Team unterstützt Sie bei praktischen Lösungen für Automatisierung, ERP, KI und Betriebsabläufe.",
+    },
+    hero: {
+      eyebrow: "Beratung",
+      heading: "Lassen Sie uns über Ihre Geschäftsziele sprechen.",
+      sub: "Sagen Sie uns, was Sie erreichen möchten. Wir prüfen Ihre Anforderungen und helfen Ihnen beim nächsten praktischen Schritt.",
+      primary: "Beratung anfragen",
+      secondary: "Kontakt aufnehmen",
+      expectTitle: "Wie es weitergeht",
+      expect: {
+        one: "Teilen Sie Ihre Ziele",
+        two: "Wir prüfen Ihre Anforderungen",
+        three: "Wir melden uns per E-Mail",
+      },
+    },
+    areas: {
+      heading: "Expertisegebiete",
+      hint: "Wählen Sie das Gebiet, das Ihrer Frage am nächsten liegt.",
+      other: "Etwas anderes",
+      otherDesc: "Sagen Sie uns, was nicht zur Liste passt.",
+    },
+    form: {
+      heading: "Sagen Sie uns, was Sie brauchen",
+      subheading:
+        "Ein paar Angaben, damit wir ein hilfreiches Gespräch vorbereiten können.",
+      name: "Vollständiger Name",
+      email: "Geschäftliche E-Mail",
+      company: "Unternehmensname",
+      optional: "Optional",
+      area: "Interessengebiet",
+      areaPlaceholder: "Gebiet auswählen (optional)",
+      message: "Beschreiben Sie kurz die geschäftliche Herausforderung",
+      privacy:
+        "Ich stimme zu, dass SystemaOps diese Angaben speichert und verarbeitet, um meine Anfrage zu beantworten.",
+      submit: "Beratung anfragen",
+      submitting: "Wird gesendet…",
+      note: "Wir verwenden diese Angaben ausschließlich, um Ihre Anfrage zu beantworten.",
+      counter: "{count} / {max} Zeichen",
+        submitError: {
+          network: "Der Server war nicht erreichbar. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+          rateLimited: "Zu viele Anfragen. Bitte warten Sie einen Moment und versuchen Sie es erneut.",
+          invalid: "Einige Angaben wurden nicht akzeptiert. Bitte prüfen Sie das Formular und versuchen Sie es erneut.",
+          server: "Auf unserer Seite ist etwas schiefgelaufen. Bitte versuchen Sie es gleich noch einmal.",
+        },
+      errorSummaryTitle:
+        "Bitte korrigieren Sie {count} Feld(er), bevor Sie fortfahren.",
+    },
+    steps: {
+      label: "Fortschritt der Beratung",
+      details: "Angaben",
+      review: "Prüfen",
+      payment: "Zahlung",
+      confirmation: "Bestätigung",
+      detailsAnnounced: "Schritt 1 des Ablaufs: Ihre Angaben.",
+      reviewAnnounced: "Schritt 2 des Ablaufs: Angaben prüfen.",
+      paymentAnnounced: "Schritt 3 des Ablaufs: Zahlung.",
+      confirmationAnnounced: "Letzter Schritt: Bestätigung.",
+    },
+    review: {
+      heading: "Angaben prüfen",
+      text: "Bitte prüfen Sie alles, bevor Sie fortfahren. Jedes Feld können Sie bearbeiten.",
+      edit: "Angaben bearbeiten",
+      submit: "Anfrage senden",
+      submitting: "Wird gesendet…",
+      toPayment: "Weiter zur Zahlung",
+    },
+    panel: {
+      label: "Beratungsübersicht",
+      heading: "Worum es in dieser Beratung geht",
+      purpose:
+        "Ein Gespräch über Ihre operativen Ziele und die praktischen Wege für die Arbeit — mit den Menschen, die sie umsetzen würden.",
+      mode: "Art der Beratung",
+      price: "Beratungsgebühr",
+      oneTime: "Einmalige Zahlung",
+      secureCheckout: "Sichere Zahlung über Stripe.",
+      next: "Wie es weitergeht",
+      stripeNote:
+        "Wenn die Zahlung aktiviert ist, werden Kartendaten auf der gehosteten Stripe-Seite eingegeben — niemals auf dieser Website.",
+      footnote:
+        "Es wird kein Termin automatisch gebucht. Die Terminierung stimmen wir per E-Mail ab.",
+    },
+    offer: {
+      mode: {
+        undecided: "Noch zu bestätigen",
+        free: "Kostenloses Erstgespräch",
+        paid: "Bezahlte Beratung",
+      },
+      pricePending: "Noch zu bestätigen",
+      next: {
+        undecided:
+          "Wir prüfen Ihre Anforderungen und bestätigen Format und Preis per E-Mail.",
+        free: "Wir stimmen einen Termin per E-Mail ab.",
+        paid:
+            "Sobald die Zahlung geprüft ist, stimmen wir den Termin per E-Mail ab.",
+      },
+      duration: "Dauer",
+      deliverable: "Das erhalten Sie",
+    },
+    confirm: {
+      heading: "Anfrage erhalten",
+      text: "Vielen Dank. Ihre Anforderungen wurden an unser Team gesendet.",
+      next: {
+        undecided:
+          "Wir prüfen sie und bestätigen Format und Preis per E-Mail.",
+        free: "Wir stimmen einen Termin per E-Mail ab.",
+        paid: "Wir melden uns per E-Mail zur bezahlten Beratung.",
+      },
+      home: "Zurück zur Startseite",
+      startOver: "Weitere Anfrage senden",
+    },
+    validation: {
+      nameRequired: "Bitte geben Sie Ihren vollständigen Namen ein.",
+      nameTooLong: "Dieser Name ist zu lang (maximal 120 Zeichen).",
+      emailRequired: "Bitte geben Sie Ihre geschäftliche E-Mail-Adresse ein.",
+      emailInvalid:
+        "Bitte geben Sie eine gültige geschäftliche E-Mail ein, zum Beispiel name@unternehmen.de.",
+      emailTooLong: "Diese E-Mail-Adresse ist zu lang.",
+      areaRequired: "Bitte wählen Sie ein Interessegebiet.",
+      areaInvalid: "Bitte wählen Sie eines der genannten Gebiete.",
+      messageRequired: "Bitte beschreiben Sie kurz Ihre Anforderungen.",
+      messageTooLong:
+        "Bitte kürzen Sie Ihre Beschreibung (maximal 1200 Zeichen).",
+      privacyRequired:
+        "Bitte bestätigen Sie den Datenschutzhinweis, um fortzufahren.",
+    },
+  },
 };
 
 export const sharedContent = { en: sharedEn, nl: sharedNl, de: sharedDe };
+
+/* ================================================================
+   DEVELOPMENT-DEMO COPY — NOT PART OF THE SHIPPING LOCALES.
+   ------------------------------------------------------------
+   The mock payment journey renders only when the dev-only flag is
+   on, so these strings are merged in DEVELOPMENT BUILDS ONLY (see
+   LanguageContext). In a production bundle they are never merged and
+   are therefore tree-shaken out entirely — no demo copy ships.
+   ================================================================ */
+export const consultationMockCopy = {
+  en: {
+    banner: "Development demo. No real payment.",
+    heading: "Simulated checkout",
+    text: "This step simulates the hosted checkout handoff so the full journey can be reviewed without Stripe or any credentials.",
+    area: "Area",
+    customer: "Customer",
+    status: "Status",
+    statusValue: "Awaiting simulation",
+    noCardNote: "No card fields are shown and no payment request is made. In production this step is provided by Stripe-hosted Checkout.",
+    simulateSuccess: "Simulate successful payment",
+    simulateCancel: "Simulate cancelled or failed payment",
+    back: "Back to details",
+    successHeading: "Simulated payment succeeded",
+    successText: "This is a simulated result for the development demo. No money was charged and no payment was verified.",
+    cancelHeading: "Simulated payment cancelled",
+    cancelText: "This is a simulated cancellation for the development demo. Nothing was charged.",
+    failHeading: "Simulated payment failed",
+    failText: "This is a simulated failure for the development demo. Nothing was charged.",
+    reference: "Demo reference",
+    realFlowNote: "In the real flow, the confirmation email is sent only after the backend has verified the payment with Stripe.",
+    tryAgain: "Try again",
+    backToConsultation: "Back to consultation",
+    devNotice: "Development build: a non-production offer scenario is active. No payment can be processed.",
+  },
+  nl: {
+    banner: "Ontwikkeldemo. Geen echte betaling.",
+    heading: "Gesimuleerde betaling",
+    text: "Deze stap simuleert de overdracht naar de gehoste betaalpagina, zodat u het volledige traject kunt bekijken zonder Stripe of inloggegevens.",
+    area: "Gebied",
+    customer: "Klant",
+    status: "Status",
+    statusValue: "Wacht op simulatie",
+    noCardNote: "Er worden geen kaartvelden getoond en er wordt geen betalingsverzoek verstuurd. In productie wordt deze stap geleverd door de gehoste betaalpagina van Stripe.",
+    simulateSuccess: "Simuleer geslaagde betaling",
+    simulateCancel: "Simuleer geannuleerde of mislukte betaling",
+    back: "Terug naar gegevens",
+    successHeading: "Gesimuleerde betaling geslaagd",
+    successText: "Dit is een gesimuleerd resultaat voor de ontwikkeldemo. Er is niets afgeschreven en er is geen betaling geverifieerd.",
+    cancelHeading: "Gesimuleerde betaling geannuleerd",
+    cancelText: "Dit is een geannuleerde betaling in de ontwikkeldemo. Er is niets afgeschreven.",
+    failHeading: "Gesimuleerde betaling mislukt",
+    failText: "Dit is een mislukte betaling in de ontwikkeldemo. Er is niets afgeschreven.",
+    reference: "Demoreferentie",
+    realFlowNote: "In het echte traject wordt de bevestigingsmail alleen verstuurd nadat de backend de betaling met Stripe heeft geverifieerd.",
+    tryAgain: "Opnieuw proberen",
+    backToConsultation: "Terug naar de consultatie",
+    devNotice: "Ontwikkelbuild: een niet-productieve aanbiedingsmodus is actief. Er kan geen betaling worden verwerkt.",
+  },
+  de: {
+    banner: "Entwicklungsdemo. Keine echte Zahlung.",
+    heading: "Simulierte Zahlung",
+    text: "Dieser Schritt simuliert die Übergabe an die gehostete Zahlungsseite, damit Sie den kompletten Ablauf ohne Stripe und ohne Zugangsdaten ansehen können.",
+    area: "Gebiet",
+    customer: "Kunde",
+    status: "Status",
+    statusValue: "Warten auf Simulation",
+    noCardNote: "Es werden keine Kartffelder angezeigt und es wird keine Zahlungsanfrage gestellt. Im Produktivbetrieb stellt Stripe die gehostete Zahlungsseite bereit.",
+    simulateSuccess: "Erfolgreiche Zahlung simulieren",
+    simulateCancel: "Abgebrochene oder fehlgeschlagene Zahlung simulieren",
+    back: "Zurück zu den Angaben",
+    successHeading: "Simulierte Zahlung erfolgreich",
+    successText: "Dies ist ein simuliertes Ergebnis der Entwicklungsdemo. Es wurde nichts abgebucht und keine Zahlung bestätigt.",
+    cancelHeading: "Simulierte Zahlung abgebrochen",
+    cancelText: "Dies ist eine abgebrochene Zahlung in der Entwicklungsdemo. Es wurde nichts abgebucht.",
+    failHeading: "Simulierte Zahlung fehlgeschlagen",
+    failText: "Dies ist eine fehlgeschlagene Zahlung in der Entwicklungsdemo. Es wurde nichts abgebucht.",
+    reference: "Demo-Referenz",
+    realFlowNote: "Im echten Ablauf wird die Bestätigungs-E-Mail erst versendet, nachdem das Backend die Zahlung mit Stripe geprüft hat.",
+    tryAgain: "Erneut versuchen",
+    backToConsultation: "Zurück zur Beratung",
+    devNotice: "Entwicklungsbuild: ein nicht-produktives Angebotsszenario ist aktiv. Es kann keine Zahlung verarbeitet werden.",
+  },
+};

@@ -171,7 +171,7 @@
 }
 
 [data-theme="dark"] .si-node {
-  fill: #0B1E21;
+  fill: var(--bg-surface);
 }
 
 .si-node--panel {
@@ -1112,7 +1112,7 @@
   to {
     background: var(--brand-primary);
     border-color: var(--brand-primary);
-    color: #062a2a;
+    color: var(--text-on-accent);
   }
 }
 
@@ -1232,7 +1232,7 @@
   }
 
   [data-theme="dark"] .si-net-chip--core {
-    color: #062a2a;
+    color: var(--text-on-accent);
   }
 
   .si-net-arrow {

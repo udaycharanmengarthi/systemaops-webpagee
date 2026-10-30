@@ -576,6 +576,56 @@
 
 
 /* ═══════════════════════════════════════════
+   BOOK A CALL — SPECULAR GLASS CTA.
+
+   The pill is rendered by the shared SpecularButton. These rules only
+   provide the navbar geometry and the white label/arrow treatment; the
+   glass body, edge light and WebGL canvas come from the component.
+   ═══════════════════════════════════════════ */
+
+.nb-book-cta {
+  height: 48px;
+  min-height: 48px;
+  padding: 0 20px !important;
+  gap: 10px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  overflow: visible;
+  border: 0;
+  border-radius: 999px;
+}
+
+.nb-book-cta .nb-cta-label {
+  color: #ffffff !important;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+
+.nb-book-cta .nb-cta-arrow {
+  color: #ffffff !important;
+}
+
+.nb-book-cta:hover .nb-cta-arrow {
+  transform: translateX(3px);
+}
+
+.nb-book-cta:focus-visible {
+  outline: 2px solid #f2c46b;
+  outline-offset: 3px;
+}
+
+.nb-mobile-cta-group .nb-book-cta--mobile {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 20px !important;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+
+/* ═══════════════════════════════════════════
    BOOK A CALL — primary navbar CTA pill.
    ═══════════════════════════════════════════ */
 
@@ -591,32 +641,37 @@
     center;
 
   gap:
-    9px;
+    10px;
 
   height:
-    44px;
+    48px;
 
   padding:
-    0 22px !important;
-
-  background:
-    #0D9F9A !important;
+    0 20px !important;
 
   border:
-    none;
+    1px solid #292929;
+
+  border-radius:
+    999px;
+
+  background:
+    transparent !important;
+
+  color:
+    #ffffff !important;
 
   box-shadow:
-    0 4px 16px rgba(34, 211, 238, 0.35);
+    none;
 
   animation:
     none;
 
   transition:
-    background 0.18s ease,
-    border-color 0.18s ease,
-    color 0.18s ease,
-    transform 0.18s ease,
-    box-shadow 0.18s ease;
+    background 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease;
 }
 
 
@@ -634,9 +689,9 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: 20px;
-  height: 20px;
-  flex: 0 0 20px;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
   line-height: 0;
   pointer-events: none;
 }
@@ -646,22 +701,7 @@
   z-index: 1;
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.35));
-}
-
-.nb-cta-mark-outline {
-  position: absolute;
-  z-index: 2;
-  display: none;
-  inset: -1px;
-  width: calc(100% + 2px);
-  height: calc(100% + 2px);
-  object-fit: contain;
-  pointer-events: none;
-}
-
-[data-theme="dark"] .nb-cta-mark-outline {
-  display: block;
+  filter: none;
 }
 
 .nb-cta-mark {
@@ -669,9 +709,9 @@
   display:
     block;
 
-  width: 20px;
-  height: 20px;
-  flex: 0 0 20px;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
 
   line-height:
     0;
@@ -685,8 +725,8 @@
   z-index: 1;
   display: block;
   flex: 0 0 auto;
-  color: var(--text-inverse);
-  transition: transform 0.18s ease;
+  color: #ffffff;
+  transition: transform 200ms ease;
 }
 
 .nb-cta-group .nb-cta {
@@ -710,6 +750,11 @@
   animation: none;
 }
 
+.nb-cta-group .nb-cta.nb-cta--book {
+  gap: 10px;
+  padding: 0 20px;
+}
+
 .nb-cta-group .nb-cta:active {
   transform: translateY(0);
   box-shadow: none;
@@ -719,13 +764,13 @@
 .nb-cta--book .nb-cta-arrow {
 
   color:
-    var(--text-inverse) !important;
+    #ffffff !important;
 }
 
 .nb-cta--book .nb-cta-label {
 
   font-size:
-    14.5px;
+    15px;
 
   font-weight:
     600;
@@ -738,41 +783,75 @@
 .nb-cta--book:hover {
 
   background:
-    #0B8F8B !important;
+    #151515 !important;
+
+  border-color:
+    #3a3a3a;
 
   box-shadow:
-    0 6px 20px rgba(34, 211, 238, 0.42);
+    none;
 
   transform:
-    translateY(-1px);
+    none;
 }
 
 .nb-cta--book:hover .nb-cta-arrow {
-  transform: translateX(2px);
+  transform: translateX(3px);
 }
 
 
 .nb-cta--book:hover .nb-cta-label {
 
   color:
-    var(--text-inverse) !important;
+    #ffffff !important;
 }
 
 
 .nb-cta--book:active {
 
+  background:
+    #151515 !important;
+
   transform:
-    translateY(0) scale(0.99);
+    none;
 }
 
 
 .nb-cta.nb-cta--book:focus-visible {
 
   outline:
-    2px solid var(--accent-primary);
+    2px solid #00b8b0;
 
   outline-offset:
     3px;
+}
+
+[data-theme="light"] .nb-cta.nb-cta--book {
+
+  background:
+    transparent !important;
+
+  border-color:
+    #d7e0e8;
+
+  color:
+    #0b1720 !important;
+}
+
+[data-theme="light"] .nb-cta--book .nb-cta-label,
+[data-theme="light"] .nb-cta--book .nb-cta-arrow {
+
+  color:
+    #0b1720 !important;
+}
+
+[data-theme="light"] .nb-cta.nb-cta--book:hover {
+
+  background:
+    #f1f5f8 !important;
+
+  border-color:
+    #c3d0da;
 }
 
 
@@ -792,49 +871,51 @@
     center;
 
   gap:
-    8px;
+    10px;
 
   min-height:
-    46px;
+    48px;
 
   padding:
-    12px 14px;
+    0 20px;
 
   background:
-    var(--bg-surface) !important;
+    transparent !important;
 
   border:
-    1px solid
-      var(--border-strong);
+    1px solid #292929;
 
-  color: var(--text-primary) !important;
+  border-radius:
+    999px;
+
+  color: #ffffff !important;
 
   box-shadow:
     none;
 
   transition:
-    background 0.18s ease,
-    border-color 0.18s ease,
-    transform 0.18s ease,
-    box-shadow 0.18s ease;
+    background 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease;
 }
 
 
 .nb-mobile-cta--book .nb-cta-mark-shell {
 
-  width: 17px;
-  height: 17px;
-  flex-basis: 17px;
+  width: 24px;
+  height: 24px;
+  flex-basis: 24px;
 }
 
 
 .nb-mobile-cta--book .nb-cta-label {
 
   color:
-    var(--text-primary) !important;
+    #ffffff !important;
 
   font-size:
-    14px;
+    15px;
 
   font-weight:
     600;
@@ -844,36 +925,65 @@
 }
 
 .nb-mobile-cta--book .nb-cta-arrow {
-  color: var(--text-primary);
+  color: #ffffff;
+  transition: transform 200ms ease;
 }
 
 
 .nb-mobile-cta.nb-mobile-cta--book:hover {
 
   border-color:
-    var(--accent-primary);
+    #3a3a3a;
 
   background:
-    var(--bg-surface-hover) !important;
+    #151515 !important;
 
   color:
-    var(--text-primary) !important;
+    #ffffff !important;
 
   opacity:
     1;
 
   box-shadow:
-    0 3px 10px rgba(var(--shadow-rgb), 0.08);
+    none;
 }
 
 
 .nb-mobile-cta.nb-mobile-cta--book:active {
 
   background:
-    var(--bg-surface-hover) !important;
+    #151515 !important;
 
   transform:
     none;
+}
+
+[data-theme="light"] .nb-mobile-cta.nb-mobile-cta--book {
+
+  background:
+    transparent !important;
+
+  border-color:
+    #d7e0e8;
+
+  color:
+    #0b1720 !important;
+}
+
+[data-theme="light"] .nb-mobile-cta--book .nb-cta-label,
+[data-theme="light"] .nb-mobile-cta--book .nb-cta-arrow {
+
+  color:
+    #0b1720 !important;
+}
+
+[data-theme="light"] .nb-mobile-cta.nb-mobile-cta--book:hover {
+
+  background:
+    #f1f5f8 !important;
+
+  border-color:
+    #c3d0da;
 }
 
 .nb-mobile-cta--book:hover .nb-cta-arrow,
@@ -923,7 +1033,7 @@
 .nb-mobile-cta.nb-mobile-cta--book:focus-visible {
 
   outline:
-    2px solid var(--accent-primary);
+    2px solid #00b8b0;
 
   outline-offset:
     3px;
@@ -2199,4 +2309,46 @@
 
     inset 0 1px 0
     rgba(255, 255, 255, 0.08);
+}
+
+/* The navbar Book a Call button is the shared SpecularButton. The glass
+   body follows the tint supplied in Navbar.jsx; the WebGL canvas draws the
+   moving edge light, so the old CSS border is intentionally removed. */
+.nb-wrapper .nb-bar .nb-cta-group .navbar-book-call {
+  height: 48px;
+  padding: 0 20px !important;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sb-tint) calc(var(--sb-tint-opacity) * 100%), transparent) !important;
+  color: #ffffff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.10),
+    0 10px 24px -14px rgba(0, 0, 0, 0.45) !important;
+  animation: none !important;
+  overflow: visible;
+}
+
+.nb-wrapper .nb-bar .nb-cta-group .navbar-book-call::before {
+  display: none !important;
+  animation: none !important;
+}
+
+.nb-wrapper .nb-bar .nb-cta-group .navbar-book-call .nb-cta-label,
+.nb-wrapper .nb-bar .nb-cta-group .navbar-book-call .nb-cta-arrow {
+  color: #ffffff !important;
+}
+
+.nb-wrapper .nb-bar .nb-cta-group .navbar-book-call:hover,
+.nb-wrapper .nb-bar .nb-cta-group .navbar-book-call:active {
+  background: color-mix(in srgb, var(--sb-tint) calc(var(--sb-tint-opacity) * 100% + 5%), transparent) !important;
+  border-color: transparent !important;
+}
+
+.nb-wrapper .nb-bar .nb-cta-group .navbar-book-call:hover .nb-cta-arrow {
+  transform: translateX(3px);
+}
+
+.nb-wrapper .nb-bar .nb-cta-group .navbar-book-call:focus-visible {
+  outline: 2px solid #f2c46b;
+  outline-offset: 3px;
 }

@@ -20,6 +20,12 @@
 </url>
 
 <url>
+<loc>https://www.systemaops.com/book-a-call</loc>
+<priority>0.7</priority>
+<changefreq>monthly</changefreq>
+</url>
+
+<url>
 <loc>https://www.systemaops.com/careers</loc>
 <priority>0.5</priority>
 <changefreq>monthly</changefreq>
@@ -63,6 +69,12 @@
 </url>
 
 <url>
+<loc>https://www.systemaops.com/n8n-development</loc>
+<priority>0.9</priority>
+<changefreq>monthly</changefreq>
+</url>
+
+<url>
 <loc>https://www.systemaops.com/system-integrations</loc>
 <priority>0.8</priority>
 <changefreq>monthly</changefreq>
@@ -84,6 +96,25 @@
 <loc>https://www.systemaops.com/ai-consulting</loc>
 <priority>0.7</priority>
 <changefreq>monthly</changefreq>
+</url>
+
+<!-- Blog articles -->
+<url>
+<loc>https://www.systemaops.com/blog/business-workflow-automation</loc>
+<priority>0.6</priority>
+<changefreq>yearly</changefreq>
+</url>
+
+<url>
+<loc>https://www.systemaops.com/blog/n8n-development-automation</loc>
+<priority>0.6</priority>
+<changefreq>yearly</changefreq>
+</url>
+
+<url>
+<loc>https://www.systemaops.com/blog/signs-your-business-has-outgrown-odoo</loc>
+<priority>0.6</priority>
+<changefreq>yearly</changefreq>
 </url>
 
 </urlset>

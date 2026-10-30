@@ -134,5 +134,10 @@ export const TRAILING_SLASH = "always"; // "always", "never", or "remove"
 // x-default language for hreflang
 export const X_DEFAULT_LANG = "en";
 
-// Supported hreflang languages
-export const HREFLANG_LANGS = ["en", "de", "nl"];
+// Supported hreflang languages.
+// Intentionally empty: the site localizes via in-page language switching
+// (localStorage), NOT via /de/ and /nl/ URL variants. No /de/* or /nl/*
+// routes exist, so emitting hreflang alternates would point search engines
+// at URLs that do not exist. Re-enable here only when URL-based locale
+// routes ship.
+export const HREFLANG_LANGS = [];

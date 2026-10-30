@@ -103,7 +103,7 @@
 }
 
 [data-theme="dark"] .demo-btn {
-  color: #062a2a;
+  color: var(--text-on-accent);
 }
 
 .demo-btn:hover:not(:disabled) {
@@ -195,7 +195,7 @@
 }
 
 [data-theme="dark"] .demo-stage--now {
-  color: #062a2a;
+  color: var(--text-on-accent);
 }
 
 .demo-stage-sep {

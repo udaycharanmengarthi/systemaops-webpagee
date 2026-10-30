@@ -18,22 +18,35 @@ function escapeHtml(value) {
 }
 
 /* Transactional email to an admin's own address (password resets,
-   security notifications). Reuses the same Resend infrastructure.
-   Never logs tokens or secrets. */
-export const sendAdminEmail = async ({ to, subject, html, text }) => {
+   security notifications, payment confirmations). Reuses the same Resend
+   infrastructure. Never logs tokens or secrets.
+
+   `idempotencyKey` is optional and additive: when provided, Resend sends it
+   as the Idempotency-Key header so a retried send cannot produce a second
+   email. Existing callers omit it and behave exactly as before. */
+export const sendAdminEmail = async ({
+  to,
+  subject,
+  html,
+  text,
+  idempotencyKey,
+}) => {
   try {
     const resend = getResend();
     if (!resend || !process.env.SENDER_EMAIL || !to) {
       console.error("Email not configured, skipping send");
       return { skipped: true };
     }
-    const response = await resend.emails.send({
-      from: process.env.SENDER_EMAIL,
-      to,
-      subject,
-      html,
-      ...(text ? { text } : {}),
-    });
+    const response = await resend.emails.send(
+      {
+        from: process.env.SENDER_EMAIL,
+        to,
+        subject,
+        html,
+        ...(text ? { text } : {}),
+      },
+      idempotencyKey ? { idempotencyKey } : undefined
+    );
     if (response.error) {
       // Safe diagnostics only: provider status/message, never the
       // request body (which could contain tokens or PII).

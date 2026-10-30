@@ -305,13 +305,7 @@
 
 .heading span {
   background:
-    linear-gradient(
-      100deg,
-      var(--text-primary) 0%,
-      var(--text-primary) 62%,
-      var(--accent-deep) 82%,
-      var(--accent-primary) 100%
-    );
+    var(--text-gradient);
 
   background-size: 100% auto;
 

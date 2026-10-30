@@ -120,6 +120,12 @@ export function getLangDirection() {
  * Returns object with URL objects for link tags.
  */
 export function generateHreflangLinks(basePath, language) {
+  /* HREFLANG_LANGS is empty because no /de/ /nl/ URL variants exist:
+     emitting alternates to non-existent URLs misleads crawlers. */
+  if (HREFLANG_LANGS.length === 0) {
+    return [];
+  }
+
   const { urls, xdefault } = getHreflangUrls(basePath);
 
   const currentLang = language || "en";

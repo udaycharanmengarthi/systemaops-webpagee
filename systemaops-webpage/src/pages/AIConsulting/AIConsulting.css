@@ -156,7 +156,7 @@
 }
 
 [data-theme="dark"] .ac-flow-num {
-  color: #062a2a;
+  color: var(--text-on-accent);
 }
 
 /* ── SECTIONS ── */
@@ -708,7 +708,7 @@
 }
 
 [data-theme="dark"] .ac-roadmap-tab--active .ac-roadmap-num {
-  color: #062a2a;
+  color: var(--text-on-accent);
 }
 
 .ac-roadmap-svg {
@@ -849,7 +849,7 @@
 }
 
 [data-theme="dark"] .ac-fw-num {
-  color: #062a2a;
+  color: var(--text-on-accent);
 }
 
 .ac-fw-card h3 {

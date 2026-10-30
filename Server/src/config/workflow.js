@@ -48,6 +48,19 @@ export const CAREER_TRANSITIONS = {
 
 export const PRIORITIES = ["LOW", "MEDIUM", "HIGH", "URGENT"];
 
+/* Areas a book-a-call enquiry can be about. Mirrors the six primary
+   services in src/data/services.js (webpage). Values are stored as-is;
+   the frontend renders the label, so keep them stable. */
+export const AREAS_OF_INTEREST = [
+  "ai-automation",
+  "odoo-erp",
+  "workflow-automation",
+  "aiops-monitoring",
+  "ai-consulting",
+  "system-integrations",
+  "other",
+];
+
 /* Roles ordered by privilege. Higher rank includes all lower rights. */
 export const ROLES = ["VIEWER", "MANAGER", "ADMIN", "SUPER_ADMIN"];
 

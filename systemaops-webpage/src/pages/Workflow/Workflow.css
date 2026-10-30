@@ -171,7 +171,7 @@
 }
 
 [data-theme="dark"] .wf-node {
-  fill: #0B1E21;
+  fill: var(--bg-surface);
 }
 
 .wf-node--cyan {
@@ -1020,7 +1020,7 @@
 }
 
 [data-theme="dark"] .wf-eco-engine {
-  color: #062a2a;
+  color: var(--text-on-accent);
 }
 
 .wf-eco-out {

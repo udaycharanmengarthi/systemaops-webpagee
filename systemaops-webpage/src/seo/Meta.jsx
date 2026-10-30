@@ -5,10 +5,10 @@
  */
 
 import { Helmet } from "react-helmet-async";
+import { useLocation } from "react-router-dom";
 import { useLanguage } from "../i18n/useLanguage";
 import {
   SITE_NAME,
-  BASE_URL,
   DEFAULT_OG_IMAGE,
 } from "./seoConfig";
 import { getRouteSeo } from "./routeSeo";
@@ -28,15 +28,21 @@ export default function Meta({
   routePath,
 }) {
   const { language } = useLanguage();
+  const location = useLocation();
 
-  // Determine the route path if not provided
-  const resolvedRoutePath = routePath || "/";
+  /* The current route, unless the caller pins one. Deriving it here (rather
+     than defaulting to "/") is what keeps per-page route SEO, og:url and
+     description fallbacks correct for every page that uses <Meta>. */
+  const resolvedRoutePath = routePath || location.pathname;
 
   // Get route-specific SEO config (falls back to defaults)
   const routeSeo = getRouteSeo(resolvedRoutePath);
 
-  // Build title: page title takes precedence, otherwise route config, then site name
-  const fullTitle = buildTitle(title, routeSeo.title.replace(`| ${SITE_NAME}`, "").trim() || SITE_NAME);
+  /* Title format: "{Page title} | SystemaOps". The site name suffix must
+     be the site name only - appending the route config's full title used
+     to double it ("About SystemaOps | SystemaOps | AI Automation & Odoo
+     ERP Solutions"). */
+  const fullTitle = buildTitle(title, SITE_NAME);
 
   // Build description: page prop > route config > site default
   const fullDescription = buildDescription(description, routeSeo.description);
@@ -46,21 +52,20 @@ export default function Meta({
     ? getCanonicalUrl(canonical)
     : getCanonicalUrl(resolvedRoutePath);
 
-  // Current language URL path
+  /* og:url is the language-agnostic canonical URL. The site has no
+     URL-based locale variants (no /de/* or /nl/* routes - language is
+     switched in-page via localStorage), so prefixing the visitor's
+     language here would emit phantom URLs. */
+  const canonicalUrlFull = canonicalUrl;
+
+  // Base path for the hreflang generator (currently returns [] because
+  // HREFLANG_LANGS is empty).
   let basePath = resolvedRoutePath;
 
   // Remove trailing slash unless the path is "/"
   if (basePath.endsWith("/") && basePath.length > 1) {
     basePath = basePath.slice(0, -1);
   }
-
-  // Current language URL
-  const currentPath =
-    language === "en"
-      ? basePath
-      : `/${language}${basePath === "/" ? "" : basePath}`;
-
-  const canonicalUrlFull = `${BASE_URL}${currentPath}`;
 
   // Generate hreflang links - language-aware
   // Only generate links for supported languages

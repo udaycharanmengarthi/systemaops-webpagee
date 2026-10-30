@@ -10,6 +10,8 @@ import cookieParser from "cookie-parser";
 import contactRoutes from "./routes/contact.routes.js";
 import careerRoutes  from "./routes/career.routes.js";
 import adminRoutes   from "./routes/admin.routes.js";
+import paymentRoutes from "./routes/payments.routes.js";
+import consultationRoutes from "./routes/consultation.routes.js";
 
 const app = express();
 
@@ -71,6 +73,36 @@ app.use((req, res, next) => {
   })(req, res, next);
 });
 
+/* Consultation payments (Stripe Checkout).
+   Mounted BEFORE express.json() on purpose: the webhook needs the RAW
+   body (express.raw, scoped to that route) so Stripe's signature can be
+   verified against the exact bytes received. If this router were mounted
+   after the JSON parser, verification would fail and the payment would
+   never be recorded.
+
+   The limiter is mounted on the create-session path ONLY. The webhook is
+   deliberately NOT rate limited: Stripe retries deliveries on its own
+   schedule and several events can legitimately arrive from one Stripe IP,
+   so throttling here would silently delay (or drop) payment confirmations.
+
+   Missing/invalid Stripe configuration is never fatal: the endpoints
+   answer 503 and the rest of the API keeps working. */
+const checkoutLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many requests, please try again later",
+  },
+});
+
+app.use("/api/payments/create-checkout-session", checkoutLimiter);
+app.use("/api/payments/offer", checkoutLimiter);
+app.use("/api/payments/session", checkoutLimiter);
+app.use("/api/payments", paymentRoutes);
+
 app.use(express.json({ limit: "100kb" }));
 app.use(express.urlencoded({ extended: true, limit: "100kb" }));
 app.use(cookieParser());
@@ -105,6 +137,14 @@ const formLimiter = rateLimit({
 
 app.use("/api/contact", formLimiter, contactRoutes);
 app.use("/api/careers", formLimiter, careerRoutes);
+
+/* Book-a-call consultation enquiries (/book-a-call).
+   Separate from /api/contact on purpose: the contact form (and its
+   required phone field) stays exactly as it was, and this one has its
+   own field set (area of interest, no phone). Same limiter, same model
+   conventions (1-year retention + privacy fields), same downstream
+   plumbing (activity log, admin notification, founder email). */
+app.use("/api/consultations", formLimiter, consultationRoutes);
 
 /* Admin operations platform (cookie-session auth enforced per route).
    Generous limit: dashboard polling + kanban drags are chatty by design. */

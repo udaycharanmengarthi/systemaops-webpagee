@@ -224,11 +224,7 @@
 .automation-heading span {
 
   background:
-    linear-gradient(
-      135deg,
-      var(--text-primary) 0%,
-      var(--accent-primary) 100%
-    );
+    var(--accent-gradient);
 
   -webkit-background-clip:
     text;
