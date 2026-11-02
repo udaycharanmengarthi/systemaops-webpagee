@@ -13,12 +13,12 @@ All paths are relative to the same origin. Public JSON endpoints are rate-limite
 
 ## `POST /api/payments/create-checkout-session`
 
-- Request: `{name?:string,email?:string,consultationId?:string}`. Name/email are Checkout prefill only. Amount, currency, Price ID, callback URLs, and metadata are server-owned.
-- Validation: optional consultation id must be a 24-hex ObjectId referencing an eligible unpaid consultation.
-- `200`: `{url:string}`. Open linked session is reused where available.
-- `400/404/409`: invalid, missing, or already-paid consultation. `503`: missing provider configuration. `502`: provider failure. `429`: rate limit.
-- Side effects: creates hosted Checkout Session and stores session id/pending state when linked.
-- Idempotency: reuses an open session per linked enquiry; there is no explicit Stripe idempotency key.
+- Request: `{name?:string,email?:string,consultationId:string}`. Name/email are Checkout prefill only. Amount, currency, Price ID, quantity, callback URLs, and metadata are server-owned.
+- Validation: `consultationId` is **required**; it must be a 24-hex ObjectId referencing an existing consultation that is not already paid. Client-supplied `price`, `priceId`, `amount`, `amountMinor`, `currency`, `quantity`, `line_items` or `unit_amount` are rejected before Stripe is called.
+- `200`: `{url:string}`. An existing open linked session is reused only after re-verifying its amount/currency/Price/quantity against the configured Price.
+- `400/404/409`: malformed, missing, unknown, already-paid, or commercially mismatched session; `409` while another checkout attempt holds the lock. `503`: missing provider configuration. `502`: provider failure. `429`: rate limit.
+- Side effects: creates one hosted Checkout Session with exactly one line item (`price: STRIPE_PRICE_ID`, `quantity: 1`) and stores its id, pending state, and a verified commercial snapshot on the consultation.
+- Idempotency: per-consultation database lock (30 s), stored attempt nonce, Stripe idempotency key `consultation-<consultationId>-<nonce>`, and open-session reuse. Repeated clicks and restarts cannot create a second session for the same attempt.
 
 ## `GET /api/payments/session/:sessionId`
 
@@ -38,7 +38,9 @@ All paths are relative to the same origin. Public JSON endpoints are rate-limite
 ## `POST /api/payments/webhook`
 
 - Raw `application/json` request body with `Stripe-Signature` header. Stripe provider verifies signature using `STRIPE_WEBHOOK_SECRET`.
-- Handles `checkout.session.completed`, `checkout.session.async_payment_succeeded`, and `checkout.session.async_payment_failed`; unknown valid event types are acknowledged and ignored.
-- `200` after safe processing; `400` invalid/missing signature; `503` configuration missing; `500` transient persistence/email processing failure (provider retry).
-- Side effects: verified events update payment record; paid events sync consultation and attempt one confirmation email.
-- Idempotency: unique session id and conditional email claim/lease; duplicate event delivery is safe.
+- Handles `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, and `checkout.session.expired`; unknown valid event types are acknowledged and ignored.
+- Isolation: events whose `livemode` differs from the configured secret-key mode are ignored before any write. Events are processed only when `metadata.consultation_id` references an existing consultation whose stored `stripeSessionId` matches the event session.
+- Commercial verification: retrieved Stripe session (with line items) must match the stored snapshot and configured Price — amount, currency, Price ID, quantity, and payment status. Mismatches are logged and ignored, never recorded as paid.
+- `200` after safe processing or deliberate ignore; `400` invalid/missing signature; `503` configuration missing; `500` transient persistence/email processing failure (provider retry).
+- Side effects: verified, app-owned events update payment/consultation state; paid events attempt one confirmation email. No webhook creates a Checkout Session or records a payment for an unrelated Stripe object.
+- Idempotency: unique event id in `stripe_webhook_events` claimed with a processing lease, unique session id, conditional email claim/lease, and Resend idempotency key. Duplicate and concurrent deliveries produce one state change and one email.

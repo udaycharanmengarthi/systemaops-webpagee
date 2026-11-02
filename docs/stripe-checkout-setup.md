@@ -38,9 +38,9 @@ when any of these are missing, empty, still contain a placeholder
 | Variable | Required value shape | Purpose |
 | --- | --- | --- |
 | `PAYMENT_PROVIDER` | `stripe` (default) | Selects the provider adapter. |
-| `STRIPE_SECRET_KEY` | `sk_test_...` in test mode | Server-side Stripe API key. Never send to the browser. |
+| `STRIPE_SECRET_KEY` | `sk_test_...`/`sk_live_...` (or `rk_test_...`/`rk_live_...`) | Server-side Stripe API key. The prefix selects the mode. Never send to the browser. |
 | `STRIPE_WEBHOOK_SECRET` | `whsec_...` | Verifies the raw webhook body. |
-| `STRIPE_PRICE_ID` | `price_...` | The only source of amount/currency. |
+| `STRIPE_PRICE_ID` | `price_...` | The only source of the Stripe Price. The backend retrieves and validates this Price; amount and currency come from it, and invalid Prices fail closed. |
 | `FRONTEND_URL` | `http://localhost:5173` for host dev; `http://localhost:3000` for local Docker (the local override defaults it) | Builds success/cancel URLs. |
 
 Which file is loaded:
@@ -55,6 +55,18 @@ Which file is loaded:
 The backend starts normally if Stripe is not configured; only
 `/api/payments/*` answers `503`. Do not put `sk_`, `whsec_`, or a real
 `price_` value in any frontend file.
+
+Run the read-only preflight before a controlled test:
+
+```powershell
+cd Server
+npm run payments:check
+```
+
+It retrieves the configured Price and verifies mode, active state, one-time
+type, and fixed amount/currency. Checkout separately enforces quantity 1. It
+prints no secret. Live mode is refused unless `-- --allow-live` is passed
+explicitly.
 
 ### Frontend (Vite, `systemaops-webpage/`)
 
@@ -91,20 +103,24 @@ server-side secret.
 
 ## Stripe test-mode checklist (Dashboard access required)
 
-These steps need an authorized Stripe Dashboard user. The code cannot verify
-that the account owns a Price or that the Dashboard webhook exists.
+These steps need an authorized Stripe Dashboard user. The backend retrieves
+and validates the configured Price with the configured key, but it cannot
+prove that the Dashboard webhook endpoint exists or is subscribed.
 
 1. Switch the Stripe Dashboard to **Test mode**.
-2. Create (or select) a Product and an **active one-time Price**. Copy its
-   `price_...` ID. The amount and currency are defined in Stripe, not in code.
+2. Create (or select) a Product and an **active one-time Price** with the
+   amount and currency you intend to charge. Copy its `price_...` ID. The
+   backend rejects inactive, recurring, tiered, custom, multi-currency, or
+   otherwise non-fixed Prices, and Prices from the other mode.
 3. Copy the test **secret** key (`sk_test_...`) from Developers -> API keys.
 4. Create a webhook endpoint (or use the Stripe CLI locally) and copy its
    signing secret (`whsec_...`).
 5. Put those values in the correct file for the way you run the app (see the
    table above). Do not paste them into chat, docs, source, or Git.
 6. Restart the backend after changing environment values.
-7. Confirm the key is test mode: the prefix must be `sk_test_`, and the Price
-   must be visible in the same test-mode account.
+7. Confirm the key is test mode: the prefix must be `sk_test_` (or
+   `rk_test_`), and the Price must be visible in the same test-mode account
+   with `livemode=false`.
 8. Pay with Stripe's official test card `4242 4242 4242 4242`, any future
    expiry date, any CVC, and any postal code accepted by the form.
 9. Confirm a `stripe_payments` row appears, the linked consultation becomes
@@ -169,20 +185,46 @@ Enable these events in the Dashboard or let the CLI forward all events:
 - `checkout.session.completed`
 - `checkout.session.async_payment_succeeded`
 - `checkout.session.async_payment_failed`
+- `checkout.session.expired`
 
 The webhook route is mounted before `express.json()` and uses
 `express.raw({ type: "application/json" })`; never move it after the global
 JSON parser or signature verification will fail.
 
+Before anything is written, the handler enforces all of the following:
+
+- the event's `livemode` matches the configured secret-key mode;
+- `metadata.consultation_id` references an existing consultation whose stored
+  `stripeSessionId` is exactly this session;
+- the session is retrieved from Stripe with line items and its
+  amount/currency/Price/quantity/payment status match the configured Price and
+  the stored snapshot;
+- the event id has not already been claimed in `stripe_webhook_events`.
+
+Anything else is acknowledged and ignored. An unrelated session (including
+`stripe trigger` fixtures) can never create a payment row, mark a consultation
+paid, or send email.
+
 ### Production
 
 - Endpoint: `https://<your-domain>/api/payments/webhook`
-- Subscribe to the three events above.
+- Subscribe to the four events above.
 - Store the endpoint's own signing secret in the production backend
   environment.
 - The webhook is intentionally not rate limited.
-- Duplicate deliveries are idempotent: the unique Checkout Session ID plus a
-  database email-claim/lease sends one confirmation email.
+- Duplicate deliveries are idempotent: the unique event-id ledger
+  (`stripe_webhook_events`) plus the unique Checkout Session ID and a database
+  email-claim/lease produce one state change and one confirmation email.
+
+## Restart and retry safety
+
+Checkout creation uses a 30-second per-consultation database lock, a stored
+attempt nonce, an open-session reuse check against Stripe, and a Stripe
+idempotency key (`consultation-<consultationId>-<nonce>`). If the backend
+restarts mid-request, the next request either reuses the already-created open
+session or takes over an expired lock; it does not create a second session for
+the same attempt. Webhook processing uses the same lease pattern, so a crash
+after receiving an event is recoverable when Stripe retries.
 
 ## Browser test sequence
 
@@ -207,10 +249,13 @@ JSON parser or signature verification will fail.
 The backend config gate found at least one missing or malformed value. Check
 the backend process environment (not the frontend) for:
 
-- `STRIPE_SECRET_KEY` starting with `sk_`
+- `STRIPE_SECRET_KEY` starting with `sk_test_`, `sk_live_`, `rk_test_` or
+  `rk_live_`
 - `STRIPE_WEBHOOK_SECRET` starting with `whsec_`
 - `STRIPE_PRICE_ID` starting with `price_`
 - a valid absolute `FRONTEND_URL`
+- the configured Stripe Price resolves to a valid fixed one-time Price in
+  the configured mode
 
 Common causes:
 
@@ -235,9 +280,11 @@ file.
 
 ### HTTP 401/403 from Stripe
 
-The backend logs only the error type/code (for example
+The backend logs only the error type/code and Stripe request id (for example
 `StripeAuthenticationError`). Check that the secret key is a test key from the
-same test-mode account as the Price. A frontend publishable key is unrelated.
+same test-mode account as the Price. Mixing a test key with a live Price (or
+the reverse) is rejected as a mode mismatch. A frontend publishable key is
+unrelated.
 
 ### HTTP 404 - Not found
 
@@ -246,22 +293,27 @@ same test-mode account as the Price. A frontend publishable key is unrelated.
 - `Checkout session not found`: the status page received an unknown session
   id.
 
-### HTTP 409 - Already paid
+### HTTP 409 - Already paid or checkout in progress
 
 The consultation is already marked `paid` by a verified webhook; a second
-checkout is intentionally refused.
+checkout is intentionally refused. A `409` can also mean another checkout
+attempt currently holds the 30-second per-consultation lock, or an existing
+open session could not be re-verified against the configured Price. Wait for the
+first attempt to finish, then retry; do not bypass the lock or create a session
+manually.
 
 ### HTTP 502 - Stripe request failed
 
 The backend intentionally hides Stripe's message from the browser and logs
-only the type/code. Common causes:
+only the type/code plus a safe Stripe request id. Common causes:
 
-- The configured Price ID is inactive, deleted, or belongs to another account
-  or mode.
+- The configured Price ID is deleted or belongs to another account.
 - The Stripe API rejected a request parameter. In particular, Checkout
   Sessions have no `customer_name` create parameter; this repository
   intentionally does not send one.
 - Stripe is unreachable or the key is invalid.
+- An existing open session could not be retrieved. The backend fails closed
+  instead of creating a second session, to prevent a double charge.
 
 Check the backend console, the Stripe Dashboard request logs, and the Price
 configuration. Never expose the full Stripe error to the browser.
@@ -322,6 +374,9 @@ enquiry-only mode in a development build.
 cd Server
 $env:MONGO_URI="mongodb://127.0.0.1:27017/systemaops"
 npm test
+
+# Read-only Stripe configuration/Price preflight
+npm run payments:check
 
 # Frontend: parser, redirect, routing, UI/wiring, build-output scans
 cd systemaops-webpage

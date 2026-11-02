@@ -25,18 +25,20 @@ The repository is a React/Vite public website, Express 5 backend, MongoDB/Mongoo
 
 - Stripe Checkout Sessions and signed webhooks are the only implemented payment provider.
 - `PAYMENT_PROVIDER` defaults to `stripe`; unsupported providers fail closed. A small provider interface isolates SDK calls.
-- Price is controlled by server-side `STRIPE_PRICE_ID`; no amount is accepted from the browser.
-- Consultation offer mode defaults to `undecided`. Paid UI remains off until a business owner approves the offer and production build configuration enables checkout.
-- Webhook verification remains the sole persistence/email trigger. Status lookup may query Stripe server-side and returns only normalized status.
+- Price is controlled by server-side `STRIPE_PRICE_ID`; no amount, currency, quantity or Price ID is accepted from the browser. The configured Price is the configured Stripe Price.
+- Consultation offer mode is `paid` in production; only an explicit development build can select enquiry-only mode. Live payments remain disabled until the owner approves the live Price, live webhook secret, and production domain.
+- Webhook verification remains the sole persistence/email trigger, and only for an app-owned Checkout Session whose retrieved terms match the configured Price. Status lookup may query Stripe server-side and returns only normalized status.
 - Email is sent after verified payment and tracked independently using a database claim/lease; delivery is at-least-once with provider idempotency where supported.
+- Checkout creation is serialized per consultation with a database lock, attempt nonce and Stripe idempotency key; repeat clicks and restarts reuse the verified open session instead of creating another.
+- Webhook event ids are claimed in a unique ledger with a processing lease, so duplicate/concurrent delivery has one effect. Test-mode events are isolated from live mode via `livemode`.
 
 ## Assumptions needing confirmation
 
-- Business owner must decide whether consultations are free or paid, approve a Stripe Price, currency, duration, offer wording, and production domain.
+- Business owner must approve the live Stripe Price, currency, duration, offer wording, and production domain. The test-mode the configured Price offer is already configured and validated.
 - Owner must configure Stripe test/live keys, webhook endpoint secret, and Resend sender/recipient configuration outside source control.
 
 ## Risks and unresolved questions
 
-- Current environment cannot reach `localhost:5000`; Docker Engine access is denied and the backend test environment has no `MONGO_URI`. Container logs and a live API request therefore remain unavailable.
+- A real Stripe test-mode end-to-end payment has not been run; the webhook secret's validity against the active endpoint is unproven.
 - Webhook retry is Stripe-driven; no authenticated operator email-replay endpoint or scheduled retry worker currently exists. Failed delivery remains queryable in `stripe_payments` for operational recovery.
 - No live Stripe or Resend credentials were inspected or used. No transaction was made.

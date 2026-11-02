@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import {
-  ArrowRight,
   CheckCircle2,
 } from "lucide-react";
 
@@ -32,7 +31,7 @@ const buildAreas = (t) => [
 ];
 
 export default function BookACall() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const areas = useMemo(() => buildAreas(t), [t]);
 
   const form = useConsultationForm({ areas, t });
@@ -83,23 +82,6 @@ export default function BookACall() {
     if (stepHeadingRef.current) stepHeadingRef.current.focus();
   }, [step]);
 
-  const scrollToForm = useCallback(() => {
-    const node = formRef.current;
-    if (!node) return;
-
-    node.scrollIntoView({
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "auto"
-        : "smooth",
-      block: "start",
-    });
-
-    window.setTimeout(() => {
-      const first = document.getElementById("cs-name");
-      if (first) first.focus({ preventScroll: true });
-    }, 320);
-  }, []);
-
   const handleSubmit = useCallback(() => {
     const found = validateAll();
     if (Object.keys(found).length > 0) return;
@@ -122,14 +104,7 @@ export default function BookACall() {
     form.setStep(STEPS.PAYMENT);
   }, [form]);
 
-  const priceLabel = useMemo(() => {
-    if (!paymentOffer) return null;
-
-    return new Intl.NumberFormat(language, {
-      style: "currency",
-      currency: paymentOffer.currency,
-    }).format(paymentOffer.amountMinor / 100);
-  }, [language, paymentOffer]);
+  const priceLabel = paymentOffer?.formattedAmount || null;
 
   const isPaidFlow = consultationOffer.isPaid && paymentAvailable;
 
@@ -172,22 +147,6 @@ export default function BookACall() {
             </h1>
 
             <p className="cs-lede">{t("consultation.hero.sub")}</p>
-
-            <div className="cs-hero-actions">
-              <button
-                type="button"
-                className="cs-btn cs-btn--primary"
-                onClick={scrollToForm}
-              >
-                {t("consultation.hero.primary")}
-                <ArrowRight size={17} aria-hidden="true" />
-              </button>
-
-              <Link to="/contact" className="cs-text-link">
-                {t("consultation.hero.secondary")}
-                <ArrowRight size={15} aria-hidden="true" />
-              </Link>
-            </div>
 
             <div className="cs-expect">
               <p className="cs-expect-title">

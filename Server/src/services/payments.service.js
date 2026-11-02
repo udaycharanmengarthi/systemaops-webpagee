@@ -24,6 +24,7 @@ import { sendAdminEmail } from "./mail.service.js";
 import {
   PAYMENTS_NOT_CONFIGURED_MESSAGE,
 } from "../config/payments.js";
+import { formatMinorUnits } from "../utils/currency.js";
 
 /* Keep stored diagnostics short and free of PII. */
 export const sanitizeError = (value, fallback = "unknown_error") => {
@@ -185,6 +186,7 @@ export const recordPayment = async ({
       ? session.amount_total
       : null,
     currency: typeof session.currency === "string" ? session.currency : null,
+    livemode: typeof session.livemode === "boolean" ? session.livemode : null,
     customer_email:
       typeof session.customer_details?.email === "string" &&
       session.customer_details.email
@@ -221,13 +223,18 @@ export const recordPayment = async ({
   }
 
   /* Merge verified payment facts. payment_status is only ever written from
-     a signature-verified event by design. */
+     a signature-verified event by design.
+
+     Terminal ordering: a late async-failure or expired delivery must never
+     downgrade a verified paid row. A later verified success can still
+     promote failed/expired -> paid. */
+  const downgradeGuard =
+    paymentStatus === "paid" ? {} : { payment_status: { $ne: "paid" } };
+
   const payment = await StripePayment.findOneAndUpdate(
     {
       stripe_session_id: sessionId,
-      /* A late async-failure delivery must never downgrade a verified paid
-         state. A later verified success can still promote failed -> paid. */
-      ...(paymentStatus === "failed" ? { payment_status: { $ne: "paid" } } : {}),
+      ...downgradeGuard,
     },
     {
       $set: {
@@ -255,6 +262,8 @@ export const claimEmail = async ({ sessionId, now = new Date() }) => {
   const claimed = await StripePayment.findOneAndUpdate(
     {
       stripe_session_id: sessionId,
+      /* Only a verified paid row may ever send a confirmation email. */
+      payment_status: "paid",
       $or: [
         { email_status: { $in: ["pending", "failed"] } },
         {
@@ -310,18 +319,10 @@ export const markEmailFailed = async ({ sessionId, error }) =>
    Copy states what happened and the next step; it never promises a
    booking, a slot or a time (booking is out of scope). */
 
-const formatAmount = (amountTotal, currency) => {
-  if (!Number.isFinite(amountTotal) || !currency) return null;
-  try {
-    const amount = amountTotal / 100;
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: String(currency).toUpperCase(),
-    }).format(amount);
-  } catch {
-    return null;
-  }
-};
+/* Currency-aware: Stripe minor units are not always hundredths (JPY has
+   no decimals; KWD has three). */
+const formatAmount = (amountTotal, currency) =>
+  formatMinorUnits(amountTotal, currency);
 
 /* Email bodies are HTML: escape anything Stripe gave us that could be
    customer-controlled (name) before it reaches the markup. */
@@ -442,6 +443,9 @@ export const deliverConfirmationEmail = async ({ session }) => {
     }).lean();
     if (current?.email_status === "sent") {
       return { outcome: "already" };
+    }
+    if (current && current.payment_status !== "paid") {
+      return { outcome: "not_paid" };
     }
     /* Still 'sending' with a live lease: another delivery owns it. */
     return { outcome: "busy" };

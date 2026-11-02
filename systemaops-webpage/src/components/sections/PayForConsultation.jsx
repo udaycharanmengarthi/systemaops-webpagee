@@ -4,7 +4,8 @@
    This is intentionally a NAVIGATION action, not a checkout API call.
    A Checkout Session must belong to a real consultation/order: the
    customer selects the service and submits the enquiry on /book-a-call,
-   and only then does the server create the one linked €500 session.
+   and only then does the server create the one linked session at the
+   currently configured Stripe Price.
 
    Keeping this component as a router link prevents the site from
    creating unlinked, synthetic-looking sessions from the home page.

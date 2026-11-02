@@ -1,10 +1,11 @@
 # Security and Payment Integrity
 
-- **Server-owned pricing:** client never sends amount, currency, or Price ID. Backend uses `STRIPE_PRICE_ID`; do not set it until owner approval.
+- **Server-owned pricing:** client never sends amount, currency, quantity, or Price ID; such fields are rejected. Backend uses `STRIPE_PRICE_ID`, validates it against the configured Stripe Price, and creates exactly one line item with quantity 1. Do not set it until owner approval.
 - **Secret handling:** Stripe, webhook, database, and Resend secrets stay in ignored deployment env files/secret store. Example files contain placeholders only. Do not print env files or log key values.
-- **Webhook verification:** payment router is mounted before JSON middleware; webhook uses route-scoped `express.raw`; Stripe signature is verified before payload effects.
+- **Webhook verification:** payment router is mounted before JSON middleware; webhook uses route-scoped `express.raw`; Stripe signature is verified before payload effects. Only app-owned sessions are accepted: metadata must reference a consultation whose stored session id matches. The session is re-retrieved with line items and its amount/currency/Price/quantity/payment status are verified before any write.
+- **Environment isolation:** an event whose `livemode` differs from the configured secret-key mode is ignored before persistence. Synthetic/unlinked sessions, including `stripe trigger` fixtures, cannot create payments, mark consultations paid, or send email.
 - **Authoritative status:** success URL is untrusted. Status lookup retrieves Stripe session server-side and returns only a normalized enum; it does not write payment state. Verified webhooks own persistence and email.
-- **Idempotency:** unique checkout session id, checkout reuse for a linked enquiry, conditional email claim, lease recovery, and Resend idempotency key limit duplicate effects.
+- **Idempotency:** per-consultation checkout lock, stored attempt nonce, Stripe idempotency key, open-session reuse after re-verification, unique checkout session id, unique webhook event-id ledger with processing lease, conditional email claim, lease recovery, and Resend idempotency key limit duplicate effects.
 - **Lookup authorization:** session id is a capability. Status API exposes no PII and is rate-limited/no-store. Do not add email/name or arbitrary consultation lookup to the public response.
 - **Validation:** request field types/lengths, area slugs, ObjectId syntax, email, session ID, and consent are validated server-side.
 - **Logging:** safe operation/type/code diagnostics only; never request bodies, emails, signatures, URLs with sensitive parameters, or secret values.

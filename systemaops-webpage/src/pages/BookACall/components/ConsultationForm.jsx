@@ -30,15 +30,20 @@ export default function ConsultationForm({
   errorMessages,
   t,
 }) {
-  const summaryRef = useRef(null);
   const shouldFocusSummary = useRef(false);
 
   useEffect(() => {
     if (errorList.length > 0 && shouldFocusSummary.current) {
       shouldFocusSummary.current = false;
-      if (summaryRef.current) summaryRef.current.focus();
+      const firstField = ["name", "email", "areaOfInterest", "message", "privacyAccepted"].find(
+        (field) => errors[field]
+      );
+      const target = firstField
+        ? document.getElementById(ERROR_TARGETS[firstField])
+        : null;
+      if (target) target.focus();
     }
-  }, [errorList.length]);
+  }, [errorList.length, errors]);
 
   const pending = status === "submitting";
   const messageLength = (values.message || "").length;
@@ -92,32 +97,6 @@ export default function ConsultationForm({
           {t("consultation.form.subheading")}
         </p>
       </header>
-
-      {errorList.length > 0 && (
-        <div
-          ref={summaryRef}
-          tabIndex={-1}
-          className="cs-error-summary"
-          role="alert"
-        >
-          <p className="cs-error-summary-title">
-            <AlertCircle size={16} aria-hidden="true" />
-            {t("consultation.form.errorSummaryTitle", {
-              count: errorList.length,
-            })}
-          </p>
-
-          <ul>
-            {errorList.map((item) => (
-              <li key={item.field}>
-                <a href={`#${ERROR_TARGETS[item.field]}`}>
-                  {errorMessages[item.key] || item.key}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       {submitError && (
         <p className="cs-alert" role="alert">

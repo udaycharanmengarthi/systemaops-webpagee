@@ -13,7 +13,7 @@
 
 import mongoose from "mongoose";
 
-export const PAYMENT_STATUSES = ["paid", "failed"];
+export const PAYMENT_STATUSES = ["paid", "failed", "expired"];
 export const EMAIL_STATUSES = ["pending", "sending", "sent", "failed"];
 
 /* Short lease: long enough for a normal provider round-trip, short enough
@@ -57,10 +57,18 @@ const stripePaymentSchema = new mongoose.Schema(
       default: null,
     },
 
-    /* Only 'paid' | 'failed' are stored. Verified events only. */
+    /* Only verified-event terminal states are stored:
+       'paid' | 'failed' | 'expired'. */
     payment_status: {
       type: String,
       enum: PAYMENT_STATUSES,
+      default: null,
+    },
+
+    /* Stripe's own mode flag from the VERIFIED session. Kept so an audit
+       can distinguish test and live rows without provider lookups. */
+    livemode: {
+      type: Boolean,
       default: null,
     },
 

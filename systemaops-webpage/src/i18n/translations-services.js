@@ -954,6 +954,12 @@ const sharedEn = {
     "We could not start the payment. Please try again in a moment.",
   errorNetwork:
     "We could not reach the payment service. Please check your connection and try again.",
+  offerMismatch:
+    "The consultation price could not be verified. Please contact us before paying.",
+  offerInvalid:
+    "The consultation price is invalid. Please try again or contact us before paying.",
+  offerUnavailable:
+    "The consultation price is temporarily unavailable. Please try again in a moment.",
     success: {
       title: "Thank you | SystemaOps",
       heading: "Thank you.",
@@ -1194,6 +1200,12 @@ const sharedNl = {
     "We konden de betaling niet starten. Probeer het over een moment opnieuw.",
   errorNetwork:
     "We konden de betaaldienst niet bereiken. Controleer je verbinding en probeer opnieuw.",
+  offerMismatch:
+    "De consultatieprijs kon niet worden geverifieerd. Neem contact met ons op voordat je betaalt.",
+  offerInvalid:
+    "De consultatieprijs is ongeldig. Probeer het opnieuw of neem contact met ons op voordat je betaalt.",
+  offerUnavailable:
+    "De consultatieprijs is tijdelijk niet beschikbaar. Probeer het over een moment opnieuw.",
     success: {
       title: "Bedankt | SystemaOps",
       heading: "Bedankt.",
@@ -1434,6 +1446,12 @@ const sharedDe = {
     "Die Zahlung konnte nicht gestartet werden. Bitte versuche es gleich noch einmal.",
   errorNetwork:
     "Der Zahlungsdienst war nicht erreichbar. Bitte prüfe deine Verbindung und versuche es erneut.",
+  offerMismatch:
+    "Der Beratungspreis konnte nicht verifiziert werden. Bitte kontaktiere uns, bevor du bezahlst.",
+  offerInvalid:
+    "Der Beratungspreis ist ungültig. Bitte versuche es erneut oder kontaktiere uns, bevor du bezahlst.",
+  offerUnavailable:
+    "Der Beratungspreis ist derzeit nicht verfügbar. Bitte versuche es gleich noch einmal.",
     success: {
       title: "Vielen Dank | SystemaOps",
       heading: "Vielen Dank.",

@@ -9,7 +9,7 @@ export default function StripeCheckout({
   onStart,
   t,
 }) {
-  const canStart = Boolean(offer) && !busy;
+  const canStart = Boolean(offer?.formattedAmount) && !offerError && !busy;
 
   return (
     <section className="cs-mock" aria-labelledby="cs-stripe-heading">
@@ -22,10 +22,7 @@ export default function StripeCheckout({
         <dl className="cs-mock-summary">
           <div className="cs-panel-row">
             <dt>{t("consultation.panel.price")}</dt>
-            <dd>{new Intl.NumberFormat(undefined, {
-              style: "currency",
-              currency: offer.currency,
-            }).format(offer.amountMinor / 100)}</dd>
+            <dd>{offer.formattedAmount}</dd>
           </div>
         </dl>
       )}

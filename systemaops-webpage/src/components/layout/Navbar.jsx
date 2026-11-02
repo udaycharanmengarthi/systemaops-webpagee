@@ -263,8 +263,10 @@ const Navbar = () => {
           <ThemeToggle />
 
           {/* ================================================= */}
-          {/* BOOK A CALL CTA — consultation page */}
-          {/* Separate from Contact Us on purpose: the contact
+          {/* BOOK A CALL CTA — global */}
+          {/* Rendered on every route. On /book-a-call it scrolls to
+              the consultation form; elsewhere it navigates there.
+              Separate from Contact Us on purpose: the contact
               form stays untouched, this opens /book-a-call. */}
           {/* ================================================= */}
 
@@ -273,7 +275,21 @@ const Navbar = () => {
               {...bookCallSpecular}
               className="nb-book-cta navbar-book-call"
               type="button"
-              onClick={() => navigate("/book-a-call")}
+              onClick={() => {
+                if (location.pathname === "/book-a-call") {
+                  const node = document.getElementById("consultation-form");
+                  if (node) {
+                    node.scrollIntoView({
+                      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                        ? "auto"
+                        : "smooth",
+                      block: "start",
+                    });
+                  }
+                } else {
+                  navigate("/book-a-call");
+                }
+              }}
             >
               <span className="nb-cta-mark-shell" aria-hidden="true">
                 <AstroidMark
@@ -520,7 +536,19 @@ const Navbar = () => {
                 type="button"
                 onClick={() => {
                   closeMobileMenu();
-                  navigate("/book-a-call");
+                  if (location.pathname === "/book-a-call") {
+                    const node = document.getElementById("consultation-form");
+                    if (node) {
+                      node.scrollIntoView({
+                        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                          ? "auto"
+                          : "smooth",
+                        block: "start",
+                      });
+                    }
+                  } else {
+                    navigate("/book-a-call");
+                  }
                 }}
               >
                 <span className="nb-cta-mark-shell" aria-hidden="true">

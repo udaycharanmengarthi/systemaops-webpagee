@@ -37,9 +37,7 @@ export default function OfferPanel({
           <div className="cs-panel-row cs-panel-row--price">
             <dt>{t("consultation.panel.price")}</dt>
             <dd>
-              {offer.priceLabel
-                ? `${offer.priceLabel} ${offer.currency || ""}`.trim()
-                : t("consultation.offer.pricePending")}
+              {offer.formattedAmount || t("consultation.offer.pricePending")}
             </dd>
           </div>
         )}

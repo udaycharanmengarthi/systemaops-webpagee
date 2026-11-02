@@ -17,12 +17,12 @@ Use real labels, keyboard-operable area selection, inline validation on blur/sub
 
 ## Offer/payment states
 
-- Current default: `undecided`; no price/duration/payment promise is shown.
+- Default: `paid` in production. Only a development build can explicitly select `undecided` with `VITE_ENABLE_STRIPE_CHECKOUT=false`; production never silently falls back to enquiry-only.
 - `free`: payment UI is absent.
-- `paid`: the production build starts the Stripe flow after the consultation is saved. The page loads the active server-side one-time Price and displays its amount/currency; Stripe configuration errors remain visible and retryable. An explicit `VITE_ENABLE_STRIPE_CHECKOUT=false` can disable paid checkout.
+- `paid`: the production build starts the Stripe flow after the consultation is saved. The page loads the active server-side one-time Price and displays its amount/currency through a fail-closed guard: a response other than the configured Price is never rendered. Stripe configuration errors remain visible and retryable. Only a development build honours `VITE_ENABLE_STRIPE_CHECKOUT=false` as an explicit enquiry-only override.
 - Result: pending/checking, verified paid, failed, expired, verification unavailable, or invalid/missing reference. A browser redirect never claims success. Retry status is safe and does not change payment state. If Stripe configuration or provider calls fail after the enquiry is stored, retain the payment step and data, display an actionable error, and allow retry rather than showing enquiry-only success.
-- Cancel route reports cancellation; it does not assert an appointment or mutate payment records.
+- Cancel route reports cancellation; it does not assert an appointment or mutate payment records. It reuses the linked consultation and never creates a second enquiry.
 
 ## Accessibility, responsive, and theming
 
-All text is localized in English, Dutch, and German. Maintain visible focus, semantic headings/labels, status announcements, reduced motion, theme token compatibility, and no horizontal overflow. Verify 360, 390, 768, 1024, and 1440px when browser tooling is available. No visual browser is available in the current environment; this check is pending.
+All text is localized in English, Dutch, and German. Maintain visible focus, semantic headings/labels, status announcements, reduced motion, theme token compatibility, and no horizontal overflow. Verify 360, 390, 768, 1024, and 1440px when browser tooling is available. The payment result/offer UI browser review is still pending.

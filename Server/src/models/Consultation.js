@@ -95,11 +95,12 @@ const consultationSchema = new mongoose.Schema(
      *   'paid'    - a SIGNATURE-VERIFIED webhook confirmed payment
      *   'failed'  - Checkout was completed without payment, or the async
      *               payment failed
+     *   'expired' - the Checkout Session expired before payment
      *
      * Only the webhook may write 'paid'. Nothing here trusts the browser. */
     paymentStatus: {
       type: String,
-      enum: ["pending", "paid", "failed"],
+      enum: ["pending", "paid", "failed", "expired"],
       default: null,
     },
 

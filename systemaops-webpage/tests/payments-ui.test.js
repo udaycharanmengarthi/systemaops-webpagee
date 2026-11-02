@@ -221,9 +221,9 @@ test("book-a-call validates required fields and the email format", () => {
   );
   assert.ok(
     src("src/pages/BookACall/components/ConsultationForm.jsx").includes(
-      "cs-error-summary"
+      "cs-field-error"
     ),
-    "an error summary must be rendered for failed submits"
+    "invalid fields must show inline validation messages"
   );
 });
 

@@ -9,6 +9,7 @@
     "migrate:ops": "node src/scripts/backfill-ops.js",
     "admin:create": "node src/scripts/create-admin.js",
     "admin:reset": "node src/scripts/create-admin.js --reset",
+    "payments:check": "node src/scripts/check-payments.js",
     "production:cleanup": "node src/scripts/prepare-production.js",
     "test": "node --test \"tests/**/*.test.js\"",
     "test:unit": "node --test tests/password-reset-policy.test.js"

@@ -35,8 +35,6 @@ Never put these values in a `VITE_*` frontend variable.
 | `STRIPE_SECRET_KEY` | `sk_test_…` | Stripe secret key. Server-side only. |
 | `STRIPE_WEBHOOK_SECRET` | `whsec_…` | Signing secret of the webhook endpoint. |
 | `STRIPE_PRICE_ID` | `price_…` | The **only** source of amount/currency. |
-| `CONSULTATION_CURRENCY` | `eur` | Expected currency guard (defaults to `eur`). |
-| `CONSULTATION_AMOUNT_MINOR` | `50000` | Expected amount guard in minor units (defaults to €500.00). |
 | `FRONTEND_URL` | `http://localhost:5173` | Builds the success/cancel redirect URLs. |
 
 Behaviour when they are missing, empty, malformed or still contain
@@ -46,10 +44,10 @@ The frontend shows a friendly "online payment is not available" message.
 
 **The frontend never supplies an amount, price or currency.** The Price
 lives in the Stripe dashboard; the browser only triggers session creation.
-Checkout is disabled if the configured Price is inactive, recurring, or does
-not match the expected €500.00 EUR offer. The production Price ID is never
-rewritten by the application; configure an approved Price ID in the backend
-environment and verify it in Stripe before enabling live payments.
+Checkout is disabled if the configured Price is inactive, recurring, or
+otherwise invalid. The production Price ID is never rewritten by the
+application; the configured Price's amount and currency are the source of
+truth. Configure and verify it in Stripe before enabling live payments.
 
 ---
 
@@ -59,11 +57,13 @@ Backend (`Server/`):
 
 | File | Purpose |
 | --- | --- |
-| `src/config/payments.js` | Env validation (never throws at boot), lazy Stripe client. |
+| `src/config/payments.js` | Env validation (never throws at boot), Price validation, mode detection, lazy Stripe client. |
 | `src/models/StripePayment.js` | `stripe_payments` collection, UNIQUE `stripe_session_id`. |
-| `src/services/payments.service.js` | Record / claim-email / mark-sent / mark-failed, email content. |
+| `src/models/StripeWebhookEvent.js` | `stripe_webhook_events` ledger, UNIQUE `event_id`, processing lease. |
+| `src/services/payments.service.js` | Record / webhook-event claim / email claim-send-fail, email content. |
 | `src/services/mail.service.js` | Existing Resend service — additive `idempotencyKey` support. |
-| `src/controllers/payments.controller.js` | The two endpoints. |
+| `src/controllers/payments.controller.js` | Checkout creation, status, offer and webhook verification. |
+| `src/scripts/check-payments.js` | Read-only preflight (`npm run payments:check`). |
 | `src/routes/payments.routes.js` | Route-scoped parsers: `express.raw` for the webhook, `express.json` for create-session. |
 | `src/app.js` | Mounts `/api/payments` **before `express.json()`**; limiter on create-session only. |
 | `src/controllers/consultation.controller.js` | `/api/consultations` — book-a-call requirements form. |
@@ -114,27 +114,42 @@ strings in `i18n/translations-services.js` (EN/NL/DE).
 | omitted | `400` — a checkout must be linked to an enquiry |
 | malformed | `400` |
 | unknown but well-formed | `404` |
-| already `paid` | `409` — an enquiry is never charged twice |
+| already `paid` | `409` — an enquiry is never charged twice; a returning customer must submit a NEW enquiry, which is a separate order |
 | valid and unpaid | Session is created and linked |
 
 After validating the reference, the endpoint:
 
+- acquires a per-consultation database lock (30 s lease) so concurrent clicks
+  cannot both create a session; a losing request answers `409` and does not
+  call Stripe;
 - stores the session id on the enquiry (`stripeSessionId`) and sets
-  `paymentStatus: "pending"`;
-- reuses the existing **open** session on a repeat request, so a double
-  click or a refresh cannot leave two live payment sessions for one
-  enquiry;
-- attaches `metadata.consultation_id` to the Stripe session. Metadata
-  carries **only** the opaque id — never the name, email or message;
+  `paymentStatus: "pending"`, together with the verified commercial snapshot
+  (`paymentPriceId`, `paymentAmountMinor`, `paymentCurrency`,
+  `paymentQuantity`);
+- reuses the existing **open** session on a repeat request only after
+  retrieving it from Stripe and re-verifying amount, currency, Price and
+  quantity, so a double click, refresh or restart cannot leave two live
+  payment sessions for one enquiry;
+- fails closed (`409`) when an existing session cannot be retrieved or no
+  longer matches the configured Price — it never creates a replacement;
+- generates a per-attempt nonce and sends Stripe the idempotency key
+  `consultation-<consultationId>-<nonce>`, so a retried create call for the
+  same attempt cannot produce a second session;
+- attaches `metadata.consultation_id` (plus the validated `price_id`,
+  `amount_minor`, `currency` and `quantity`) to the Stripe session. Metadata
+  carries **only** opaque ids and commercial terms — never the name, email or
+  message;
 - appends that opaque id to the cancel URL so the cancel page can reopen
   Checkout for the same enquiry instead of creating a duplicate.
 
-The verified webhook writes the final state back onto the enquiry
-(`paid`/`failed`, plus `paidAt`) only when the session ID stored on the
-enquiry matches the event's Checkout Session. Metadata alone is not enough.
-This is a second copy of state, not the source of truth: `paid` can only
-ever be written from a signature-verified event, and the browser can never
-set it (the consultation endpoint ignores any such field).
+The verified webhook accepts a session only when it is **owned by an app
+record**: the `consultation_id` metadata must reference an existing enquiry
+whose stored `stripeSessionId` is exactly this session. The webhook then
+retrieves the session from Stripe *with line items expanded* and verifies
+`amount_total`, currency, Price id, quantity, payment status and `livemode`
+against the stored snapshot and the server configuration before writing any
+state. It never marks a payment paid or sends email from an event that was
+not created by this app.
 
 `/api/consultations` stores the enquiry with the same 1-year retention and
 privacy fields as `contacts`, logs activity, notifies admins and emails the
@@ -153,13 +168,35 @@ existing lead data. `/api/contact` is untouched.
 | --- | --- |
 | `stripe_session_id` | **UNIQUE** — the duplicate-delivery collapse point |
 | `payment_intent_id` | nullable |
-| `payment_status` | `paid` \| `failed`, written **only** from verified events |
+| `payment_status` | `paid` \| `failed` \| `expired`, written **only** from verified events |
 | `amount_total`, `currency`, `customer_email` | verified session data only |
+| `price_id`, `quantity` | verified commercial terms copied from the session line item |
+| `livemode` | which Stripe mode produced the session |
+| `consultation_id` | the linked enquiry, when known |
 | `email_status` | `pending` \| `sending` \| `sent` \| `failed` |
 | `email_attempts` | incremented on every claim |
 | `email_lease_expires_at` | lease that makes a crashed `sending` reclaimable |
 | `email_sent_at`, `last_error` (sanitized, no PII), `last_event_id` | |
 | `created_at`, `updated_at` | `timestamps: true` |
+
+### Webhook event ledger (`stripe_webhook_events`)
+
+One row per Stripe event id, `event_id` **UNIQUE**. A delivery must first win a
+compare-and-set lease on this row before it may touch a payment or send mail:
+
+| Field | Notes |
+| --- | --- |
+| `event_id` | Stripe event id, unique |
+| `event_type`, `stripe_session_id` | opaque routing fields |
+| `status` | `processing` \| `processed` \| `ignored` \| `failed` |
+| `claim_id`, `lease_expires_at` | who owns processing and until when |
+| `attempts`, `last_error` | bounded, sanitized retry bookkeeping |
+| `created_at`, `updated_at` | timestamps |
+
+Duplicate deliveries therefore return `200` without a second state change or
+email. A crashed claim becomes reclaimable when its lease expires, so Stripe
+retries are not lost. `last_event_id` on the payment row remains a convenience
+pointer only.
 
 Delivery uses a single **compare-and-set** claim:
 
@@ -219,11 +256,20 @@ guaranteed:
 
 | Event | Behaviour |
 | --- | --- |
-| `checkout.session.completed` + `payment_status === 'paid'` | Record `paid`, send email |
+| `checkout.session.completed` + `payment_status === 'paid'` | Verify ownership/terms, record `paid`, send email |
 | `checkout.session.completed` + not paid | **Nothing recorded, no email**, 200 |
-| `checkout.session.async_payment_succeeded` | Record `paid`, send email |
-| `checkout.session.async_payment_failed` | Record `failed`, **no email**, 200 |
+| `checkout.session.async_payment_succeeded` | Verify, record `paid`, send email |
+| `checkout.session.async_payment_failed` | Verify, record `failed`, **no email**, 200 |
+| `checkout.session.expired` | Verify the session really expired, record `expired`, **no email**, 200 |
 | anything else | 200, ignored |
+
+Events whose `livemode` does not equal the configured secret-key mode are
+ignored before any database write. A synthetic `stripe trigger` event, a
+session with no app-owned consultation link, a session whose stored id does
+not match, or a session whose amount/currency/Price/quantity differs from the
+configured Price is **ignored, never treated as a payment**. No webhook can
+create a Checkout Session and none can synthesize a payment for an unrelated
+Stripe object.
 
 200 = handled safely. 500 = transient failure, Stripe retries. 400 =
 bad/missing signature, nothing is written and nothing is sent.
@@ -257,14 +303,34 @@ email" — by design.
    webhook answers non-2xx and Stripe retries; restore the key and confirm
    exactly one email is delivered.
 
-Automated equivalents (mocked Stripe + fake Resend, no network):
+Automated equivalents (mocked Stripe + fake Resend, no network). From
+`Server/`, with a reachable MongoDB:
 
-```bash
-# backend — needs the compose MongoDB
-docker compose run --rm -v "${PWD}/Server/tests:/app/tests:ro" backend node --test tests/
+```powershell
+$env:MONGO_URI="mongodb://127.0.0.1:27017/systemaops"
+node --test tests/payments.test.js tests/consultation-payment-link.test.js
+```
 
+The suite covers dynamic configured Prices, repeated clicks, concurrent
+checkout attempts, duplicate and concurrent webhook delivery, a stale
+processing lease, restart safety (stored state wins), expired and failed
+sessions, synthetic/unlinked sessions, test/live isolation, and secret-safe
+responses.
+cancel/expiry/failure, legitimate repeat purchase after a paid enquiry is
+closed, wrong Price/currency/amount/quantity, synthetic and unrelated events,
+and test/live isolation.
+
+```powershell
 # frontend
-cd systemaops-webpage && npm test
+cd systemaops-webpage
+npm test
+```
+
+Before spending any test money, run the read-only preflight:
+
+```powershell
+cd Server
+npm run payments:check
 ```
 
 ---

@@ -33,6 +33,12 @@ export const STEPS = {
   CONFIRMATION: "confirmation",
 };
 
+const sameOffer = (first, second) =>
+  Boolean(first && second) &&
+  first.amountMinor === second.amountMinor &&
+  first.currency === second.currency &&
+  first.quantity === second.quantity;
+
 export function useConsultationForm({ areas, t }) {
   const [values, setValues] = useState(EMPTY_VALUES);
   const [errors, setErrors] = useState({});
@@ -52,6 +58,7 @@ export function useConsultationForm({ areas, t }) {
      within the same tick (double click / double Enter). */
   const statusRef = useRef(status);
   const paymentBusyRef = useRef(false);
+  const offerRequestRef = useRef(0);
   /* Server-generated enquiry id from POST /api/consultations. Mirrored in a
    * ref so the payment adapter always sees the latest value without the
    * step machine having to be rebuilt around it. */
@@ -63,21 +70,63 @@ export function useConsultationForm({ areas, t }) {
   const paymentAvailable =
     consultationOffer.isPaid && adapter.isAvailable();
 
+  const loadPaymentOffer = useCallback(async ({ signal } = {}) => {
+    const requestId = offerRequestRef.current + 1;
+    offerRequestRef.current = requestId;
+
+    try {
+      const offer = await fetchPaymentOffer({ signal });
+      if (signal?.aborted || offerRequestRef.current !== requestId) return null;
+      setPaymentOffer(offer);
+      setPaymentOfferError(null);
+      return offer;
+    } catch (error) {
+      if (signal?.aborted || offerRequestRef.current !== requestId) return null;
+      setPaymentOffer(null);
+      setPaymentOfferError(
+        error?.message?.startsWith("payments.")
+          ? error.message
+          : "payments.errorNetwork"
+      );
+      return null;
+    }
+  }, []);
+
+  /* Refresh immediately before checkout. Never reuse a displayed amount as
+     proof that the configured Price is still current. */
+  const refreshPaymentOffer = useCallback(
+    () => loadPaymentOffer(),
+    [loadPaymentOffer]
+  );
+
   useEffect(() => {
     if (!paymentAvailable || adapter.name !== "stripe") return undefined;
     const controller = new AbortController();
+    const requestId = offerRequestRef.current + 1;
+    offerRequestRef.current = requestId;
+
     fetchPaymentOffer({ signal: controller.signal })
       .then((offer) => {
-        if (!controller.signal.aborted) setPaymentOffer(offer);
+        if (controller.signal.aborted || offerRequestRef.current !== requestId) {
+          return;
+        }
+        setPaymentOffer(offer);
+        setPaymentOfferError(null);
       })
       .catch((error) => {
-        if (!controller.signal.aborted) {
-          setPaymentOffer(null);
-          setPaymentOfferError(error?.message || "payments.errorGeneric");
+        if (controller.signal.aborted || offerRequestRef.current !== requestId) {
+          return;
         }
+        setPaymentOffer(null);
+        setPaymentOfferError(
+          error?.message?.startsWith("payments.")
+            ? error.message
+            : "payments.errorNetwork"
+        );
       });
+
     return () => controller.abort();
-  }, [adapter, offerRetry, paymentAvailable]);
+  }, [adapter.name, loadPaymentOffer, offerRetry, paymentAvailable]);
 
   const retryPaymentOffer = useCallback(() => {
     setPaymentOfferError(null);
@@ -165,21 +214,14 @@ export function useConsultationForm({ areas, t }) {
       setStep(paymentAvailable ? STEPS.PAYMENT : STEPS.CONFIRMATION);
 
       if (paymentAvailable && adapter.name === "stripe") {
-        let offer = paymentOffer;
-
-        if (!offer) {
-          try {
-            offer = await fetchPaymentOffer();
-            setPaymentOffer(offer);
-            setPaymentOfferError(null);
-          } catch (error) {
-            setPaymentOfferError(
-              error?.message?.startsWith("payments.")
-                ? error.message
-                : "payments.errorNetwork"
-            );
-            return result;
-          }
+        /* The displayed offer may be old (Price changed, network cache,
+           another tab). Refresh before creating the session. If the amount
+           or currency changed, stop and let the visitor review the new
+           price instead of silently redirecting them. */
+        const freshOffer = await refreshPaymentOffer();
+        if (!freshOffer) return result;
+        if (paymentOffer && !sameOffer(paymentOffer, freshOffer)) {
+          return result;
         }
 
         paymentBusyRef.current = true;
@@ -211,7 +253,13 @@ export function useConsultationForm({ areas, t }) {
       setSubmitError(error?.reason || "server");
       return null;
     }
-  }, [values, paymentAvailable, adapter, paymentOffer]);
+  }, [
+    values,
+    paymentAvailable,
+    adapter,
+    paymentOffer,
+    refreshPaymentOffer,
+  ]);
 
   /* Simulated checkout result (Phase 1 mock adapter). */
   const resolvePayment = useCallback(
@@ -223,6 +271,17 @@ export function useConsultationForm({ areas, t }) {
 
       try {
         if (outcome === PAYMENT_OUTCOME.SUCCESS) {
+          if (adapter.name === "stripe") {
+            const freshOffer = await refreshPaymentOffer();
+            if (!freshOffer) return;
+            if (paymentOffer && !sameOffer(paymentOffer, freshOffer)) {
+              /* The price changed while this page was open. Show the new
+                 offer and require a fresh click; never redirect at a price
+                 the visitor has not seen. */
+              return;
+            }
+          }
+
           const result = await adapter.create({
             /* Prefill only — never an amount, price or currency. */
             name: values.name,
@@ -260,7 +319,7 @@ export function useConsultationForm({ areas, t }) {
         setPaymentBusy(false);
       }
     },
-    [adapter, values]
+    [adapter, values, paymentOffer, refreshPaymentOffer]
   );
 
   const startOver = useCallback(() => {
@@ -277,6 +336,7 @@ export function useConsultationForm({ areas, t }) {
     setStatus("idle");
     consultationIdRef.current = null;
     setStep(STEPS.DETAILS);
+    setOfferRetry((count) => count + 1);
   }, []);
 
   const errorList = useMemo(

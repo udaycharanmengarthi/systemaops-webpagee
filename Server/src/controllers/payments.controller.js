@@ -27,10 +27,11 @@ import crypto from "node:crypto";
 import Consultation from "../models/Consultation.js";
 import StripePayment from "../models/StripePayment.js";
 import {
-  getExpectedOffer,
   getPaymentsConfig,
+  getPriceValidationIssues,
   isLiveMode,
   isPaymentsConfigured,
+  offerFromPrice,
   PAYMENTS_NOT_CONFIGURED_MESSAGE,
 } from "../config/payments.js";
 import { getPaymentProvider } from "../services/paymentProvider.js";
@@ -40,6 +41,10 @@ import {
   markWebhookEvent,
   recordPayment,
 } from "../services/payments.service.js";
+import {
+  formatMinorUnits,
+  normalizeCurrency,
+} from "../utils/currency.js";
 
 const APP_METADATA = "systemaops-consultation";
 const CHECKOUT_LOCK_MS = 30 * 1000;
@@ -82,6 +87,9 @@ const logPaymentEvent = (level, event, fields = {}) => {
 const stripeErrorFields = (error) => ({
   errorType: (error && (error.type || error.name)) || "unknown",
   errorCode: (error && error.code) || "",
+  /* Safe correlation id from Stripe; never an API key or payload. */
+  requestId: (error && (error.requestId || error.raw?.requestId)) || "",
+  statusCode: (error && (error.statusCode || error.raw?.statusCode)) || "",
 });
 
 const cleanField = (value, max) => {
@@ -103,14 +111,13 @@ const paymentIntentId = (session) =>
     : session?.payment_intent?.id || null;
 
 /**
- * Validate the configured Stripe Price against the expected server offer.
- * A wrong Price ID (or a price whose amount/currency drifted) must fail
- * closed before any Checkout Session is created.
+ * Retrieve the configured Stripe Price and validate it. A wrong Price ID,
+ * an inactive/recurring/tiered/custom Price, a mode mismatch, or an invalid
+ * fixed amount must fail closed before any Checkout Session is created.
  */
 const validateConfiguredPrice = async (provider, priceId) => {
-  const expected = getExpectedOffer();
-  if (!expected.valid) {
-    return { ok: false, reasons: ["expected_offer_invalid"], expected };
+  if (typeof priceId !== "string" || !priceId.startsWith("price_")) {
+    return { ok: false, reasons: ["price_id_missing"] };
   }
 
   let price;
@@ -119,27 +126,35 @@ const validateConfiguredPrice = async (provider, priceId) => {
   } catch (error) {
     logPaymentEvent("error", "stripe_price_retrieval_failed", {
       priceId,
+      mode: isLiveMode() ? "live" : "test",
       ...stripeErrorFields(error),
     });
     throw error;
   }
 
-  const reasons = [];
-  if (!price || price.active !== true) reasons.push("price_inactive");
-  if (price?.type !== "one_time") reasons.push("price_not_one_time");
-  if (typeof price?.currency !== "string") {
-    reasons.push("price_currency_missing");
-  } else if (price.currency.toLowerCase() !== expected.currency) {
-    reasons.push("price_currency_mismatch");
-  }
-  if (price?.unit_amount !== expected.amountMinor) {
-    reasons.push("price_amount_mismatch");
+  const reasons = getPriceValidationIssues(price, {
+    priceId,
+    live: isLiveMode(),
+  });
+  const expected = reasons.length === 0 ? offerFromPrice(price) : null;
+  const formattedAmount =
+    expected && formatMinorUnits(expected.amountMinor, expected.currency);
+  if (expected && !formattedAmount) {
+    reasons.push("price_currency_unsupported");
   }
 
   return {
-    ok: reasons.length === 0,
+    ok: reasons.length === 0 && Boolean(expected) && Boolean(formattedAmount),
     price,
     expected,
+    offer: expected
+      ? {
+          amountMinor: expected.amountMinor,
+          currency: expected.currency,
+          formattedAmount,
+          quantity: expected.quantity,
+        }
+      : null,
     reasons,
   };
 };
@@ -169,21 +184,40 @@ const resolveConsultation = async (rawId) => {
 };
 
 const expectedFromConsultation = (consultation) => {
-  const configured = getExpectedOffer();
+  const priceId =
+    typeof consultation?.paymentPriceId === "string"
+      ? consultation.paymentPriceId
+      : null;
+  const amountMinor = consultation?.paymentAmountMinor;
+  const currency = normalizeCurrency(consultation?.paymentCurrency);
+
   return {
-    priceId: consultation?.paymentPriceId || getPaymentsConfig().priceId,
-    amountMinor: Number.isSafeInteger(consultation?.paymentAmountMinor)
-      ? consultation.paymentAmountMinor
-      : configured.amountMinor,
-    currency:
-      typeof consultation?.paymentCurrency === "string" &&
-      consultation.paymentCurrency
-        ? consultation.paymentCurrency.toLowerCase()
-        : configured.currency,
-    quantity: Number.isSafeInteger(consultation?.paymentQuantity)
-      ? consultation.paymentQuantity
-      : configured.quantity,
+    priceId,
+    /* The snapshot is written from the validated configured Price at
+       checkout creation. A later STRIPE_PRICE_ID change must not invalidate
+       a legitimate in-flight session, so amount/currency are read from the
+       snapshot rather than from current configuration. */
+    amountMinor,
+    currency: currency ? currency.toLowerCase() : null,
+    quantity: consultation?.paymentQuantity,
+    valid:
+      Boolean(priceId) &&
+      priceId.startsWith("price_") &&
+      Number.isSafeInteger(amountMinor) &&
+      amountMinor > 0 &&
+      Boolean(currency) &&
+      consultation?.paymentQuantity === 1,
   };
+};
+
+/* A Stripe object's livemode is authoritative for the account/mode that
+   produced it. A test object can never satisfy a live deployment (or the
+   reverse), even if a session id happens to be reused in a mock. */
+const sessionModeIssues = (session) => {
+  const issues = [];
+  if (session?.livemode !== isLiveMode()) issues.push("session_mode_mismatch");
+  if (session?.mode !== "payment") issues.push("session_not_payment_mode");
+  return issues;
 };
 
 /**
@@ -192,6 +226,10 @@ const expectedFromConsultation = (consultation) => {
  */
 const sessionCommercialIssues = (session, expected) => {
   const issues = [];
+
+  if (!expected?.valid || expected.quantity !== 1) {
+    return ["expected_offer_invalid"];
+  }
 
   if (!Number.isFinite(session?.amount_total)) {
     issues.push("amount_missing");
@@ -236,6 +274,18 @@ const sessionCommercialIssues = (session, expected) => {
   if (item.price.type !== "one_time") {
     issues.push("price_not_one_time");
   }
+  if (item.price.recurring) {
+    issues.push("price_recurring");
+  }
+  if (item.price.active === false) {
+    issues.push("price_inactive");
+  }
+  if (
+    typeof item.price.livemode === "boolean" &&
+    item.price.livemode !== isLiveMode()
+  ) {
+    issues.push("line_price_mode_mismatch");
+  }
   if (item.price.unit_amount !== expected.amountMinor) {
     issues.push("price_unit_amount_mismatch");
   }
@@ -273,12 +323,13 @@ const findReusableSession = async ({
       { expand: ["line_items"] }
     );
 
-    if (
-      !existing ||
-      existing.id !== consultation.stripeSessionId ||
-      existing.mode !== "payment"
-    ) {
+    if (!existing || existing.id !== consultation.stripeSessionId) {
       return null;
+    }
+
+    const modeIssues = sessionModeIssues(existing);
+    if (modeIssues.length > 0) {
+      return { mismatch: modeIssues, session: existing };
     }
 
     if (existing.payment_status === "paid") {
@@ -300,13 +351,17 @@ const findReusableSession = async ({
 
     return { session: existing };
   } catch (error) {
+    /* The linked session may still be open. Creating a NEW session without
+       knowing its state could let the customer pay twice, so a transient
+       retrieval failure fails closed. `resource_missing` is safe: the old
+       session no longer exists in this account/mode. */
     if (error?.code === "resource_missing") return null;
     logPaymentEvent("error", "stripe_existing_session_retrieval_failed", {
       consultationId: String(consultation._id),
       sessionId: consultation.stripeSessionId,
       ...stripeErrorFields(error),
     });
-    return null;
+    return { error: true };
   }
 };
 
@@ -372,25 +427,18 @@ export const createCheckoutSession = async (req, res) => {
   let lockConsultationId = null;
 
   try {
-    const { frontendUrl, priceId } = getPaymentsConfig();
+    const config = getPaymentsConfig();
+    const { frontendUrl, priceId, mode } = config;
     const provider = getPaymentProvider();
 
-    const priceCheck = await validateConfiguredPrice(provider, priceId);
-    if (!priceCheck.ok) {
-      logPaymentEvent("error", "checkout_rejected", {
-        reason: "configured_price_invalid",
-        priceId,
-        amountMinor: priceCheck.price?.unit_amount,
-        currency: priceCheck.price?.currency,
-        reasons: priceCheck.reasons,
-      });
-      return res.status(503).json({
-        success: false,
-        message: "The consultation payment offer is not ready",
-      });
-    }
+    logPaymentEvent("info", "checkout_started", {
+      consultationId: cleanObjectId(body.consultationId) || "invalid",
+      mode: mode || "unconfigured",
+      priceId,
+    });
 
-    const expected = priceCheck.expected;
+    /* Validate the app-owned order first. An invalid reference must not
+       consume a Stripe Price lookup or produce a misleading provider 502. */
     const resolved = await resolveConsultation(body.consultationId);
     if (resolved.status) {
       logPaymentEvent("warn", "checkout_rejected", {
@@ -403,6 +451,24 @@ export const createCheckoutSession = async (req, res) => {
       });
     }
 
+    const priceCheck = await validateConfiguredPrice(provider, priceId);
+    if (!priceCheck.ok) {
+      logPaymentEvent("error", "checkout_rejected", {
+        reason: "configured_price_invalid",
+        mode,
+        priceId,
+        amountMinor: priceCheck.price?.unit_amount,
+        currency: priceCheck.price?.currency,
+        priceLivemode: priceCheck.price?.livemode,
+        reasons: priceCheck.reasons,
+      });
+      return res.status(503).json({
+        success: false,
+        message: "The consultation payment offer is not ready",
+      });
+    }
+
+    const expected = priceCheck.expected;
     let enquiry = resolved.consultation;
 
     const reusable = await findReusableSession({
@@ -448,6 +514,18 @@ export const createCheckoutSession = async (req, res) => {
       });
     }
 
+    if (reusable?.error) {
+      logPaymentEvent("error", "checkout_rejected", {
+        reason: "existing_session_unverifiable",
+        consultationId: String(enquiry._id),
+        sessionId: enquiry.stripeSessionId,
+      });
+      return res.status(502).json({
+        success: false,
+        message: "Unable to verify the existing checkout. Please try again.",
+      });
+    }
+
     if (reusable?.session) {
       logPaymentEvent("info", "checkout_reused", {
         consultationId: String(enquiry._id),
@@ -479,6 +557,17 @@ export const createCheckoutSession = async (req, res) => {
           sessionId: concurrent.session.id,
         });
         return res.status(200).json({ url: concurrent.session.url });
+      }
+
+      if (concurrent?.error) {
+        logPaymentEvent("error", "checkout_rejected", {
+          reason: "existing_session_unverifiable",
+          consultationId: String(enquiry._id),
+        });
+        return res.status(502).json({
+          success: false,
+          message: "Unable to verify the existing checkout. Please try again.",
+        });
       }
 
       logPaymentEvent("warn", "checkout_duplicate", {
@@ -523,6 +612,22 @@ export const createCheckoutSession = async (req, res) => {
       return res.status(409).json({
         success: false,
         message: "The existing checkout does not match the current offer",
+      });
+    }
+
+    if (afterLock?.error) {
+      await releaseCheckoutLock({
+        consultationId: enquiry._id,
+        token: lockToken,
+      });
+      lockConsultationId = null;
+      logPaymentEvent("error", "checkout_rejected", {
+        reason: "existing_session_unverifiable",
+        consultationId: String(enquiry._id),
+      });
+      return res.status(502).json({
+        success: false,
+        message: "Unable to verify the existing checkout. Please try again.",
       });
     }
 
@@ -731,10 +836,7 @@ export const getCheckoutOffer = async (_req, res) => {
 
     return res.json({
       success: true,
-      price: {
-        amountMinor: priceCheck.price.unit_amount,
-        currency: priceCheck.price.currency,
-      },
+      offer: priceCheck.offer,
     });
   } catch (error) {
     if (error?.status === 503) return notConfigured(res);
@@ -772,19 +874,88 @@ export const getCheckoutSessionStatus = async (req, res) => {
       .lean();
     if (
       stored?.payment_status === "paid" ||
-      stored?.payment_status === "failed"
+      stored?.payment_status === "failed" ||
+      stored?.payment_status === "expired"
     ) {
       return res.json({ success: true, status: stored.payment_status });
     }
 
+    /* Stripe retrieval is authoritative only after the session's mode and
+       commercial terms have been verified. A browser redirect (or a session
+       created with a different Price) must never display "paid". */
     const session = await getPaymentProvider().retrieveCheckoutSession(
-      sessionId
+      sessionId,
+      { expand: ["line_items"] }
     );
-    if (session.mode !== "payment") {
+
+    const modeIssues = sessionModeIssues(session);
+    if (modeIssues.length > 0) {
+      logPaymentEvent("warn", "session_status_rejected", {
+        sessionId,
+        reasons: modeIssues,
+      });
       return res
         .status(404)
         .json({ success: false, message: "Checkout session not found" });
     }
+
+    const consultation = await Consultation.findOne({
+      stripeSessionId: sessionId,
+    }).lean();
+
+    let expected;
+    if (consultation) {
+      expected = expectedFromConsultation(consultation);
+    } else {
+      /* An unlinked session has no per-consultation snapshot. Compare it
+         against the current configured Price, never against its own
+         payload (which would fail open). */
+      const { priceId } = getPaymentsConfig();
+      const priceCheck = await validateConfiguredPrice(
+        getPaymentProvider(),
+        priceId
+      );
+      if (!priceCheck.ok) {
+        logPaymentEvent("error", "session_status_rejected", {
+          sessionId,
+          reason: "configured_price_invalid",
+          reasons: priceCheck.reasons,
+        });
+        return res.status(503).json({
+          success: false,
+          message: "The consultation payment offer is not ready",
+        });
+      }
+      expected = priceCheck.expected;
+    }
+
+    if (!expected.valid) {
+      logPaymentEvent("error", "session_status_rejected", {
+        sessionId,
+        consultationId: consultation ? String(consultation._id) : null,
+        reason: "invalid_commercial_snapshot",
+      });
+      return res.status(502).json({
+        success: false,
+        message: "Payment status is temporarily unavailable",
+      });
+    }
+
+    const issues = sessionCommercialIssues(session, expected);
+    if (issues.length > 0) {
+      logPaymentEvent("error", "session_status_rejected", {
+        sessionId,
+        consultationId: consultation ? String(consultation._id) : null,
+        amountMinor: session.amount_total,
+        currency: session.currency,
+        reasons: issues,
+      });
+      return res.status(502).json({
+        success: false,
+        message: "Payment status is temporarily unavailable",
+      });
+    }
+
     const status =
       session.payment_status === "paid"
         ? "paid"
@@ -815,6 +986,7 @@ const HANDLED_EVENTS = new Set([
   "checkout.session.completed",
   "checkout.session.async_payment_succeeded",
   "checkout.session.async_payment_failed",
+  "checkout.session.expired",
 ]);
 
 /**
@@ -846,9 +1018,14 @@ const findOwnedConsultation = async (session) => {
     return { reason: "client_reference_mismatch" };
   }
 
+  const expected = expectedFromConsultation(consultation);
+  if (!expected.valid) {
+    return { reason: "invalid_commercial_snapshot" };
+  }
+
   return {
     consultation,
-    expected: expectedFromConsultation(consultation),
+    expected,
   };
 };
 
@@ -921,9 +1098,22 @@ const processPaidSession = async ({ event, session, eventId }) => {
   if (
     !verified ||
     verified.id !== session.id ||
-    verified.payment_status !== "paid"
+    verified.payment_status !== "paid" ||
+    verified.status !== "complete"
   ) {
     return { status: "ignored", reason: "verified_session_not_paid" };
+  }
+
+  const modeIssues = sessionModeIssues(verified);
+  if (modeIssues.length > 0) {
+    logPaymentEvent("error", "webhook_rejected", {
+      eventId,
+      eventType: event.type,
+      sessionId: session.id,
+      consultationId: String(owned.consultation._id),
+      reasons: modeIssues,
+    });
+    return { status: "ignored", reason: "verified_session_mode_mismatch" };
   }
 
   const metadataIssues = validateRetrievedMetadata({
@@ -1006,6 +1196,18 @@ const processFailedSession = async ({ event, session, eventId }) => {
     return { status: "ignored", reason: "paid_session_failure_event" };
   }
 
+  const modeIssues = sessionModeIssues(session);
+  if (modeIssues.length > 0) {
+    logPaymentEvent("error", "webhook_rejected", {
+      eventId,
+      eventType: event.type,
+      sessionId: session.id,
+      consultationId: String(owned.consultation._id),
+      reasons: modeIssues,
+    });
+    return { status: "ignored", reason: "session_mode_mismatch" };
+  }
+
   const issues = [];
   if (
     Number.isFinite(session.amount_total) &&
@@ -1057,6 +1259,95 @@ const processFailedSession = async ({ event, session, eventId }) => {
     consultationId: String(owned.consultation._id),
     paymentIntentId: paymentIntentId(session),
     paymentStatus: "failed",
+  });
+
+  return {
+    status: "processed",
+    consultationId: String(owned.consultation._id),
+  };
+};
+
+/**
+ * A Checkout Session that expired before payment. No money moved and no
+ * email is sent. The consultation is released so the visitor can start a
+ * fresh checkout attempt. A paid state can never be downgraded.
+ */
+const processExpiredSession = async ({ event, session, eventId }) => {
+  const owned = await findOwnedConsultation(session);
+  if (!owned.consultation) {
+    return { status: "ignored", reason: owned.reason };
+  }
+
+  if (session.payment_status === "paid") {
+    return { status: "ignored", reason: "paid_session_expired_event" };
+  }
+
+  if (session.status !== "expired") {
+    return { status: "ignored", reason: "session_not_expired" };
+  }
+
+  const modeIssues = sessionModeIssues(session);
+  if (modeIssues.length > 0) {
+    logPaymentEvent("error", "webhook_rejected", {
+      eventId,
+      eventType: event.type,
+      sessionId: session.id,
+      consultationId: String(owned.consultation._id),
+      reasons: modeIssues,
+    });
+    return { status: "ignored", reason: "session_mode_mismatch" };
+  }
+
+  const issues = [];
+  if (
+    Number.isFinite(session.amount_total) &&
+    session.amount_total !== owned.expected.amountMinor
+  ) {
+    issues.push("amount_mismatch");
+  }
+  if (
+    typeof session.currency === "string" &&
+    session.currency.toLowerCase() !== owned.expected.currency
+  ) {
+    issues.push("currency_mismatch");
+  }
+  if (
+    session.metadata?.price_id &&
+    session.metadata.price_id !== owned.expected.priceId
+  ) {
+    issues.push("price_id_mismatch");
+  }
+  if (issues.length > 0) {
+    logPaymentEvent("error", "webhook_rejected", {
+      eventId,
+      eventType: event.type,
+      sessionId: session.id,
+      consultationId: String(owned.consultation._id),
+      reasons: issues,
+    });
+    return { status: "ignored", reason: "commercial_terms_mismatch" };
+  }
+
+  await recordPayment({
+    session,
+    paymentStatus: "expired",
+    eventId,
+    consultationId: owned.consultation._id,
+    priceId: owned.expected.priceId,
+    quantity: owned.expected.quantity,
+  });
+
+  await syncConsultation({
+    consultationId: owned.consultation._id,
+    paymentStatus: "expired",
+  });
+
+  logPaymentEvent("info", "webhook_processed", {
+    eventId,
+    eventType: event.type,
+    sessionId: session.id,
+    consultationId: String(owned.consultation._id),
+    paymentStatus: "expired",
   });
 
   return {
@@ -1125,7 +1416,11 @@ export const stripeWebhook = async (req, res) => {
       sessionId: session.id,
       reason: "livemode_mismatch",
     });
-    return res.status(200).json({ received: true, ignored: true });
+    return res.status(200).json({
+      received: true,
+      ignored: true,
+      reason: "livemode_mismatch",
+    });
   }
 
   const claim = await claimWebhookEvent({
@@ -1173,7 +1468,9 @@ export const stripeWebhook = async (req, res) => {
     const result =
       eventType === "checkout.session.async_payment_failed"
         ? await processFailedSession({ event, session, eventId })
-        : await processPaidSession({ event, session, eventId });
+        : eventType === "checkout.session.expired"
+          ? await processExpiredSession({ event, session, eventId })
+          : await processPaidSession({ event, session, eventId });
 
     await markWebhookEvent({
       eventId,
