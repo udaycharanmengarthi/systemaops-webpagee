@@ -48,6 +48,10 @@ const translations = {
     common: sharedContent.en.common,
     legal: sharedContent.en.legal,
     payments: sharedContent.en.payments,
+    cookiePolicy: sharedContent.en.cookiePolicy,
+    terms: sharedContent.en.terms,
+    paymentTerms: sharedContent.en.paymentTerms,
+    privacyRequests: sharedContent.en.privacyRequests,
     consultation: DEV_BUILD
       ? { ...sharedContent.en.consultation, mock: consultationMockCopy.en }
       : sharedContent.en.consultation,
@@ -63,6 +67,10 @@ const translations = {
     common: sharedContent.nl.common,
     legal: sharedContent.nl.legal,
     payments: sharedContent.nl.payments,
+    cookiePolicy: sharedContent.nl.cookiePolicy,
+    terms: sharedContent.nl.terms,
+    paymentTerms: sharedContent.nl.paymentTerms,
+    privacyRequests: sharedContent.nl.privacyRequests,
     consultation: DEV_BUILD
       ? { ...sharedContent.nl.consultation, mock: consultationMockCopy.nl }
       : sharedContent.nl.consultation,
@@ -78,6 +86,10 @@ const translations = {
     common: sharedContent.de.common,
     legal: sharedContent.de.legal,
     payments: sharedContent.de.payments,
+    cookiePolicy: sharedContent.de.cookiePolicy,
+    terms: sharedContent.de.terms,
+    paymentTerms: sharedContent.de.paymentTerms,
+    privacyRequests: sharedContent.de.privacyRequests,
     consultation: DEV_BUILD
       ? { ...sharedContent.de.consultation, mock: consultationMockCopy.de }
       : sharedContent.de.consultation,

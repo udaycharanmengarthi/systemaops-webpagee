@@ -266,6 +266,19 @@ export default function ConsultationForm({
         {fieldError("privacyAccepted")}
       </div>
 
+      <label className="cs-check" htmlFor="cs-marketing">
+        <input
+          id="cs-marketing"
+          name="marketingOptIn"
+          type="checkbox"
+          checked={values.marketingOptIn === true}
+          onChange={(event) =>
+            onChange("marketingOptIn", event.target.checked)
+          }
+        />
+        <span>{t("privacy.marketingNote")}</span>
+      </label>
+
       {paymentRequired && (
         <div className="cs-price-block">
           <div>

@@ -24,6 +24,7 @@ export const EMPTY_VALUES = {
   areaOfInterest: "",
   message: "",
   privacyAccepted: false,
+  marketingOptIn: false,
 };
 
 /* Deliberately permissive but rejects the obvious mistakes. Mirrors the
@@ -112,6 +113,7 @@ export const toPayload = (values) => ({
   areaOfInterest: toAreaSlug(trim(values.areaOfInterest) || "other"),
   message: trim(values.message),
   privacyAccepted: true,
+  marketingOptIn: values.marketingOptIn === true,
 });
 
 /** Field order used by the error summary (stable, predictable). */

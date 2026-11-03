@@ -309,6 +309,7 @@ export default function ContactUs() {
   const [phoneError, setPhoneError] = useState("");
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [privacyError, setPrivacyError] = useState("");
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(COUNTRY_CODES[0]);
   const [flight, setFlight] = useState("idle");
   const flightTimers = useRef([]);
@@ -386,6 +387,7 @@ const handleSubmit = async (e) => {
         message: formData.message.trim(),
         privacyAccepted: true,
         privacyVersion: t("privacy.version"),
+        marketingOptIn,
       }),
     });
 
@@ -645,6 +647,14 @@ return (
                 {t("privacy.consentNote")}{" "}
                 <a href="/privacy-policy">{t("privacy.policyLink")}</a>
               </span>
+            </label>
+            <label className="contact-privacy">
+              <input
+                type="checkbox"
+                checked={marketingOptIn}
+                onChange={(e) => setMarketingOptIn(e.target.checked)}
+              />
+              <span>{t("privacy.marketingNote")}</span>
             </label>
             {privacyError && (
               <p className="contact-error" role="alert">

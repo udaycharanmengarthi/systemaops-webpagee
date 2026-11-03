@@ -1,27 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
+import {
+  readConsent,
+  acceptAll,
+  rejectOptional,
+} from "../consent/consent";
+import CookiePreferences from "./CookiePreferences";
 import "./CookieConsent.css";
-
-const STORAGE_KEY = "systemaops-cookie-consent";
-const VERSION = "2026-01-01";
-
-function readConsent() {
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (typeof parsed !== "object" || parsed === null) return null;
-    return parsed;
-  } catch {
-    return null;
-  }
-}
 
 export default function CookieConsent() {
   const { t } = useLanguage();
   const [visible, setVisible] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [statsOn, setStatsOn] = useState(false);
 
   useEffect(() => {
     if (!readConsent()) {
@@ -33,8 +23,6 @@ export default function CookieConsent() {
 
   useEffect(() => {
     const reopen = () => {
-      const existing = readConsent();
-      setStatsOn(existing ? existing.stats === true : false);
       setShowSettings(true);
       setVisible(true);
     };
@@ -43,20 +31,19 @@ export default function CookieConsent() {
       window.removeEventListener("open-cookie-settings", reopen);
   }, []);
 
-  const persist = useCallback((stats) => {
-    try {
-      window.localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          necessary: true,
-          stats,
-          version: VERSION,
-          updatedAt: new Date().toISOString(),
-        }),
-      );
-    } catch {
-      /* storage unavailable: banner simply hides for this session */
-    }
+  const handleAcceptAll = useCallback(() => {
+    acceptAll("banner");
+    setVisible(false);
+    setShowSettings(false);
+  }, []);
+
+  const handleReject = useCallback(() => {
+    rejectOptional("banner");
+    setVisible(false);
+    setShowSettings(false);
+  }, []);
+
+  const handleSave = useCallback(() => {
     setVisible(false);
     setShowSettings(false);
   }, []);
@@ -76,94 +63,35 @@ export default function CookieConsent() {
           <p className="cookie-text">{t("cookie.text")}</p>
 
           {showSettings && (
-            <div className="cookie-options">
-              <div className="cookie-option">
-                <div>
-                  <p className="cookie-option-title">
-                    {t("cookie.necessary")}
-                  </p>
-                  <p className="cookie-option-desc">
-                    {t("cookie.necessaryDesc")}
-                  </p>
-                </div>
-                <span
-                  className="cookie-pill"
-                  aria-hidden="true"
-                >
-                  on
-                </span>
-              </div>
-
-              <div className="cookie-option">
-                <div>
-                  <p className="cookie-option-title">
-                    {t("cookie.stats")}
-                  </p>
-                  <p className="cookie-option-desc">
-                    {t("cookie.statsDesc")}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={statsOn}
-                  aria-label={t("cookie.stats")}
-                  className={`cookie-switch${statsOn ? " on" : ""}`}
-                  onClick={() => setStatsOn((v) => !v)}
-                >
-                  <span className="cookie-knob" aria-hidden="true" />
-                </button>
-              </div>
-
-              <p className="cookie-note">{t("cookie.note")}</p>
-            </div>
+            <CookiePreferences onSave={handleSave} />
           )}
         </div>
 
-        <div className="cookie-actions">
-          {!showSettings ? (
-            <>
-              <button
-                type="button"
-                className="cookie-btn cookie-btn--ghost"
-                onClick={() => setShowSettings(true)}
-              >
-                {t("cookie.settings")}
-              </button>
-              <button
-                type="button"
-                className="cookie-btn cookie-btn--secondary"
-                onClick={() => persist(false)}
-              >
-                {t("cookie.decline")}
-              </button>
-              <button
-                type="button"
-                className="cookie-btn cookie-btn--primary"
-                onClick={() => persist(true)}
-              >
-                {t("cookie.accept")}
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                className="cookie-btn cookie-btn--secondary"
-                onClick={() => persist(false)}
-              >
-                {t("cookie.decline")}
-              </button>
-              <button
-                type="button"
-                className="cookie-btn cookie-btn--primary"
-                onClick={() => persist(statsOn)}
-              >
-                {t("cookie.save")}
-              </button>
-            </>
-          )}
-        </div>
+        {!showSettings && (
+          <div className="cookie-actions">
+            <button
+              type="button"
+              className="cookie-btn cookie-btn--secondary"
+              onClick={handleReject}
+            >
+              {t("cookie.rejectOptional")}
+            </button>
+            <button
+              type="button"
+              className="cookie-btn cookie-btn--ghost"
+              onClick={() => setShowSettings(true)}
+            >
+              {t("cookie.customize")}
+            </button>
+            <button
+              type="button"
+              className="cookie-btn cookie-btn--primary"
+              onClick={handleAcceptAll}
+            >
+              {t("cookie.acceptAll")}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

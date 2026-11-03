@@ -16,7 +16,7 @@ function sanitizeString(value, max = 5000) {
 
 export const submitContact = async (req, res) => {
   try {
-    let { name, email, phone, company, message, privacyAccepted, privacyVersion } = req.body;
+    let { name, email, phone, company, message, privacyAccepted, privacyVersion, marketingOptIn } = req.body;
 
     name = sanitizeString(name, 120);
     email = sanitizeString(email, 254).toLowerCase();
@@ -91,6 +91,8 @@ export const submitContact = async (req, res) => {
       privacyAccepted: true,
       privacyVersion: typeof privacyVersion === "string" ? privacyVersion.slice(0, 32) : PRIVACY_VERSION,
       privacyAcceptedAt: submittedAt,
+      marketingOptIn: marketingOptIn === true,
+      marketingConsentAt: marketingOptIn === true ? submittedAt : null,
       createdAt: submittedAt,
       expiresAt: expiresAtFor(submittedAt),
     });

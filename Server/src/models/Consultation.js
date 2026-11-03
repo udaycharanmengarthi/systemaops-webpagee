@@ -79,6 +79,15 @@ const consultationSchema = new mongoose.Schema(
       type: Date,
     },
 
+    marketingOptIn: {
+      type: Boolean,
+      default: false,
+    },
+
+    marketingConsentAt: {
+      type: Date,
+      default: null,
+    },
     /* Same 1-year retention policy as every other lead collection. */
     expiresAt: {
       type: Date,

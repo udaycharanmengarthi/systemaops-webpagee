@@ -1338,6 +1338,9 @@ function ApplyModal({
   const [privacyError, setPrivacyError] =
     useState("");
 
+  const [marketingOptIn, setMarketingOptIn] =
+    useState(false);
+
   const [why, setWhy] =
     useState("");
 
@@ -1458,6 +1461,7 @@ function ApplyModal({
               whyUs: why,
               privacyAccepted: true,
               privacyVersion: t("privacy.version"),
+              marketingOptIn,
             }),
           },
         );
@@ -1967,6 +1971,16 @@ function ApplyModal({
                     {t("privacy.policyLink")}
                   </a>
                 </span>
+              </label>
+              <label className="af-privacy">
+                <input
+                  type="checkbox"
+                  checked={marketingOptIn}
+                  onChange={(event) =>
+                    setMarketingOptIn(event.target.checked)
+                  }
+                />
+                <span>{t("privacy.marketingNote")}</span>
               </label>
 
               {privacyError && (

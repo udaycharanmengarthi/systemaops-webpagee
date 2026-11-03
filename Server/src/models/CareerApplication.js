@@ -123,7 +123,16 @@ const careerApplicationSchema = new mongoose.Schema(
     privacyAcceptedAt: {
       type: Date,
     },
-    expiresAt: {
+
+    marketingOptIn: {
+      type: Boolean,
+      default: false,
+    },
+
+    marketingConsentAt: {
+      type: Date,
+      default: null,
+    },    expiresAt: {
       type: Date,
       default: oneYearFromNow,
       index: { expireAfterSeconds: 0 },

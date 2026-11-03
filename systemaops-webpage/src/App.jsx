@@ -23,6 +23,11 @@ import About from "./components/sections/About";
 import ContactUs from "./components/sections/ContactUs";
 import Careers from "./components/sections/Careers";
 import PrivacyPolicy from "./components/sections/PrivacyPolicy";
+import CookiePolicy from "./components/sections/CookiePolicy";
+import Terms from "./components/sections/Terms";
+import PaymentTerms from "./components/sections/PaymentTerms";
+import PrivacyRequests from "./components/sections/PrivacyRequests";
+import CookieSettings from "./components/sections/CookieSettings";
 
 /* SERVICE SECTIONS */
 import N8nWorkflowProcess from "./components/sections/SERVICES/N8nWorkflowProcess/N8nWorkflowProcess";
@@ -138,6 +143,26 @@ function N8nWorkflowProcessPage() {
 
 function PrivacyPolicyPage() {
   return <PrivacyPolicy />;
+}
+
+function CookiePolicyPage() {
+  return <CookiePolicy />;
+}
+
+function TermsPage() {
+  return <Terms />;
+}
+
+function PaymentTermsPage() {
+  return <PaymentTerms />;
+}
+
+function PrivacyRequestsPage() {
+  return <PrivacyRequests />;
+}
+
+function CookieSettingsPage() {
+  return <CookieSettings />;
 }
 
 /* ---------- BLOG PAGES ---------- */
@@ -297,6 +322,12 @@ function App() {
               <PrivacyPolicyPage />
             }
           />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/cookies" element={<CookiePolicyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/payment-refunds" element={<PaymentTermsPage />} />
+          <Route path="/privacy-requests" element={<PrivacyRequestsPage />} />
+          <Route path="/cookie-settings" element={<CookieSettingsPage />} />
 
           <Route
             path="/careers"

@@ -36,6 +36,7 @@ export const submitConsultation = async (req, res) => {
       message,
       privacyAccepted,
       privacyVersion,
+      marketingOptIn,
     } = req.body || {};
 
     name = sanitizeString(name, 120);
@@ -88,6 +89,8 @@ export const submitConsultation = async (req, res) => {
           ? privacyVersion.slice(0, 32)
           : PRIVACY_VERSION,
       privacyAcceptedAt: submittedAt,
+      marketingOptIn: marketingOptIn === true,
+      marketingConsentAt: marketingOptIn === true ? submittedAt : null,
       createdAt: submittedAt,
       expiresAt: expiresAtFor(submittedAt),
     });

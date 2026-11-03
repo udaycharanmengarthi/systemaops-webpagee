@@ -53,6 +53,14 @@ export default function StripeCheckout({
       </button>
 
       <p className="cs-mock-note">{t("consultation.panel.stripeNote")}</p>
+      <p className="cs-mock-note">
+        {t("payments.stripeDisclosure")}{" "}
+        <a href="/privacy-policy">{t("privacy.policyLink")}</a>
+        {" · "}
+        <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer">
+          Stripe
+        </a>
+      </p>
     </section>
   );
 }

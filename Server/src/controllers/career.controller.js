@@ -46,6 +46,7 @@ export const submitCareerApplication = async (req, res) => {
       resumeUrl,
       privacyAccepted,
       privacyVersion,
+      marketingOptIn,
     } = req.body;
 
     firstName = sanitizeString(firstName, 80);
@@ -120,6 +121,8 @@ export const submitCareerApplication = async (req, res) => {
       privacyAccepted: true,
       privacyVersion: typeof privacyVersion === "string" ? privacyVersion.slice(0, 32) : PRIVACY_VERSION,
       privacyAcceptedAt: submittedAt,
+      marketingOptIn: marketingOptIn === true,
+      marketingConsentAt: marketingOptIn === true ? submittedAt : null,
       createdAt: submittedAt,
       expiresAt: expiresAtFor(submittedAt),
     });

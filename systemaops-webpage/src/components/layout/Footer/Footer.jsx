@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import {
   FaLinkedinIn,
@@ -93,93 +93,25 @@ export default function Footer() {
    * it when it becomes available.
    */
 
-  useEffect(() => {
-    let cancelled = false;
-
-    const initializePreferredSource = () => {
-      if (
-        cancelled ||
-        !preferredSourceRef.current
-      ) {
-        return;
-      }
-
-      if (
-        window.PREFERRED_SOURCE &&
-        Array.isArray(window.PREFERRED_SOURCE)
-      ) {
-        window.PREFERRED_SOURCE.push((preferredSource) => {
-          if (cancelled) return;
-
-          preferredSource.init({
-            theme: "dark",
-            lang: "en",
-          });
-
-          preferredSourceRef.current = preferredSource;
-
-          setPreferredSourceReady(true);
-        });
-
-        return;
-      }
-
-      if (window.preferredSource) {
-        window.preferredSource.init({
-          theme: "dark",
-          lang: "en",
-        });
-
-        preferredSourceRef.current =
-          window.preferredSource;
-
-        setPreferredSourceReady(true);
-
-        return;
-      }
-
-      // Retry while Google's async script is loading.
-      window.setTimeout(
-        initializePreferredSource,
-        100,
+  const loadPreferredSourceScript = () => {
+    return new Promise((resolve) => {
+      const existing = document.querySelector(
+        'script[src="https://news.google.com/swg/js/v1/publisher.js"]',
       );
-    };
-
-    const existingScript = document.querySelector(
-      'script[src="https://news.google.com/swg/js/v1/publisher.js"]',
-    );
-
-    if (!existingScript) {
-      const script =
-        document.createElement("script");
-
+      if (existing) {
+        resolve();
+        return;
+      }
+      const script = document.createElement("script");
       script.async = true;
-
-      /*
-       * IMPORTANT:
-       *
-       * "manual" prevents Google from automatically scanning
-       * the DOM for the standard button.
-       *
-       * We are using our own SystemaOps button instead.
-       */
-      script.setAttribute(
-        "preferred-sources-control",
-        "manual",
-      );
-
+      script.setAttribute("preferred-sources-control", "manual");
       script.src =
         "https://news.google.com/swg/js/v1/publisher.js";
-
+      script.onload = () => resolve();
+      script.onerror = () => resolve();
       document.head.appendChild(script);
-    }
-
-    initializePreferredSource();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    });
+  };
 
   /*
    * ============================================================
@@ -187,16 +119,38 @@ export default function Footer() {
    * ============================================================
    */
 
-  const handlePreferredSourceClick = () => {
-    const preferredSource =
-      preferredSourceRef.current;
-
+  const handlePreferredSourceClick = async () => {
     if (
-      preferredSource &&
-      typeof preferredSource.addPreferredSource ===
+      preferredSourceRef.current &&
+      typeof preferredSourceRef.current.addPreferredSource ===
         "function"
     ) {
-      preferredSource.addPreferredSource();
+      preferredSourceRef.current.addPreferredSource();
+      return;
+    }
+
+    await loadPreferredSourceScript();
+
+    // Try init after load
+    if (window.preferredSource) {
+      try {
+        window.preferredSource.init({
+          theme: "dark",
+          lang: "en",
+        });
+        preferredSourceRef.current = window.preferredSource;
+        setPreferredSourceReady(true);
+      } catch {
+        /* ignore */
+      }
+    }
+
+    if (
+      preferredSourceRef.current &&
+      typeof preferredSourceRef.current.addPreferredSource ===
+        "function"
+    ) {
+      preferredSourceRef.current.addPreferredSource();
       return;
     }
 
@@ -624,45 +578,41 @@ export default function Footer() {
             className="sys-footer-legal"
             aria-label={t("footer.links.legal")}
           >
-            <a
-              href="/privacy-policy"
-              className="sys-footer-legal-link"
-            >
-              {t("footer.links.privacy")}
-            </a>
-
-            <span
-              className="sys-footer-legal-sep"
-              aria-hidden="true"
-            >
-              ·
-            </span>
-
-            <a
-              href="/privacy-policy#cookies"
-              className="sys-footer-legal-link"
-            >
-              {t("legal.cookieTitle")}
-            </a>
-
-            <span
-              className="sys-footer-legal-sep"
-              aria-hidden="true"
-            >
-              ·
-            </span>
-
-            <button
-              type="button"
-              className="sys-footer-legal-link"
-              onClick={() =>
-                window.dispatchEvent(
-                  new CustomEvent("open-cookie-settings"),
-                )
-              }
-            >
-              {t("cookie.settings")}
-            </button>
+            <a href="/privacy-policy" className="sys-footer-legal-link">
+            {t("footer.links.privacy")}
+          </a>
+          <span className="sys-footer-legal-sep" aria-hidden="true">·</span>
+          <a href="/cookies" className="sys-footer-legal-link">
+            {t("cookiePolicy.title") || t("legal.cookieTitle")}
+          </a>
+          <span className="sys-footer-legal-sep" aria-hidden="true">·</span>
+          <a href="/terms" className="sys-footer-legal-link">
+            {t("terms.title") || "Terms"}
+          </a>
+          <span className="sys-footer-legal-sep" aria-hidden="true">·</span>
+          <a href="/payment-refunds" className="sys-footer-legal-link">
+            {t("paymentTerms.title") || "Payment Terms"}
+          </a>
+          <span className="sys-footer-legal-sep" aria-hidden="true">·</span>
+          <a href="/privacy-requests" className="sys-footer-legal-link">
+            {t("privacyRequests.title") || "Privacy Requests"}
+          </a>
+          <span className="sys-footer-legal-sep" aria-hidden="true">·</span>
+          <a href="/cookie-settings" className="sys-footer-legal-link">
+            {t("cookie.settings")}
+          </a>
+          <span className="sys-footer-legal-sep" aria-hidden="true">·</span>
+          <button
+            type="button"
+            className="sys-footer-legal-link"
+            onClick={() =>
+              window.dispatchEvent(
+                new CustomEvent("open-cookie-settings"),
+              )
+            }
+          >
+            {t("cookie.settings")}
+          </button>
           </nav>
         </div>
       </div>

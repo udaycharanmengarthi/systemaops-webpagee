@@ -65,6 +65,15 @@ const contactSchema = new mongoose.Schema(
       type: Date,
     },
 
+    marketingOptIn: {
+      type: Boolean,
+      default: false,
+    },
+
+    marketingConsentAt: {
+      type: Date,
+      default: null,
+    },
     expiresAt: {
       type: Date,
       default: oneYearFromNow,
