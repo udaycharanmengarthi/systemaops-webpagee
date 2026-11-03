@@ -67,11 +67,20 @@ const CLIENT_COMMERCIAL_FIELDS = [
   "unitAmount",
 ];
 
-const notConfigured = (res) =>
-  res.status(503).json({
+const notConfigured = (res) => {
+  /* Names only — never values. This is what makes a missing staging/production
+     env var diagnosable from `docker compose logs backend` instead of a
+     generic 503 in the browser. */
+  const { missing } = getPaymentsConfig();
+  logPaymentEvent("error", "payments_not_configured", {
+    missing,
+    mode: isLiveMode() ? "live" : "test",
+  });
+  return res.status(503).json({
     success: false,
     message: PAYMENTS_NOT_CONFIGURED_MESSAGE,
   });
+};
 
 /* Structured, PII-free payment logs. Never pass an email, name, secret,
    webhook body or raw provider error into `fields`. */
